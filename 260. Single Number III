@@ -1,0 +1,83 @@
+//try to divide two different numbers to two different list.
+(distinguish them by bits(there is at least one bitindex that one is 0 and another is 1))
+
+import java.util.ArrayList;
+
+//older and lower version
+class Solution {
+    public int[] singleNumber(int[] nums) {
+        int xorResult = 0;
+        for(int tmp : nums){
+            xorResult = tmp ^ xorResult;
+        }
+        int bitIndex = findOneBitIndex(xorResult);
+        ArrayList<Integer> leftNums = new ArrayList<>();
+        ArrayList<Integer> rightNums = new ArrayList<>();
+        for(int tmp : nums){
+            if(isBitOne(tmp, bitIndex)){
+                leftNums.add(tmp);
+            } else {
+                rightNums.add(tmp);
+            }
+        }
+        int[] resultNums = new int[2];
+        int firstNum = 0;
+        int secondNum = 0;
+        for(int tmp : leftNums){
+            firstNum = tmp ^ firstNum;
+        }
+        for(int tmp : rightNums){
+            secondNum = tmp ^ secondNum;
+        }
+        resultNums[0] = firstNum;
+        resultNums[1] = secondNum;
+        return resultNums;
+    } 
+    
+    public int findOneBitIndex(int num){
+        int result = 0;
+        while(num % 2 == 0){
+            num = num / 2;
+            result ++;
+        }
+        return result;
+    }
+    
+    public boolean isBitOne(int num, int bitIndex){
+        return ((num >> bitIndex) % 2 != 0);
+    }
+}
+
+//newest and faster version
+class Solution {
+    public int[] singleNumber(int[] nums) {
+        int xorResult = 0;
+        for(int tmp : nums){
+            xorResult = tmp ^ xorResult;
+        }
+        int bitIndex = findOneBitIndex(xorResult);
+        int firstNum = 0;
+        int secondNum = 0;
+        for(int tmp : nums){
+            if(isBitOne(tmp, bitIndex)){
+                firstNum = firstNum ^ tmp;
+            } else {
+                secondNum = secondNum ^ tmp;
+            }
+        }
+        return new int[]{firstNum, secondNum};
+    } 
+    
+    public int findOneBitIndex(int num){
+        int result = 0;
+        while(num % 2 == 0){
+            num = num / 2;
+            result ++;
+        }
+        return result;
+    }
+    
+    public boolean isBitOne(int num, int bitIndex){
+        return ((num >> bitIndex) % 2 != 0);
+    }
+}
