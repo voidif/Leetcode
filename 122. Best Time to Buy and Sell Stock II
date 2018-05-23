@@ -1,0 +1,39 @@
+class Solution {
+   public int maxProfit(int[] prices) {
+      int index = 0;
+      int length = prices.length;
+      int profit = 0;;
+      int buyPrice = -1;
+      boolean isHold = false;
+      while(index < length){
+         while(index < length){
+            if(index == length - 1){
+               return profit;
+            }
+            if(prices[index] < prices[index + 1]){
+               buyPrice = prices[index];
+               isHold = true;
+               index ++;
+               break;
+            } else {
+               index ++;
+            }
+         }
+         while(isHold){
+            if(index == length - 1){
+               profit = profit + prices[index] - buyPrice;
+               return profit;
+            } else if (prices[index] > prices[index + 1]){
+               profit = profit + prices[index] - buyPrice;
+               isHold = false;
+               buyPrice = -1;
+               index ++;
+               break;
+            } else {
+               index ++;
+            }
+         }
+      }
+      return profit;
+   }
+}
