@@ -1,0 +1,34 @@
+class Solution {
+    public List<Integer> topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> stat = new HashMap<>();
+        for(int tmp : nums){
+            if(stat.containsKey(tmp)){
+                stat.put(tmp, stat.get(tmp) + 1);
+            } else {
+                stat.put(tmp, 1);
+            }
+        }
+        ArrayList<Map.Entry<Integer, Integer>> sortedList = new ArrayList<>();
+        for(Map.Entry<Integer, Integer> tmpEntry : stat.entrySet()){
+            sortedList.add(tmpEntry);
+        }
+        Collections.sort(sortedList, new EntryComparator());
+        List<Integer> topK = new ArrayList<>();
+        for(int i = 0; i < k; i ++){
+            topK.add(sortedList.get(i).getKey());
+        }
+        return topK; 
+    }
+    
+}
+
+class EntryComparator implements Comparator<Map.Entry<Integer, Integer>>{
+   @Override
+   public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+      if(o1.getValue() != o2.getValue()){
+          return o2.getValue() - o1.getValue();
+      } else {
+          return o1.getKey() - o2.getKey();
+      }
+   }
+}
