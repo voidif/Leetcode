@@ -1,19 +1,21 @@
+//a better way: sort array
 class Solution {
     public int majorityElement(int[] nums) {
-        int maxNum = 0;
-        int maxCount = 0;
-        int max = Integer.MIN_VALUE;
-        int min = Integer.MAX_VALUE;
+        Map<Integer, Integer> numsCount = new HashMap<>();
         for(int tmp : nums){
-            if(tmp > max) max = tmp;
-            if(tmp < min) min = tmp;
+            int newValue = numsCount.getOrDefault(tmp, 0) + 1;
+            if(newValue >= (nums.length + 1) / 2){
+                return tmp;
+            } else {
+                numsCount.put(tmp, newValue);
+            }
         }
-        long arraySize = (long)max - min + 1;
-        int[] countArray = new int[arraySize];
-        for(int tmp : nums){
-            countArray[tmp - min] ++;
-            if(countArray[tmp - min] >= nums.length / 2) {return tmp;}
-        }
+        // long arraySize = (long)max - min + 1;
+        // int[] countArray = new int[arraySize];
+        // for(int tmp : nums){
+        //     countArray[tmp - min] ++;
+        //     if(countArray[tmp - min] >= nums.length / 2) {return tmp;}
+        // }
         return -1;
     }
 }
