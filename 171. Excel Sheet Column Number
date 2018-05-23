@@ -1,0 +1,12 @@
+class Solution {
+    public int titleToNumber(String s) {
+        int res = 0;
+        int exp = 1;
+        int n = s.length();
+        for(int i = n - 1; i >= 0; i --){
+            res = res + (s.charAt(i) - 'A' + 1) * exp;
+            exp = exp * 26;
+        }
+        return res;
+    }
+}
