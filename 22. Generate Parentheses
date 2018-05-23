@@ -1,0 +1,22 @@
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> res = new LinkedList<>();
+        char[] treePath = new char[n * 2];
+        helper(res, n, 0, 0, treePath, 0);
+        return res;
+    }
+    public void helper(List<String> res, int n, int left, int right, char[] treePath, int index){
+        if(index == 2 * n){
+            res.add(new String(treePath));
+            return;
+        }
+        if(left < n){
+            treePath[index] = '(';
+            helper(res, n, left + 1, right, treePath, index + 1);
+        }
+        if(right < left){
+            treePath[index] = ')';
+            helper(res, n, left, right + 1, treePath, index + 1);
+        }
+    }
+}
