@@ -1,0 +1,21 @@
+//another backtracking
+class Solution {
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> tmpRes = new ArrayList<>();
+        helper(res, tmpRes, 1, k, n);
+        return res;
+    }
+    
+    public void helper(List<List<Integer>> res, List<Integer> tmpRes, int beginNum, int k, int n){
+        if(k == 0 && n == 0){
+            res.add(new ArrayList<>(tmpRes));
+        }
+        for(int i = beginNum; i < 10; i ++){
+            if(i > n){ break; }
+            tmpRes.add(i);
+            helper(res, tmpRes, i + 1, k - 1, n - i);
+            tmpRes.remove(tmpRes.size() - 1);
+        }
+    }
+}
