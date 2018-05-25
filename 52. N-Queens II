@@ -1,0 +1,33 @@
+class Solution {
+    public int totalNQueens(int n) {
+        int[] board = new int[n * n];
+        int[] res = new int[1];
+        helper(n, 0, board, res);
+        return res[0];
+
+    }
+    public void helper(int n, int row, int[] board, int[] res){
+        if(row == n){
+            res[0] ++;
+            return;
+        }
+        for(int i = 0; i < n; i ++){
+            if(canPlaceQueen(i, row, board, n)){
+                board[row * n + i] = 1;
+                helper(n, row + 1, board, res);
+                board[row * n + i] = 0;
+            }
+        }
+    }
+
+    public boolean canPlaceQueen(int column, int row, int[] board, int n){
+        for(int i = 0; i < row * n + column; i ++){
+            if(i % n == column || i % n + i / n == row + column || (i % n - i / n) == (column - row)) {
+                if(board[i] == 1){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
