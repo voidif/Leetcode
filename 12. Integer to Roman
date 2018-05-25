@@ -1,0 +1,69 @@
+//very stupid version
+class Solution {
+    public String intToRoman(int num) {
+        ArrayList<Character> tmpString = new ArrayList<>();
+        while(num >= 1000){
+            tmpString.add('M');
+            num = num - 1000;
+        }
+        if(num >= 900){
+            tmpString.add('C');
+            tmpString.add('M');
+            num = num - 900;
+        }
+        if(num >= 400 && num < 500){
+            tmpString.add('C');
+            tmpString.add('D');
+            num = num - 400;
+        }
+        while(num >= 500){
+            tmpString.add('D');
+            num = num - 500;
+        }
+        while(num >= 100){
+            tmpString.add('C');
+            num = num - 100;
+        }
+        if(num >= 90){
+            tmpString.add('X');
+            tmpString.add('C');
+            num = num - 90;
+        }
+        if(num >= 40 && num < 50){
+            tmpString.add('X');
+            tmpString.add('L');
+            num = num - 40;
+        }
+        while(num >= 50){
+            tmpString.add('L');
+            num = num - 50;
+        }
+        while(num >= 10){
+            tmpString.add('X');
+            num = num - 10;
+        }
+        if(num >= 9){
+            tmpString.add('I');
+            tmpString.add('X');
+            num = num - 9;
+        }
+        if(num >= 4 && num < 5){
+            tmpString.add('I');
+            tmpString.add('V');
+            num = num - 4;
+        }
+        while(num >= 5){
+            tmpString.add('V');
+            num = num - 5;
+        }
+        while(num >= 1){
+            tmpString.add('I');
+            num = num - 1;
+        }
+        char[] res = new char[tmpString.size()];
+        for(int i = 0; i < res.length; i++) {
+            res[i] = tmpString.get(i);
+        }
+        return new String(res);
+    }
+}
