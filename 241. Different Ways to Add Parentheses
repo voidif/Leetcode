@@ -55,3 +55,51 @@ class Solution {
         return res;
     }
 }
+
+//solution with memorize
+class Solution {
+    private List[][] memArray;
+
+    public List<Integer> diffWaysToCompute(String input) {
+        char[] inputArray = input.toCharArray();
+        memArray = new LinkedList[input.length()][input.length()];
+        return helper(inputArray, 0, input.length());
+    }
+
+    public List<Integer> helper(char[] inputArray, int begin, int end){
+        List<Integer> res = new LinkedList<Integer>();
+        List<Integer> res1 = new LinkedList<Integer>();
+        List<Integer> res2 = new LinkedList<Integer>();
+        for(int i = begin; i < end; i ++){
+            if(inputArray[i] == '+' || inputArray[i] == '-' || inputArray[i] == '*'){
+                if(memArray[begin][i - 1] != null){
+                    res1 = memArray[begin][i - 1];
+                } else {
+                    res1 = helper(inputArray, begin, i);
+                    memArray[begin][i - 1] = res1;
+                }
+                if(memArray[i + 1][end - 1] != null){
+                    res2 = memArray[i + 1][end - 1];
+                } else {
+                    res2 = helper(inputArray, i + 1, end);
+                    memArray[i + 1][end - 1] = res2;
+                }
+                for(int tmp1 : res1){
+                    for(int tmp2 : res2){
+                        switch(inputArray[i]){
+                            case '+' : res.add(tmp1 + tmp2); break;
+                            case '-' : res.add(tmp1 - tmp2); break;
+                            case '*' : res.add(tmp1 * tmp2); break;
+                        }
+                    }
+                }
+            }
+            
+        }
+        if(res.size() == 0){
+            res.add(Integer.parseInt(new String(inputArray, begin, end - begin)));
+        }
+        memArray[begin][end - 1] = res;
+        return res;
+    }
+}
