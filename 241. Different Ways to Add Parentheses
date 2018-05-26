@@ -20,16 +20,38 @@ Explanation:
 (((2*3)-4)*5) = 10
 */
 
+//way 1: recursive without memorize
 class Solution {
+    //private LinkedList<>[][] mem = new LinkedList<>[inputArray.length][inputArray.length];
+
     public List<Integer> diffWaysToCompute(String input) {
-        Scanner in = new Scanner(input);
+        return helper(input, 0, input.length());
+
+    }
+
+    public List<Integer> helper(String input, int begin, int end){
+        char[] inputArray = input.toCharArray();
         List<Integer> res = new LinkedList<Integer>();
-        if(formula.length() <= 1){
-            res.add(in.nextInt());
-            return new LinkedList<>
+        List<Integer> res1 = new LinkedList<Integer>();
+        List<Integer> res2 = new LinkedList<Integer>();
+        for(int i = begin; i < end; i ++){
+            if(inputArray[i] == '+' || inputArray[i] == '-' || inputArray[i] == '*'){
+                res1 = helper(input, begin, i);
+                res2 = helper(input, i + 1, end);
+            }
+            for(int tmp1 : res1){
+                for(int tmp2 : res2){
+                    switch(inputArray[i]){
+                        case '+' : res.add(tmp1 + tmp2); break;
+                        case '-' : res.add(tmp1 - tmp2); break;
+                        case '*' : res.add(tmp1 * tmp2); break;
+                    }
+                }
+            }
         }
-        StringBuilder formula = new StringBuilder(input);
-        
-        
+        if(res.size() == 0){
+            res.add(Integer.parseInt(new String(inputArray, begin, end - begin)));
+        }
+        return res;
     }
 }
