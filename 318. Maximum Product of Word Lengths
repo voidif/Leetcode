@@ -13,6 +13,8 @@ Input: ["a","aa","aaa","aaaa"]
 Output: 0 
 Explanation: No such pair of words.
 */
+
+//solution 1 without memorization, 230 ms
 class Solution {
    public int maxProduct(String[] words) {
       int res = 0;
@@ -47,3 +49,35 @@ class StringComparator implements Comparator<String> {
       return o2.length() - o1.length();
    }
 }
+//solution 2 with memorize, 47 ms
+class Solution {
+    private boolean[][] letterArray;
+    
+    public int maxProduct(String[] words) {
+        letterArray = new boolean[words.length][26];
+       for(int i = 0; i < words.length; i ++){
+           for(char tmp : words[i].toCharArray()){
+               letterArray[i][tmp - 'a'] = true; 
+           }
+       }
+       int res = 0;
+       for(int i = 0; i < words.length; i ++){
+           for(int j = i + 1; j < words.length; j ++){
+               if(! isShareCommonLetters(i, j)){
+                   res = res > words[i].length() * words[j].length() ? res : words[i].length() * words[j].length();
+               }
+           }
+       }
+       return res;
+    }
+
+    public boolean isShareCommonLetters(int a, int b){
+       for(int i = 0; i < 26; i ++){
+           if(letterArray[a][i] && letterArray[b][i]){
+               return true;
+           }
+       }
+       return false;
+    }
+}
+
