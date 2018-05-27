@@ -21,6 +21,8 @@ What if the BST is modified (insert/delete operations) often and you need to fin
  *     TreeNode(int x) { val = x; }
  * }
  */
+ 
+ //old solution, list all node in tree and find k
 class Solution {
    public int kthSmallest(TreeNode root, int k) {
       ArrayList<Integer> array = new ArrayList<>();
@@ -34,6 +36,39 @@ class Solution {
       array.add(root.val);
       if(root.right != null){
          iter(root.right, array);
+      }
+   }
+}
+//new solution, only find first k node
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    private int res = 0;;
+    private int curNum = 1;
+   public int kthSmallest(TreeNode root, int k) {
+      iter(root, k);
+      return res;
+   }
+   public void iter(TreeNode root, int k){
+       if(curNum > k){
+            return;
+       }
+      if(root.left != null){
+         iter(root.left, k);
+      }
+       if(curNum == k){
+           res = root.val;
+       }
+       curNum ++;
+      if(root.right != null){
+         iter(root.right, k);
       }
    }
 }
