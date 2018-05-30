@@ -1,0 +1,53 @@
+class Solution {
+    public List<String> readBinaryWatch(int num) {
+        int limit = Math.min(num, 4);
+        List<String> res = new ArrayList<>();
+        for(int i = 0; i <= limit; i ++){
+            create(res, i, num - i);
+        }
+        return res;
+    }
+        
+        public void create(List<String> res, int hourNum, int minuteNum){
+            List<String> hours = new LinkedList<>();
+            List<String> minutes = new LinkedList<>();
+            enumTime(hours, new int[4], 0, hourNum, 4, 1);
+            enumTime(minutes, new int[6], 0, minuteNum, 6, 0);
+            for(String tmpHour : hours){
+                for(String tmpMinute : minutes){
+                    res.add(new String(tmpHour + ":" + tmpMinute));
+                }
+            }
+        }
+        
+        public void enumTime(List<String> timeRes, int[] tmpRes, int begin, int igniteNum, int totalLight, int flag){
+            if(igniteNum + begin > totalLight) {return;}
+            if(igniteNum == 0){
+                String tmp = bitsToTime(tmpRes, flag);
+                if(tmp != null){
+                    timeRes.add(tmp);
+                }
+            }
+            for(int i = begin; i < totalLight; i ++){
+                tmpRes[i] = 1;
+                enumTime(timeRes, tmpRes, i + 1, igniteNum - 1, totalLight, flag);
+                tmpRes[i] = 0;
+            }
+        }
+        
+        public String bitsToTime(int[] input, int flag){
+            int time = 0;
+            for(int i = 0; i < input.length; i++){
+                time = (int)(time + input[i] * Math.pow(2, input.length - i - 1));
+            }
+            if(flag != 1 && time < 10){
+                return new String("0" + time);
+            } else if(flag == 1 && time > 11){
+                return null;
+            } else {
+                return String.valueOf(time);
+            }
+            
+        }
+    
+}
