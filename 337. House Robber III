@@ -1,0 +1,43 @@
+//dp with memorization by HashMap<>;
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    private Map<TreeNode, Integer> memo;
+    public int rob(TreeNode root) {
+        memo = new HashMap<TreeNode, Integer>();
+        return dp(root);
+    }
+    
+    public int dp(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+        Integer res = memo.get(root);
+        if(res != null){
+            return res;
+        }
+        if(root.left == null && root.right == null){
+            return root.val;
+        } else {
+            int leftChild = 0;
+            int rightChild = 0;
+            if(root.left != null){
+                leftChild = dp(root.left.left) + dp(root.left.right);
+            }
+            if(root.right != null){
+                rightChild = dp(root.right.left) + dp(root.right.right);
+            }
+            res = Math.max(root.val + leftChild + rightChild, dp(root.left) + dp(root.right));
+            memo.putIfAbsent(root, res);
+        }
+        return res;
+    }
+    
+}
