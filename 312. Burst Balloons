@@ -1,0 +1,45 @@
+//classic dp
+class Solution {
+    public int maxCoins(int[] nums) {
+        if(nums.length == 0){
+            return 0;
+        }
+        
+        int n = nums.length;
+        int[][] table = new int[n][n];
+        for(int i = 0; i < n; i ++){
+            table[i][i] = getValue(nums, i - 1) * nums[i] * getValue(nums, i + 1);
+        }
+        for(int i = 1; i < n; i ++){
+            for(int j = 0; i + j < n; j ++){
+                table[j][j + i] = dp(table, nums, j, j + i);
+            }
+        }
+        return table[0][n - 1];
+    }
+    
+    public int dp(int[][] table, int[] nums, int x, int y) {
+        int res = 0;
+        for(int i = x; i <= y; i ++){
+            res = Math.max(res, getValue(nums, x - 1) * nums[i] * getValue(nums, y + 1) + getValueTable(table, x, i - 1) + getValueTable(table, i + 1, y));
+        }
+        return res;
+    }
+                  
+    public int getValue(int[] nums, int i){
+        if(i == -1 || i == nums.length){
+            return 1;
+        }
+        else {
+            return nums[i];
+        }
+    }
+    
+    public int getValueTable(int[][] table, int i, int j){
+        if(i > j || i == table.length){
+            return 0;
+        } else {
+            return table[i][j];
+        }
+    }
+}
