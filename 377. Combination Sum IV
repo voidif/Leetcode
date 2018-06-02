@@ -20,3 +20,29 @@ class Solution {
         }
     }
 }
+//dp, top-down
+class Solution {
+    private int[] table;
+    public int combinationSum4(int[] nums, int target) {
+        table = new int[target + 1];
+        Arrays.fill(table, 0);
+        table[0] = 1;
+        return helper(nums, target);
+    }
+    public int helper(int[] nums, int target){
+        if(target == 0){
+            return 1;
+        }
+        if(table[target] != 0){
+            return table[target];
+        }
+        int res = 0;
+        for(int i = 0; i < nums.length; i ++){
+            if(target >= nums[i]){
+                res = res + helper(nums, target - nums[i]);
+            }
+        }
+        table[target] = res;
+        return res;
+    }
+}
