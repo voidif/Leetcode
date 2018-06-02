@@ -1,0 +1,32 @@
+class Solution {
+    public int maxProfit(int[] prices) {
+        return helper(prices, 0, prices.length - 1);
+    }
+    
+    public int helper(int[] prices, int begin, int end){
+        if(begin >= end){
+            return 0;
+        }
+        int mid = (begin + end) / 2;
+        int leftMax = helper(prices, begin, mid);
+        int rightMax = helper(prices, mid + 1, end);
+        int leftRightMax = maxi(prices, mid + 1, end) - mini(prices, begin, mid);
+        return Math.max(leftMax, Math.max(rightMax, leftRightMax));
+    }
+    
+    public int maxi(int[] price, int begin, int end){
+        int max = Integer.MIN_VALUE;
+        for(int i = begin; i <= end; i ++){
+            max = Math.max(max, price[i]);
+        }
+        return max;
+    }
+    
+    public int mini(int[] price, int begin, int end){
+        int min = Integer.MAX_VALUE;
+        for(int i = begin; i <= end; i ++){
+            min = Math.min(min, price[i]);
+        }
+        return min;
+    }
+}
