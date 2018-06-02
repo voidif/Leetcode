@@ -1,0 +1,22 @@
+//recursive solution, cost too much time
+class Solution {
+    private int res = 0;
+    public int combinationSum4(int[] nums, int target) {
+        helper(nums, target);
+        return res;
+    }
+    public void helper(int[] nums, int target){
+        for(int i = 0; i < nums.length; i ++){
+            if(target < nums[i]){
+                continue;
+            }
+            if(target == nums[i]){
+                res ++;
+                continue;
+            }
+            if(target > nums[i]){
+                helper(nums, target - nums[i]);
+            }
+        }
+    }
+}
