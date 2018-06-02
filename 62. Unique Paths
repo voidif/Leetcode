@@ -1,0 +1,22 @@
+//for m x n, there are (m*n-2)*(m*n-3)*...*m/C(n-1)(n-1) solutions
+class Solution {
+    public int uniquePaths(int m, int n) {
+        int i = Math.max(m, n);
+        int j = Math.min(m, n);
+        return (int)(factorial(i + j - 2, j - 1) / factorial(j - 1, j - 1));
+    }
+    
+    public long factorial(int i, int num){
+        System.out.println(i + " " + num);
+        if(i <= 0){
+            return 1;
+        }
+        long res = 1;
+        while(num > 0){
+            res = res * i;
+            i --;
+            num --;
+        }
+        return res;
+    }
+}
