@@ -6,3 +6,6 @@ class Solution {
         return 2 * (n/2 - lastRemaining(n / 2) + 1);
     }
 }
+
+
+//solution 2 need to be fulled, iteratally, O(log n)
