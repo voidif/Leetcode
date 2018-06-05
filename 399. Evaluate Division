@@ -27,11 +27,15 @@ class Solution {
         if(traveledNodes.contains(node)){
             return -1.0;
         }
+        Map<String, Double> tmp = map.get(node);
+        if(tmp == null){
+            return -1.0;
+        }
         if(node.equals(neiborNode)){
-            return 1.0;
+            return val;
         }
         
-        Map<String, Double> tmp = map.get(node);
+        
         double res = - 1.0;
         traveledNodes.add(node);
         for(String curNode : tmp.keySet()){
