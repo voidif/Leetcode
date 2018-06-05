@@ -1,0 +1,49 @@
+//find a topologic sort in a DAG
+class Solution {
+    private Map<Integer, ArrayList<Integer>> map;
+    private int[] nodeCount;
+    private int[] res;
+    private int curIndex;
+    
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        if(numCourses <= 0){
+            return new int[0];
+        }
+        map = new HashMap<>();
+        nodeCount = new int[numCourses];
+        res = new int[numCourses];
+        curIndex = 0;
+        for(int i = 0; i < prerequisites.length; i++){
+            ArrayList<Integer> tmp = map.getOrDefault(prerequisites[i][1], new ArrayList<Integer>());
+            tmp.add(prerequisites[i][0]);
+            map.put(prerequisites[i][1], tmp);
+            nodeCount[prerequisites[i][0]] ++;
+        }
+        //System.out.println(map.size());
+        int index = findZero();
+        while(index != -1){
+            for(int tmp : map.getOrDefault(index, new ArrayList<Integer>())){
+                nodeCount[tmp] --;
+            }
+            nodeCount[index] = -1;
+            res[curIndex] = index;
+            curIndex ++;
+            index = findZero();
+        }
+        if(curIndex == numCourses){
+            return res;
+        } else {
+            return new int[0];
+        }
+    }
+    
+    public int findZero(){
+        for(int i = 0; i < nodeCount.length; i ++){
+            if(nodeCount[i] == 0){
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+}
