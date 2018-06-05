@@ -1,0 +1,40 @@
+//find a topologic sort in a DAG
+class Solution {
+    private Map<Integer, ArrayList<Integer>> map;
+    private int[] nodeCount;
+    
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if(numCourses <= 0){
+            return true;
+        }
+        map = new HashMap<>();
+        nodeCount = new int[numCourses];
+        for(int i = 0; i < prerequisites.length; i++){
+            ArrayList<Integer> tmp = map.getOrDefault(prerequisites[i][0], new ArrayList<Integer>());
+            tmp.add(prerequisites[i][1]);
+            map.put(prerequisites[i][0], tmp);
+            nodeCount[prerequisites[i][1]] ++;
+        }
+        //System.out.println(map.size());
+        int index = findZero();
+        while(index != -1){
+            for(int tmp : map.getOrDefault(index, new ArrayList<Integer>())){
+                nodeCount[tmp] --;
+            }
+            map.remove(index);
+            nodeCount[index] = -1;
+            index = findZero();
+        }
+        return map.size() == 0;
+    }
+    
+    public int findZero(){
+        for(int i = 0; i < nodeCount.length; i ++){
+            if(nodeCount[i] == 0){
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+}
