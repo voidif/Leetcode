@@ -1,0 +1,50 @@
+class Solution {
+    private Map<String, List<String>> map;
+    public List<String> findItinerary(String[][] tickets) {
+        map = new HashMap<>();
+        for(String[] tmp : tickets){
+            List tmpList = map.getOrDefault(tmp[0], new LinkedList<String>());
+            tmpList.add(tmp[1]);
+            map.put(tmp[0], tmpList);
+            if(!map.containsKey(tmp[1])){
+                map.put(tmp[1], new LinkedList<String>());
+            }
+        }
+        //System.out.println(map.size());
+        List<String> result = new ArrayList<>();
+        String cur = "JFK";
+        return result;
+    }
+    public void getPath(List<String> res, int count, String cur) throw Exception{
+        if(count == tickets.length){
+            throws new Exception();
+        }
+        List<String> tmp = map.get(cur);
+        if(tmp.size() == 0){
+            return;
+        }
+        String newCur = getNext(tmp);
+        res.add(newCur);
+        tmp.remove(newCur);
+        getPath(res, count + 1, newCur);
+        newCur =
+    }
+    
+    public String getNext(List<String> nextList){
+        if(nextList == null || nextList.size() == 0){
+            return null;
+        }
+        String res = null;
+        for(String tmp : nextList){
+            if(!map.containsKey(tmp)){
+                continue;
+            }
+            if(res != null){
+                res = res.compareTo(tmp) < 0 ? res : tmp;
+            } else {
+                res = tmp;
+            }
+        }
+        return res;
+    }
+}
