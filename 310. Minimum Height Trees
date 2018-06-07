@@ -1,0 +1,49 @@
+//repeatly delete all current leafs until we get only 1 or 2 nodes left.
+
+class Solution {
+    private LinkedList<Integer>[] tree;
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        if(n == 1){
+            LinkedList<Integer> res = new LinkedList<Integer>();
+            res.add(0);
+            return res;
+        }
+        tree = new LinkedList[n];
+        for(int i = 0; i < tree.length; i ++){
+            tree[i] = new LinkedList<>();
+        }
+        for(int[] tmp : edges){
+            tree[tmp[0]].add(tmp[1]);
+            tree[tmp[1]].add(tmp[0]);
+        }
+        int nodeNum = n;
+        LinkedList<Integer> leaf = new LinkedList<Integer>();
+        for(int i = 0; i < tree.length; i ++){
+            if(tree[i].size() == 1){
+                leaf.add(i);
+            }
+        }
+        while(nodeNum > 2){
+            int m = leaf.size();
+            for(int loop = 0; loop < m; loop ++){
+                int curLeaf = leaf.pollFirst();
+                LinkedList<Integer> tmp = tree[tree[curLeaf].peek()];
+                ListIterator<Integer> iter = tmp.listIterator();
+            
+                while(iter.hasNext()){
+                    if(iter.next() == curLeaf){
+                        iter.remove();
+                        break;
+                    }
+                }
+
+                if(tmp.size() == 1){
+                    leaf.addLast(tree[curLeaf].peek());
+                }
+                nodeNum --;
+            }
+            
+        }
+        return leaf;
+    }
+}
