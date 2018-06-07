@@ -1,0 +1,37 @@
+class Solution {
+    public boolean isBipartite(int[][] graph) {
+        int[] nodeLevel = new int[graph.length];
+        Arrays.fill(nodeLevel, -1);
+        LinkedList<Integer> nodeList = new LinkedList<>();
+        for(int i = 0; i < graph.length; i ++){
+            if(nodeLevel[i] == -1){
+                nodeList.clear();
+                nodeList.add(i);
+                nodeLevel[i] = 0;
+                int currentLevel = 1;
+                while(nodeList .size() > 0){
+                    int curLevelNum = nodeList.size();
+                    for(int num = 0; num < curLevelNum; num ++){
+                        int curNode = nodeList.pollFirst();
+                        int[] nextLevel = graph[curNode];
+                        for(int tmp : nextLevel){
+                            if(nodeLevel[tmp] != -1){
+                                if(((nodeLevel[tmp] % 2) ^ (currentLevel % 2)) == 1){
+                                    System.out.println(tmp);
+                                    System.out.println(nodeLevel[tmp]);
+                                    System.out.println(currentLevel);
+                                    return false;
+                                }
+                            } else {
+                                nodeLevel[tmp] = currentLevel;
+                                nodeList.addLast(tmp);
+                            }
+                        }
+                    }
+                    currentLevel ++;
+                }
+            }
+        }
+        return true;
+    }
+}
