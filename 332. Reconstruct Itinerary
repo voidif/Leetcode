@@ -1,50 +1,34 @@
+//The graph must be Eulerian since we know that a Eulerian path exists.
+//we use Hierholzer's algorithm
+//Everytime we travel a edge, delete it.
+//if there is no more edges to go in a node, add that node to the first of result
+//so the node that has odd edge will be add to the end of result, that is exactly we need
+//use priorityqueue to ensure the lexical order.
+
 class Solution {
-    private Map<String, List<String>> map;
+    private Map<String, PriorityQueue<String>> map;
     public List<String> findItinerary(String[][] tickets) {
         map = new HashMap<>();
         for(String[] tmp : tickets){
-            List tmpList = map.getOrDefault(tmp[0], new LinkedList<String>());
+            map.putIfAbsent(tmp[0], new PriorityQueue<String>());
+            PriorityQueue tmpList = map.get(tmp[0]);
             tmpList.add(tmp[1]);
-            map.put(tmp[0], tmpList);
-            if(!map.containsKey(tmp[1])){
-                map.put(tmp[1], new LinkedList<String>());
-            }
         }
         //System.out.println(map.size());
-        List<String> result = new ArrayList<>();
+        LinkedList<String> result = new LinkedList<>();
         String cur = "JFK";
+        getPath(result, cur);
         return result;
     }
-    public void getPath(List<String> res, int count, String cur) throw Exception{
-        if(count == tickets.length){
-            throws new Exception();
+    public void getPath(LinkedList<String> res, String cur) {
+        PriorityQueue<String> tmpList = map.get(cur);
+        if(tmpList != null && tmpList.size() != 0){
+            while(tmpList.size() > 0){
+                String next = tmpList.poll();
+                getPath(res, next);
+            }
         }
-        List<String> tmp = map.get(cur);
-        if(tmp.size() == 0){
-            return;
-        }
-        String newCur = getNext(tmp);
-        res.add(newCur);
-        tmp.remove(newCur);
-        getPath(res, count + 1, newCur);
-        newCur =
+        res.addFirst(cur);
     }
     
-    public String getNext(List<String> nextList){
-        if(nextList == null || nextList.size() == 0){
-            return null;
-        }
-        String res = null;
-        for(String tmp : nextList){
-            if(!map.containsKey(tmp)){
-                continue;
-            }
-            if(res != null){
-                res = res.compareTo(tmp) < 0 ? res : tmp;
-            } else {
-                res = tmp;
-            }
-        }
-        return res;
-    }
 }
