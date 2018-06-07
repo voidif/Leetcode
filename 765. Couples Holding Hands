@@ -1,0 +1,38 @@
+//the minimum number to exchange is the cycle error couples number - cycle number 
+class Solution {
+    public int minSwapsCouples(int[] row) {
+        int n = row.length;
+        int count = 0;
+        int[] ptn = new int[n];
+        int[] pos = new int[n];
+        
+        for(int i = 0; i < n; i++){
+            if(i % 2 == 0){
+                ptn[i] = i + 1;
+            } else {
+                ptn[i] = i - 1;
+            }
+            pos[row[i]] = i;
+        }
+            
+        for(int i = 0; i < n; i = i + 2){
+            while(ptn[pos[ptn[row[i]]]] != i){
+                int p1 = row[i];
+                int p2 = row[ptn[pos[ptn[row[i]]]]];
+                int l1 = i;
+                int l2 = ptn[pos[ptn[row[i]]]];
+                
+                System.out.println(ptn[pos[ptn[row[i]]]]);
+                row[l1] = p2;
+                row[l2] = p1;
+                
+                pos[p2] = l1;
+                pos[p1] = l2;
+                
+                count ++;
+            }
+
+        }
+        return count;
+    }
+}
