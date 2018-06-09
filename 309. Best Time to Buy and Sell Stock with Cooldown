@@ -1,0 +1,52 @@
+//very wrong and completed solution
+class Solution {
+    public int maxProfit(int[] prices) {
+        ArrayList<Integer> recorder = new ArrayList<>();
+
+        int n = prices.length;
+        int first = 0;
+        int last = 0;
+        for(; last < n - 1; last ++){
+            if(prices[last + 1] <= prices[last]){
+                if(first != last){
+                    recorder.add(first);
+                    recorder.add(last);
+                }
+                first = last + 1;
+            }
+        }
+        if(last > first){
+            recorder.add(first);
+            recorder.add(last);
+        }
+        if(recorder.size() == 0){
+            return 0;
+        }
+        int[] table = new int[n];
+        table[recorder.get(1)] = prices[recorder.get(1)] - prices[recorder.get(0)];
+        table[recorder.get(1) - 1] = prices[recorder.get(1) - 1] - prices[recorder.get(0)];
+        for(int i = 3; i < recorder.size(); i = i + 2){
+            if(recorder.get(i - 1) == recorder.get(i - 2) + 1){
+                table[recorder.get(i) - 1] = Math.max(table[recorder.get(i - 2)] + a(recorder.get(i - 1) + 1,  recorder.get(i) - 1, prices),
+                        table[recorder.get(i - 2) - 1] + a(recorder.get(i - 1),  recorder.get(i) - 1, prices));
+                table[recorder.get(i)] = Math.max(table[recorder.get(i - 2)] + a(recorder.get(i - 1) + 1,  recorder.get(i), prices),
+                        table[recorder.get(i - 2) - 1] + a(recorder.get(i - 1),  recorder.get(i), prices));
+            } else {
+                table[recorder.get(i) - 1] = table[recorder.get(i - 2)] + a(recorder.get(i - 1),  recorder.get(i) - 1, prices);
+                table[recorder.get(i)] = table[recorder.get(i - 2)] + a(recorder.get(i - 1),  recorder.get(i), prices);
+            }
+        }
+        return table[recorder.get(recorder.size() - 1)];
+
+
+    }
+
+    public int a(int begin, int end, int[] prices){
+        if(begin >= end){
+            return 0;
+        } else {
+            return prices[end] - prices[begin];
+        }
+    }
+
+}
