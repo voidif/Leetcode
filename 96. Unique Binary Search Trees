@@ -55,3 +55,20 @@ class Solution {
         return res;
     }
 }
+
+//actaully, we could use only a 1-d array to memorize the table
+class Solution {
+    public int poorPigs(int buckets, int minutesToDie, int minutesToTest) {
+        if(buckets <= 1){
+            return 0;
+        }
+        int n = minutesToTest / minutesToDie + 1;
+        int total = n;
+        int i = 1;
+        while(total < buckets){
+            total *= n;
+            i ++;
+        }
+        return i;
+    }
+}
