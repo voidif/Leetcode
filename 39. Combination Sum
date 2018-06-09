@@ -1,0 +1,27 @@
+//traditional backtracking method
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        List<Integer> tmpRes = new ArrayList<Integer>();
+        backtracking(res, tmpRes, target, candidates, 0);
+        return res;
+    }
+    
+    public void backtracking(List<List<Integer>> res, List<Integer> tmpRes, int target, int[] candidates, int index){
+        if(target < 0){
+            return;
+        }
+        if(target == 0){
+            res.add(new ArrayList<Integer>(tmpRes));
+        }
+        for(int i = index; i < candidates.length; i ++){
+            if(candidates[i] > target){
+                return;
+            }
+            tmpRes.add(candidates[i]);
+            backtracking(res, tmpRes, target - candidates[i], candidates, i);
+            tmpRes.remove(tmpRes.size() - 1);
+        }
+    }
+}
