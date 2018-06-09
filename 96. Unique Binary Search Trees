@@ -20,3 +20,38 @@ class Solution {
         return res;
     }
 }
+
+//Recuriive with dp
+class Solution {
+    private int[][] table;
+    public int numTrees(int n) {
+        table = new int[n][n];
+        for(int[] tmp: table){
+            Arrays.fill(tmp, -1);
+        }
+        
+        
+        return helper(0, n - 1);
+    }
+    
+    public int helper(int begin, int end){
+        // if(begin > end){
+        //     return 0;
+        // }
+        if(begin >= end){
+            return 1;
+        }
+        if(table[begin][end] != -1){
+            return table[begin][end];
+        }
+
+        int res = 0;
+        for(int i = begin; i <= end; i ++){
+            int left = helper(begin, i - 1);
+            int right = helper(i + 1, end);
+            res = res + left * right;
+        }
+        table[begin][end] = res;
+        return res;
+    }
+}
