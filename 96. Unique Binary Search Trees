@@ -58,17 +58,19 @@ class Solution {
 
 //actaully, we could use only a 1-d array to memorize the table
 class Solution {
-    public int poorPigs(int buckets, int minutesToDie, int minutesToTest) {
-        if(buckets <= 1){
-            return 0;
+    private int[] table;
+    public int numTrees(int n) {
+        table = new int[n + 1];
+        table[0] = 1;
+        table[1] = 1;
+        for(int i = 2; i <= n; i ++){
+            int res = 0;
+            for(int j = 0; j < i; j++){
+                res += table[j] * table[i - j - 1];
+            }
+            table[i] = res;
         }
-        int n = minutesToTest / minutesToDie + 1;
-        int total = n;
-        int i = 1;
-        while(total < buckets){
-            total *= n;
-            i ++;
-        }
-        return i;
+        return table[n];
     }
+    
 }
