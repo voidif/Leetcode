@@ -50,3 +50,24 @@ class Solution {
     }
 
 }
+//
+class Solution {
+    public int maxProfit(int[] prices) {
+
+        int n = prices.length;
+        if(n == 0){
+            return 0;
+        }
+        int[] notHold = new int[n];
+        int[] hold = new int[n];
+        int[] justSell = new int[n];
+        hold[0] = - prices[0];
+        for(int i = 1; i < n; i++){
+            notHold[i] = Math.max(notHold[i - 1], justSell[i - 1]);
+            hold[i] = Math.max(notHold[i - 1] - prices[i], hold[i - 1]);
+            justSell[i] = hold[i - 1] + prices[i];
+        }
+        return Math.max(notHold[n - 1], justSell[n - 1]);
+    }
+
+}
