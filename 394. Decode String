@@ -1,0 +1,36 @@
+class Solution {
+    public String decodeString(String s) {
+        int index = 0;
+        int n = s.length();
+        Stack<String> charStack = new Stack<>();
+        Stack<Integer> countStack = new Stack<>();
+        String res = new String();
+        while(index < n){
+            char curChar = s.charAt(index);
+            if(curChar <= '9' && curChar >= '0'){
+                int count = curChar - '0';
+                index ++;
+                while(curChar <= '9' && curChar >= '0'){
+                    count = count * 10 + (s.charAt(index) - '0');
+                }
+            } else if(curChar == '['){
+                charStack.push(res);
+                res = "";
+                index ++;
+            } else if(curChar == ']'){
+                StringBuilder tmp = new StringBuilder(charStack.pop());
+                int count = countStack.pop();
+                while(count > 0){
+                    tmp.append(res);
+                    count --;
+                }
+                res = tmp.toString();
+                index ++;
+            } else {
+                res = res + curChar;
+                index ++;
+            }
+        }
+        return res;
+    }
+}
