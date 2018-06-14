@@ -10,9 +10,11 @@ class Solution {
             if(curChar <= '9' && curChar >= '0'){
                 int count = curChar - '0';
                 index ++;
-                while(curChar <= '9' && curChar >= '0'){
+                while(s.charAt(index) <= '9' && s.charAt(index) >= '0'){
                     count = count * 10 + (s.charAt(index) - '0');
+                    index ++;
                 }
+                countStack.push(count);
             } else if(curChar == '['){
                 charStack.push(res);
                 res = "";
