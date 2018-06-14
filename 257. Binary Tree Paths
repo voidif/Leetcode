@@ -1,0 +1,50 @@
+//bakctracking
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> res = new ArrayList<>();
+        StringBuilder tmpRes = new StringBuilder();
+        if(root == null){
+            return res;
+        } else {
+            tmpRes.append(root.val);
+        }
+        backtracking(res, tmpRes, root);
+        return res;
+    }
+    
+    public void backtracking(List<String> res, StringBuilder tmpRes, TreeNode root){
+        if(root.left == null && root.right == null){
+            res.add(tmpRes.toString());
+            return;
+        }
+        if(root.left != null){
+            tmpRes.append("->");
+            tmpRes.append(root.left.val);
+            backtracking(res, tmpRes, root.left);
+            delete(tmpRes);
+        }
+        if(root.right != null){
+            tmpRes.append("->");
+            tmpRes.append(root.right.val);
+            backtracking(res, tmpRes, root.right);
+            delete(tmpRes);
+        }
+    }
+    
+    public void delete(StringBuilder string){
+        while(string.charAt(string.length() - 1) != '>'){
+            string.deleteCharAt(string.length() - 1);
+        }
+        string.deleteCharAt(string.length() - 1);
+        string.deleteCharAt(string.length() - 1);
+    }
+}
