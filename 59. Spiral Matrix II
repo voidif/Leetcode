@@ -1,0 +1,53 @@
+class Solution {
+    public int[][] generateMatrix(int n) {
+        int[][] res = new int[n][n];
+        int i = 1;
+        int[] cur = {0, 0, 1};
+        while(i < n * n){
+            res[cur[0]][cur[1]] = i;
+            getNext(res, cur, n);
+            i ++;
+        }
+        res[cur[0]][cur[1]] = i;
+        return res;
+    }
+    
+    public void getNext(int[][] res, int[] cur, int n){
+        switch (cur[2]){
+            case 1: {
+                if(cur[1] < n - 1 && res[cur[0]][cur[1] + 1] == 0){
+                    cur[1] ++;
+                    return;
+                }
+                break;
+            }
+            case 2: {
+                if(cur[0] < n - 1 && res[cur[0] + 1][cur[1]] == 0){
+                    cur[0] ++;
+                    return;
+                }
+                break;
+            }
+            case 3: {
+                if(cur[1] > 0 && res[cur[0]][cur[1] - 1] == 0){
+                    cur[1] --;
+                    return;
+                }
+                break;
+            }
+            case 4: {
+                if(cur[0] > 0 && res[cur[0] - 1][cur[1]] == 0){
+                    cur[0] --;
+                    return;
+                }
+                break;
+            }
+            default:break;
+        }
+        cur[2] ++;
+        if(cur[2] > 4){
+            cur[2] = 1;
+        }
+        getNext(res, cur, n);
+    }
+}
