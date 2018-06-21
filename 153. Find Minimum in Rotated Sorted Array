@@ -1,0 +1,19 @@
+class Solution {
+    public int findMin(int[] nums) {
+        return helper(nums, 0, nums.length - 1);
+    }
+    
+    public int helper(int[] nums, int begin, int end){
+        if(begin >= end){
+            return nums[begin];
+        }
+        int middle = (begin + end) / 2;
+        if(nums[begin] > nums[middle]){
+            return helper(nums, begin + 1, middle);
+        }
+        if(nums[middle] > nums[end]){
+            return helper(nums, middle + 1, end);
+        }
+        return nums[begin];
+    }
+}
