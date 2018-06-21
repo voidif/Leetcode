@@ -1,0 +1,13 @@
+class Solution {
+    public boolean isPowerOfTwo(int n) {
+        if(n <= 0){
+            return false;
+        }
+        int one = 0;
+        for(int i = 0; i < 32; i ++){
+            one += n & 1;
+            n = n >> 1;
+        }
+        return one == 1;
+    }
+}
