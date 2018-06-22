@@ -1,0 +1,21 @@
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int[] price = new int[nums.length + 1];
+        price[0] = 0;
+        price[1] = nums[0];
+        for(int i = 2; i <= nums.length; i ++){
+            price[i] = nums[i - 1] + price[i - 1];
+        }
+        int buyPrice = price[0];
+        int profit = Integer.MIN_VALUE;
+        for(int i = 1; i <= nums.length; i ++){
+            if(profit < price[i] - buyPrice){
+                profit = price[i] - buyPrice;
+            }
+            if(price[i] < buyPrice) {
+                buyPrice = price[i];
+            }
+        }
+        return profit;
+    }
+}
