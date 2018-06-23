@@ -1,0 +1,22 @@
+//this question is very similar to stock price problem
+
+class Solution {
+    public boolean increasingTriplet(int[] nums) {
+        if(nums.length < 3){
+            return false;
+        }
+        int[] data = new int[2];
+        data[0] = nums[0];
+        data[1] = Integer.MAX_VALUE;
+        for(int tmp : nums){
+            if(tmp > data[1]){
+                return true;
+            } else if(tmp > data[0]){
+                data[1] = Math.min(tmp, data[1]);
+            } else {
+                data[0] = tmp;
+            }
+        }
+        return false;
+    }
+}
