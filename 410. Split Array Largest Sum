@@ -1,0 +1,42 @@
+//The difference between this question and load-balance is this question divides array to different 
+//non-empty continuous subarrays.
+Solution {
+    public int splitArray(int[] nums, int m) {
+        int maxNum = 0;
+        int sum = 0;
+        for(int tmp : nums){
+            maxNum = Math.max(maxNum, tmp);
+            sum += tmp;
+        }
+        if(m == 1){
+            return sum;
+        }
+        int l = maxNum;
+        int r = sum;
+        while(l < r){
+            int mid = (l + r) / 2;
+            if(valid(nums, m, mid)){
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return l;
+    }
+    
+    public boolean valid(int[] nums, int m, int maxSum){
+        int sum = 0;
+        int count = 0;
+        for(int tmp : nums){
+            sum += tmp;
+            if(sum > maxSum){
+                sum = tmp;
+                count ++;
+                if(count > m){
+                    return false;
+                }
+            }
+        }
+        return count < m;
+    }
+}
