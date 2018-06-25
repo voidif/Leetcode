@@ -1,0 +1,16 @@
+class Solution {
+    public boolean isPowerOfFour(int num) {
+        if(num < 1){
+            return false;
+        }
+        int pow2 = 0;
+        int pow4 = 0;
+        for(int i = 1; i <= 16; i ++){
+            pow4 += num & 1;
+            num = num >> 1;
+            pow2 += num & 1;
+            num = num >> 1;
+        }
+        return pow4 == 1 && pow2 == 0;
+    }
+}
