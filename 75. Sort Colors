@@ -1,0 +1,35 @@
+//create 2 pointer, point to the end of 0s and the begin of 2s.
+//Then create a iterator from begin to end.
+//if current number is 0, swap it with the next number after the end of 0s
+//if 2, swap it with the number before the begin of 2s.
+class Solution {
+    public void sortColors(int[] nums) {
+        int l = 0;
+        int r = nums.length - 1;
+        for(int i = 0; i <= r;){
+            switch(nums[i]){
+                case 0:{
+                    swap(nums, i, l);
+                    l ++;
+                    i ++;
+                    break;
+                }
+                case 1:{
+                    i ++;
+                    break;
+                }
+                case 2:{
+                    swap(nums, i, r);
+                    r --;
+                }
+                default: break;
+            }
+        }
+    }
+    
+    public void swap(int[] nums, int l, int r){
+        int tmp = nums[l];
+        nums[l] = nums[r];
+        nums[r] = tmp;
+    }
+}
