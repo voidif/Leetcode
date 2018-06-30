@@ -1,0 +1,31 @@
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        if(nums.length == 0){
+            return 0;
+        }
+        Map<Integer, Integer> data = new HashMap<>();
+        int max = 1;
+        for(int tmp : nums){
+            if(data.get(tmp) != null){
+                continue;
+            }
+            data.put(tmp, 1);
+            Integer left = data.get(tmp - 1);
+            Integer right = data.get(tmp + 1);
+            if(left != null && right != null){
+                data.put(tmp - left, left + 1 + right);
+                data.put(tmp + right, left + 1 + right);
+                max = Math.max(max, left + 1 + right);
+            } else if(left != null){
+                data.put(tmp - left, left + 1);
+                data.put(tmp, left + 1);
+                max = Math.max(max, left + 1);
+            } else if(right != null) {
+                data.put(tmp + right, right + 1);
+                data.put(tmp, right + 1);
+                max = Math.max(max, right + 1);
+            }
+        }
+        return max;
+    }
+}
