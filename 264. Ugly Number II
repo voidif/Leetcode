@@ -1,0 +1,17 @@
+class Solution {
+    public int nthUglyNumber(int n) {
+        int[] data = new int[n];
+        data[0] = 1;
+        int d2 = 0;
+        int d3 = 0;
+        int d5 = 0;
+        for(int i = 1; i < n; i ++){
+            data[i] = Math.min(data[d2] * 2, Math.min(data[d3] * 3, data[d5] * 5));
+            if(data[i] == data[d2] * 2){d2 ++;}
+            if(data[i] == data[d3] * 3){d3 ++;}
+            if(data[i] == data[d5] * 5){d5 ++;}
+            //System.out.print(data[i] + " ");
+        }
+        return data[n - 1];
+    }
+}
