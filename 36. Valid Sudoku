@@ -1,0 +1,48 @@
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        int[] data = new int[10];
+        for(int i = 0; i < 9; i ++){
+            for(int j = 0; j < 9; j ++){
+                if(board[i][j] != '.'){
+                    if(data[board[i][j] - '0'] == 1){
+                        return false;
+                    } else {
+                        data[board[i][j] - '0'] = 1;
+                    }
+                } 
+            }
+            Arrays.fill(data, -1);
+        }
+        //System.out.println("1 clear");
+        for(int i = 0; i < 9; i ++){
+            for(int j = 0; j < 9; j ++){
+                if(board[j][i] != '.'){
+                    if(data[board[j][i] - '0'] == 1){
+                        return false;
+                    } else {
+                        data[board[j][i] - '0'] = 1;
+                    }
+                } 
+            }
+            Arrays.fill(data, -1);
+        }
+        //System.out.println("2 clear");
+        for(int i = 0; i < 9; i = i + 3){
+            for(int offsetJ = 0; offsetJ < 9; offsetJ = offsetJ + 3){
+                for(int offsetI = 0; offsetI < 3; offsetI ++){
+                    for(int j = 0; j < 3; j ++){
+                        if(board[i + offsetI][j + offsetJ] != '.'){
+                            if(data[board[i + offsetI][j + offsetJ] - '0'] == 1){
+                                return false;
+                            } else {
+                                data[board[i + offsetI][j + offsetJ] - '0'] = 1;
+                            }
+                        } 
+                    }
+                }
+                Arrays.fill(data, -1);
+            }
+        }
+        return true;
+    }
+}
