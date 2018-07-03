@@ -1,0 +1,32 @@
+class Solution {
+    public int trap(int[] height) {
+        int left = 0;
+        int volumn = 0;
+        int highestIndex = 0;
+        int tmp = 0;
+        for(int i = 0; i < height.length; i ++){
+            if(height[i] > tmp){
+                highestIndex = i;
+                tmp = height[i];
+            }
+        }
+        //System.out.println(highestIndex);
+        for(int i = 0; i < highestIndex; i ++){
+            if(height[i] > left){
+                left = height[i];
+            } else {
+                volumn = volumn + (left - height[i]);
+            }
+        }
+        //System.out.println(volumn);
+        left = 0;
+        for(int i = height.length - 1; i > highestIndex; i --){
+            if(height[i] > left){
+                left = height[i];
+            } else {
+                volumn = volumn + (left - height[i]);
+            }
+        }
+        return volumn;
+    }
+}
