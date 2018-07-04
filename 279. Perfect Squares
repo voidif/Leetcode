@@ -1,0 +1,27 @@
+class Solution {
+    public int numSquares(int n) {
+        int maxSqrt = (int)Math.sqrt(n);
+        int[] sqrtList = new int[maxSqrt];
+        for(int i = 0; i < sqrtList.length; i ++){
+            sqrtList[i] = (i + 1) * (i + 1);
+        }
+        int[] table = new int[n];
+        table[0] = 1;
+        for(int i = 1; i < n; i ++){
+            int count = Integer.MAX_VALUE;
+            for(int j = 0; j < maxSqrt; j ++){
+                if(sqrtList[j] < i + 1){
+                    count = Math.min(count, table[i - sqrtList[j]] + 1);
+                } else {
+                    if(sqrtList[j] == i + 1){
+                        count = 1;
+                    }
+                    break;
+                }
+            }
+            //System.out.print(count + " ");
+            table[i] = count;
+        }
+        return table[n - 1];
+    }
+}
