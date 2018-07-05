@@ -1,0 +1,28 @@
+class Solution {
+    public String countAndSay(int n) {
+        char[] data = new char[]{'1'};
+        int len = 1;
+        int count = 1;
+        while(count < n){
+            char[] tmp = new char[len * 2];
+            int tmpLen = 0;
+            for(int i = 0; i < len;){
+                char cur = data[i];
+                int duplicateCount = 1;
+                while(i < len - 1 && data[i + 1] == cur){
+                    i ++;
+                    duplicateCount ++;
+                }
+                tmp[tmpLen] = (char)(duplicateCount + (int)'0');
+                tmp[tmpLen + 1] = cur;
+                tmpLen = tmpLen + 2;
+                i ++;
+            }
+            data = tmp;
+            len = tmpLen;
+            count ++;
+        }
+        
+        return new String(Arrays.copyOf(data, len));
+    }
+}
