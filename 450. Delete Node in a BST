@@ -1,0 +1,90 @@
+//reference:https://blog.csdn.net/claroja/article/details/54617344
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if(root == null){
+            return root;
+        }
+        //if delete root
+        if(root.val == key){
+            //there are 4 cases;
+            if(root.left == null){
+                return root.right;
+            }
+            if(root.right == null){
+                return root.left;
+            }
+            TreeNode replaceNode = root.left;
+            if(replaceNode.right == null){
+                replaceNode.right = root.right;
+                return replaceNode;
+            } else {
+                while(replaceNode.right.right != null){
+                    replaceNode = replaceNode.right;
+                }
+                root.val = replaceNode.right.val;
+                replaceNode.right = replaceNode.right.left;
+                return root;
+            }
+        }
+        //if not root
+        TreeNode previous = root;
+        TreeNode cur = root;
+        while(cur != null && cur.val != key){
+            previous = cur;
+            if(cur.val < key){
+                cur = cur.right;
+            } else {
+                cur = cur.left;
+            }
+        }
+        //System.out.println(previous.val);
+        //System.out.println(cur.val);
+        if(cur == null){
+            return root;
+        }
+
+        //4 cases
+        if(cur.left == null){
+            if(previous.left == cur){
+                previous.left = cur.right;
+            } else {
+                previous.right = cur.right;
+            }
+            return root;
+        }
+        if(cur.right == null){
+            if(previous.left == cur){
+                previous.left = cur.left;
+            } else {
+                previous.right = cur.left;
+            }
+            return root;
+        }
+        TreeNode replaceNode = cur.left;
+        if(replaceNode.right == null){
+            replaceNode.right = cur.right;
+            if(previous.left == cur){
+                previous.left = replaceNode;
+            } else {
+                previous.right = replaceNode;
+            }
+        } else {
+            while(replaceNode.right.right != null){
+                replaceNode = replaceNode.right;
+            }
+            cur.val = replaceNode.right.val;
+            replaceNode.right = replaceNode.right.left;
+        }
+        return root;
+    }
+}
