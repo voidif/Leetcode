@@ -1,0 +1,35 @@
+//calculate inDegree and outDegree
+class Solution {
+    public boolean isValidSerialization(String preorder) {
+        if(preorder.equals("#")){
+            return true;
+        }
+        int inDegree = 0;
+        int outDegree = 0;
+        char[] charArray = preorder.toCharArray();
+        if(charArray[0] == '#'){
+            return false;
+        } else {
+            outDegree = 2;
+        }
+        for(int i = 1; i < charArray.length; i ++){
+            if(charArray[i] == ','){
+                continue;
+            }
+            if(charArray[i] == '#'){
+                inDegree ++;
+            } else {
+                inDegree ++;
+                outDegree = outDegree + 2;
+                while(i < charArray.length && charArray[i] <= '9' && charArray[i] >= '0'){
+                    i ++;
+                }
+            }
+            if(outDegree == inDegree && i < charArray.length - 1){
+                return false;
+            }
+        }
+        //System.out.print(inDegree + " " + outDegree);
+        return inDegree == outDegree;
+    }
+}
