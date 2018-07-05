@@ -1,0 +1,25 @@
+//return the max volumn water we could get
+class Solution {
+    public int maxArea(int[] height) {
+        int l = 0;
+        int r = height.length - 1;
+        int max = 0;
+        while(l < r){
+            max = Math.max(max, Math.min(height[l], height[r]) * (r - l));
+            
+            
+            if(height[l] < height[r]){
+                int i = l + 1;
+                while(i < r && height[i] < height[l]) {i ++;}
+                l = i;
+            } else {
+                int j = r - 1;
+                while(l < j && height[j] < height[r]) {j --;}
+                r = j;
+            }
+            
+            
+        }
+        return max;
+    }
+}
