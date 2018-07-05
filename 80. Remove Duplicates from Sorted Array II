@@ -1,0 +1,39 @@
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        if(nums.length == 0){
+            return 0;
+        }
+        int curNum = nums[0] - 1;
+        int fast = 0;
+        int slow = 0;
+        int duplicateCount = 1;
+        while(fast < nums.length){
+            if(nums[fast] == curNum){
+                duplicateCount ++;
+            } else {
+                curNum = nums[fast];
+                duplicateCount = 1;
+            }
+            if(duplicateCount == 3){
+                while(fast < nums.length && nums[fast] == curNum){
+                    fast ++;
+                }
+                if(fast < nums.length){
+                    curNum = nums[fast];
+                    duplicateCount = 1;
+                } else {
+                    return slow;
+                }
+            }
+            if(fast != slow){
+                int tmp = nums[fast];
+                nums[fast] = nums[slow];
+                nums[slow] = tmp;
+            }
+            fast ++;
+            slow ++;
+            
+        }
+        return slow;
+    }
+}
