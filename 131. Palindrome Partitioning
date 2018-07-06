@@ -1,0 +1,32 @@
+class Solution {
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<List<String>>();
+        ArrayList<String> tmpRes = new ArrayList<>();
+        backtracking(res, tmpRes, s.toCharArray(), 0);
+        return res;
+    }
+    public void backtracking(List<List<String>> res, ArrayList<String> tmpRes, char[] charList, int index){
+        if(index == charList.length){
+            res.add(new ArrayList<>(tmpRes));
+            return;
+        }
+        for(int i = index; i < charList.length; i ++){
+            if(isPalindrome(charList, index, i)){
+                tmpRes.add(new String(charList, index, i - index + 1));
+                backtracking(res, tmpRes, charList, i + 1);
+                tmpRes.remove(tmpRes.size() - 1);
+            }
+        }
+    }
+    
+    public boolean isPalindrome(char[] charList, int begin, int end){
+        while(begin < end){
+            if(charList[begin] != charList[end]){
+                return false;
+            }
+            begin ++;
+            end --;
+        }
+        return true;
+    }
+}
