@@ -1,0 +1,19 @@
+class Solution {
+    public boolean isPalindrome(int x) {
+        if(x < 0){
+            return false;
+        }
+        LinkedList<Integer> memo = new LinkedList<>();
+        while(x > 0){
+            int tmp = x % 10;
+            memo.add(tmp);
+            x = x / 10;
+        }
+        while(memo.size() >= 2){
+            if(memo.removeFirst() != memo.removeLast()){
+                return false;
+            }
+        }
+        return true;
+    }
+}
