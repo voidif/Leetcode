@@ -1,0 +1,26 @@
+class Solution {
+    public String getHint(String secret, String guess) {
+        int[] table = new int[10];
+        char[] secretChar = secret.toCharArray();
+        char[] guessChar = guess.toCharArray();
+        int a = 0;
+        int b = 0;
+        for(char tmp : secretChar){
+            table[tmp - '0'] ++;
+        }
+        for(int i = 0; i < guessChar.length; i ++){
+            if(table[guessChar[i] - '0'] > 0){
+                if(secretChar[i] == guessChar[i]){
+                    a ++;
+                } else {
+                    b ++;
+                }
+                table[guessChar[i] - '0'] --;
+            } else if(secretChar[i] == guessChar[i]){
+                a ++;
+                b --;
+            }
+        }
+        return a + "A" + b + "B";
+    }
+}
