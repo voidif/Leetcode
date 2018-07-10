@@ -1,0 +1,32 @@
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        ArrayList<Integer> tmpRes = new ArrayList<>();
+        int[] repeat = new int[nums.length];
+        backtracking(res, tmpRes, 0, nums, repeat);
+        return res;
+    }
+    
+    public void backtracking(List<List<Integer>> res, ArrayList<Integer> tmpRes, int count , int[] nums, int[] repeat){
+        if(count == nums.length){
+            res.add(new ArrayList(tmpRes));
+            return;
+        }
+        Integer cur = null;
+        for(int i = 0; i < nums.length; i ++){
+            if(repeat[i] == 1){
+                continue;
+            }
+            if(cur != null && cur == nums[i]){
+                continue;
+            }
+            tmpRes.add(nums[i]);
+            repeat[i] = 1;
+            backtracking(res, tmpRes, count + 1, nums, repeat);
+            repeat[i] = 0;
+            tmpRes.remove(tmpRes.size() - 1);
+            cur = nums[i];
+        }
+    }
+}
