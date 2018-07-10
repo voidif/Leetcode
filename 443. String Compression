@@ -1,0 +1,46 @@
+class Solution {
+    public int compress(char[] chars) {
+        int index = 0;
+        char cur = 0;
+        int count = 0;
+        for(int i = 0; i < chars.length; i ++){
+            if(chars[i] != cur){
+                if(count > 1){
+                    char[] tmpArray = toChar(count);
+                    for(char tmp : tmpArray){
+                        chars[index] = tmp;
+                        index ++;
+                    }
+                }
+                cur = chars[i];
+                chars[index] = chars[i];
+                index ++;
+                count = 1;
+            } else {
+                count ++;
+            }
+        }
+        if(count > 1){
+            char[] tmpArray = toChar(count);
+            for(char tmp : tmpArray){
+                chars[index] = tmp;
+                index ++;
+            }
+        }
+        return index;
+    }
+    
+    public char[] toChar(int count){
+        ArrayList<Integer> tmp = new ArrayList<>();
+        while(count > 0){
+            tmp.add(count % 10);
+            count = count / 10;
+        }
+        char[] res = new char[tmp.size()];
+        for(int i = 0; i < res.length; i ++){
+            res[res.length - i - 1] = (char)(tmp.get(i) + (int)'0');
+        }
+        return res;
+    }
+    
+}
