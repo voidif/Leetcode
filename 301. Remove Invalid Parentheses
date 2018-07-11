@@ -1,0 +1,31 @@
+class Solution {
+    public List<String> removeInvalidParentheses(String s) {
+        List<String> res = new ArrayList<>();
+        remove(res, s, 0, 0, new char[]{'(', ')'});
+        return res;
+    }
+
+    public void remove(List<String> res, String s, int goodStart, int safeDeletePosition, char[] pattern){
+        int stack = 0;
+        for(int i = goodStart; i < s.length(); i ++){
+            if(s.charAt(i) == pattern[0]){ stack ++;}
+            if(s.charAt(i) == pattern[1]){ stack --;}
+            if(stack >= 0) {
+                continue;
+            } else {
+                for(int j = safeDeletePosition; j < s.length(); j ++){
+                    if(s.charAt(j) == pattern[1] && (j == safeDeletePosition || s.charAt(j - 1) != pattern[1])){
+                        remove(res, s.substring(0, j) + s.substring(j + 1, s.length()), i, j, pattern);
+                    }
+                }
+                return;
+            }
+        }
+        if(pattern[0] == '('){
+            String reverse = new StringBuilder(s).reverse().toString();
+            remove(res, reverse, 0, 0, new char[]{')', '('});
+        } else {
+            res.add(new StringBuilder(s).reverse().toString());
+        }
+    }
+}
