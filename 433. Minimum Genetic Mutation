@@ -1,0 +1,42 @@
+class Solution {
+    public int minMutation(String start, String end, String[] bank) {
+        if(start.equals(end)){
+            return 0;
+        }
+        HashSet<String> bankSet = new HashSet<>();
+        for(String tmp : bank){
+            bankSet.add(tmp);
+        }
+        HashSet<String> visited = new HashSet<>();
+        LinkedList<String> queue = new LinkedList<>();
+        char[] charList = new char[]{'A', 'C', 'G', 'T'};
+        int length = 1;
+        int level = 1;
+        visited.add(start);
+        queue.add(start);
+        while(length > 0){
+            int tmpLength = length;
+            length = 0;
+            for(int i = 0; i < tmpLength; i ++){
+                String tmp = queue.remove();
+                for(int j = 0; j < tmp.length(); j ++){
+                    char[] curList = tmp.toCharArray();
+                    for(int k = 0; k <charList.length; k ++){
+                        curList[j] = charList[k];
+                        String mutation = new String(curList);
+                        if(mutation.equals(end) && bankSet.contains(mutation)){
+                            return level;
+                        }
+                        if(!visited.contains(mutation) && bankSet.contains(mutation)){
+                            length ++;
+                            visited.add(mutation);
+                            queue.add(mutation);
+                        }
+                    }
+                }
+            }
+            level ++;
+        }
+        return -1;
+    }
+}
