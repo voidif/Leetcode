@@ -1,0 +1,38 @@
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> bankSet = new HashSet<>();
+        for(String tmp : wordList){
+            bankSet.add(tmp);
+        }
+        HashSet<String> visited = new HashSet<>();
+        LinkedList<String> queue = new LinkedList<>();
+        int length = 1;
+        int level = 2;
+        visited.add(beginWord);
+        queue.add(beginWord);
+        while(length > 0){
+            int tmpLength = length;
+            length = 0;
+            for(int i = 0; i < tmpLength; i ++){
+                String tmp = queue.remove();
+                for(int j = 0; j < tmp.length(); j ++){
+                    char[] curList = tmp.toCharArray();
+                    for(int k = 0; k < 26; k ++){
+                        curList[j] = (char)('a' + k);
+                        String mutation = new String(curList);
+                        if(mutation.equals(endWord) && bankSet.contains(mutation)){
+                            return level;
+                        }
+                        if(!visited.contains(mutation) && bankSet.contains(mutation)){
+                            length ++;
+                            visited.add(mutation);
+                            queue.add(mutation);
+                        }
+                    }
+                }
+            }
+            level ++;
+        }
+        return 0;
+    }
+}
