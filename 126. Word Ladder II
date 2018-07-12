@@ -1,0 +1,71 @@
+class Solution {
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> bankSet = new HashSet<>();
+        for(String tmp : wordList){
+            bankSet.add(tmp);
+        }
+        HashMap<String, LinkedList<String>> visited = new HashMap<>();
+        LinkedList<String> queue = new LinkedList<>();
+        int length = 1;
+        int level = 1;
+        LinkedList<String> beginArray = new LinkedList<>();
+        beginArray.add(Integer.toString(level));
+        visited.put(beginWord, beginArray);
+        queue.add(beginWord);
+        List<List<String>> res = new ArrayList<List<String>>();
+        boolean isFound = false;
+        while(length > 0){
+            int tmpLength = length;
+            length = 0;
+            for(int i = 0; i < tmpLength; i ++){
+                String tmp = queue.remove();
+                for(int j = 0; j < tmp.length(); j ++){
+                    char[] curList = tmp.toCharArray();
+                    for(int k = 0; k < 26; k ++){
+                        curList[j] = (char)('a' + k);
+                        String mutation = new String(curList);
+                        if(mutation.equals(endWord) && bankSet.contains(mutation)){
+                            isFound = true;
+                            LinkedList<String> tmpRes = new LinkedList<>();
+                            tmpRes.addFirst(mutation);
+                            getRes(visited, tmpRes, res, tmp);
+                        }
+                        if(bankSet.contains(mutation)){
+                            if(!visited.containsKey(mutation)){
+                                length ++;
+                                LinkedList<String> initArray = new LinkedList<>();
+                                initArray.add(Integer.toString(level + 1));
+                                initArray.add(tmp);
+                                visited.putIfAbsent(mutation, initArray);
+                                queue.add(mutation);
+                            } else if(Integer.parseInt(visited.get(mutation).get(0)) > level){
+                                visited.get(mutation).add(tmp);
+                            }
+                        }
+                    }
+                }
+            }
+            if(isFound){
+                return res;
+            }
+            level ++;
+        }
+        return res;
+    }
+    
+    public void getRes(HashMap<String, LinkedList<String>> visited, LinkedList<String> tmpRes, List<List<String>> res, String found){
+        tmpRes.addFirst(found);
+        LinkedList<String> fathers = visited.get(found);
+        if(Integer.parseInt(fathers.get(0)) == 1){
+            res.add(new LinkedList(tmpRes));
+            tmpRes.removeFirst();
+            return;
+        }
+        for(String tmp : fathers){
+            if(visited.containsKey(tmp)){
+                getRes(visited, tmpRes, res, tmp);
+            }
+        }
+        tmpRes.removeFirst();
+    }
+}
