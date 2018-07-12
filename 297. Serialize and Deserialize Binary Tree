@@ -7,6 +7,8 @@
  *     TreeNode(int x) { val = x; }
  * }
  */
+ //Scaneer class is time-cosumed;
+ //recommand String.split();
 public class Codec {
 
     // Encodes a tree to a single string.
