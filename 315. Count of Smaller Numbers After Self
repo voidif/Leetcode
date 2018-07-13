@@ -1,0 +1,57 @@
+//runtime cost: 6 ms to 200 ms
+class Solution {
+    
+    public List<Integer> countSmaller(int[] nums) {
+        int[] indexList = new int[nums.length];
+        int[] countList = new int[nums.length];
+        for(int i = 0; i < nums.length; i ++){
+            indexList[i] = i;
+        }
+        mergeSort(nums, 0, nums.length - 1, indexList, countList);
+        ArrayList<Integer> res = new ArrayList<>();
+        for(int tmp : countList){res.add(tmp);}
+
+        return res;
+    }
+    
+    
+    //end included
+    public void mergeSort(int[] nums, int begin, int end, int[] indexList, int[] countList){
+        if(begin >= end){
+            return;
+        }
+        int mid = (begin + end) / 2;
+        mergeSort(nums, begin, mid, indexList, countList);
+        mergeSort(nums, mid + 1, end, indexList, countList);
+        int index = 0;
+        int i = begin;
+        int j = mid + 1;
+        int count = 0;
+        //warning: this copy all length of indexList is O(n), will cost a lot of time
+        //recomand change:
+        //        for(int k = begin; k <= end; k ++){
+        //          helper[k] = indexList[k];
+        //        }
+        int[] helper = Arrays.copyOf(indexList, indexList.length);
+        while(i <= mid && j <= end){
+            if(nums[helper[i]] <= nums[helper[j]]){
+                indexList[begin + index] = helper[i];
+                countList[indexList[begin + index]] += count;
+                index ++;
+                i ++;
+            } else {
+                count ++;
+                indexList[begin + index] = helper[j];
+                index ++;
+                j ++;
+            }
+        }
+        while(i <= mid){
+            indexList[begin + index] = helper[i];
+            countList[indexList[begin + index]] += count;
+            i ++;
+            index ++;
+        }
+    }
+}
+
