@@ -1,0 +1,36 @@
+class Solution {
+    public boolean validUtf8(int[] data) {
+        return helper(data, 0);
+    }
+    
+    public boolean helper(int[] data, int index){
+        int count = 0;
+        int tmp = data[index];
+        while((tmp & 128) == 128){
+            tmp = tmp << 1;
+            count ++;
+        }
+        if(count >= 5 || count == 1){
+            return false;
+        }
+        if(count != 0){
+            count --;
+        }
+        index ++;
+        while(index < data.length && count > 0){
+            if(!((data[index] & 128) == 128 && ((data[index] << 1) & 128) == 0)){
+                return false;
+            }
+            index ++;
+            count --;
+        }
+        if(count > 0){
+            return false;
+        }
+        if(index < data.length){
+            return helper(data, index);
+        } else {
+            return true;
+        }
+    }
+}
