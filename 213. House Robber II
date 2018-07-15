@@ -1,0 +1,24 @@
+class Solution {
+    public int rob(int[] nums) {
+        if(nums.length == 0){
+            return 0;
+        }
+        if(nums.length == 1){
+            return nums[0];
+        }
+        return Math.max(getMax(nums, 0, nums.length - 2), getMax(nums, 1, nums.length - 1));
+    }
+    
+    public int getMax(int[] nums, int begin, int end){
+        if(nums.length == 2){
+            return nums[begin];
+        }
+        int[] table = new int[nums.length - 1];
+        table[0] = nums[begin];
+        table[1] = Math.max(nums[begin], nums[begin + 1]);
+        for(int i = 2; i < nums.length - 1; i++){
+            table[i] = Math.max(table[i - 2] + nums[begin + i], table[i - 1]);
+        }
+        return table[nums.length - 2];
+    }
+}
