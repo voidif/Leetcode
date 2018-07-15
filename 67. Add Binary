@@ -1,0 +1,60 @@
+class Solution {
+    public String addBinary(String a, String b) {
+        char[] charA = a.toCharArray();
+        char[] charB = b.toCharArray();
+        //current number in A
+        int indexA = charA.length - 1;
+        //B
+        int indexB = charB.length - 1;
+        int carry = 0;
+        LinkedList<Integer> tmpRes = new LinkedList<>();
+        //add from right to left
+        while(indexA >= 0 || indexB >= 0) {
+            if(indexA >= 0 && indexB >= 0){
+                carry = add(charA[indexA] - '0', charB[indexB] - '0', carry, tmpRes);
+                indexA --;
+                indexB --;
+            } else if(indexA < 0){
+                carry = add(0, charB[indexB] - '0', carry, tmpRes);
+                indexB --;
+            } else {
+                carry = add(charA[indexA] - '0', 0, carry, tmpRes);
+                indexA --;
+            }
+        }
+        if(carry == 1){
+            tmpRes.addFirst(1);
+        }
+        char[] resChar = new char[tmpRes.size()];
+        int index = 0;
+        for(int tmp : tmpRes){
+            resChar[index] = (char)(tmp + '0');
+            index ++;
+        }
+        return new String(resChar);
+        
+    }
+    
+    public int add(int a, int b, int carry, LinkedList<Integer> res){
+        int sum = a + b + carry;
+        switch (sum) {
+            case 0 : {
+                res.addFirst(0);
+                return 0;
+            }
+            case 1 : {
+                res.addFirst(1);
+                return 0;
+            }
+            case 2 : {
+                res.addFirst(0);
+                return 1;
+            }
+            case 3 : {
+                res.addFirst(1);
+                return 1;
+            }
+            default : return 0;
+        }
+    }
+}
