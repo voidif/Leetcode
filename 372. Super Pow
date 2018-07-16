@@ -1,0 +1,29 @@
+class Solution {
+    public int superPow(int a, int[] b) {
+        int ans = 1;
+        for(int i = 0; i < b.length; i ++){
+            ans = (pow(ans, 10 , 1337) * pow(a, b[i], 1337)) % 1337;
+        }
+        return ans;
+    }
+    
+    public int superPowMode(int a, int[] b){
+        return 0;
+    }
+    
+    public int pow(int a, int pow, int k){
+        if(pow == 0){
+            return 1;
+        }
+        a = a % k;
+        int ans = 1;
+        while(pow > 0){
+            if(pow % 2 != 0){
+                ans = (ans * a) % k;
+            }
+            a = (a * a) % k;
+            pow = pow / 2;
+        }
+        return ans;
+    }
+}
