@@ -1,0 +1,41 @@
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        if(n == 0){
+            return new ArrayList();
+        }
+        int[] column = new int[n];
+        int[] crossUp = new int[2 * n + 1];
+        int[] crossDown = new int[2 * n + 1];
+        List<List<String>> res = new ArrayList<List<String>>();
+        ArrayList<String> tmpRes = new ArrayList<>();
+        backtracking(res, tmpRes, 0, n, column, crossUp, crossDown);
+        return res;
+    }
+    
+    public void backtracking(List<List<String>> res, ArrayList<String> tmpRes, int row, int n, int[] column, int[] crossUp, int[] crossDown){
+        if(row == n){
+            res.add(new ArrayList(tmpRes));
+            return;
+        }
+        for(int i = 0; i < n; i ++){
+            if(column[i] != 1 && crossUp[n + (i - row)] != 1 && crossDown[row + i] != 1){
+                column[i] = 1;
+                crossUp[n + (i - row)] = 1;
+                crossDown[row + i] = 1;
+                tmpRes.add(makeString(i, n));
+                backtracking(res, tmpRes, row + 1, n, column, crossUp, crossDown);
+                tmpRes.remove(tmpRes.size() - 1);
+                column[i] = 0;
+                crossUp[n + (i - row)] = 0;
+                crossDown[row + i] = 0;
+            }
+        }
+    }
+    
+    public String makeString(int i, int n){
+        char[] res = new char[n];
+        Arrays.fill(res, '.');
+        res[i] = 'Q';
+        return new String(res);
+    }
+}
