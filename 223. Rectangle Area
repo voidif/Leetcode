@@ -1,0 +1,14 @@
+class Solution {
+    public int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
+        int SumArea = (D - B) * (C - A) + (H - F) * (G - E);
+        //overlap x right border
+        int tmpXR = Math.min(C, G);
+        //overlap x left border
+        int tmpXL = Math.max(A, E);
+        int tmpYR = Math.min(D, H);
+        int tmpYL = Math.max(B, F);
+        int dupX = tmpXR > tmpXL ? tmpXR - tmpXL : 0;
+        int dupY = tmpYR > tmpYL ? tmpYR - tmpYL : 0;
+        return SumArea - dupX * dupY;
+    }
+}
