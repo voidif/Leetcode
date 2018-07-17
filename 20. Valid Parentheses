@@ -1,0 +1,22 @@
+class Solution {
+    public boolean isValid(String s) {
+        char[] charSet = new char[]{'(', ')', '{', '}', '[', ']'};
+        Stack<Integer> stack = new Stack();
+        for(char tmp : s.toCharArray()){
+            for(int i = 0; i < 6; i ++){
+                if(charSet[i] == tmp){
+                    if(i % 2 == 0){
+                        stack.push(i / 2);
+                    } else {
+                        if(stack.isEmpty() || stack.peek() != (i / 2)){
+                            return false;
+                        }
+                        stack.pop();
+                    }
+                    continue;
+                }
+            }
+        }
+        return stack.isEmpty();
+    }
+}
