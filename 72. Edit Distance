@@ -1,0 +1,28 @@
+class Solution {
+    public int minDistance(String word1, String word2) {
+        if(word1 == null){
+            return word2 == null ? 0 : word2.length();
+        } else if(word2 == null){
+            return word1.length();
+        }
+        char[] char1 = word1.toCharArray();
+        char[] char2 = word2.toCharArray();
+        int[][] table = new int[char1.length + 1][char2.length + 1];
+        for(int i = 0; i <= char1.length; i ++){
+            table[i][0] = i;
+        }
+        for(int i = 0; i <= char2.length; i ++){
+            table[0][i] = i;
+        }
+        for(int i = 1; i <= char1.length; i ++){
+            for(int j = 1; j <= char2.length; j ++){
+                if(char1[i - 1] == char2[j - 1]){
+                    table[i][j] = table[i - 1][j - 1];
+                } else {
+                    table[i][j] = Math.min(Math.min(table[i - 1][j], table[i][j - 1]), table[i - 1][j - 1]) + 1;
+                }
+            }
+        }
+        return table[char1.length][char2.length];
+    }
+}
