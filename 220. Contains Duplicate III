@@ -1,0 +1,31 @@
+//bucket mapping
+//bucket length = t + 1;
+//index == long index = ((long)nums[i] - (long)Integer.MIN_VALUE) / ((long)t + 1);
+class Solution {
+    public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+        if(nums.length == 0 || k == 0 || t < 0){
+            return false;
+        }
+        Map<Long, Long> set = new HashMap<>();
+        int i = 0;
+        while(i < nums.length){
+            long index = ((long)nums[i] - (long)Integer.MIN_VALUE) / ((long)t + 1);
+            //System.out.println(index);
+            if(set.containsKey(index)){
+                return true;
+            }
+            if(set.containsKey(index - 1) && nums[i] - set.get(index - 1) <= t){
+                return true;
+            }
+            if(set.containsKey(index + 1) && set.get(index + 1) - nums[i] <= t){
+                return true;
+            } else if(set.size() == k){
+                long removeIndex = ((long)nums[i - k] - Integer.MIN_VALUE) / (t + 1);
+                set.remove(removeIndex);
+            }
+            set.put(index, (long)nums[i]);
+            i ++;
+        }
+        return false;
+    }
+}
