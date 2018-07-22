@@ -1,0 +1,17 @@
+class Solution {
+    public int minPatches(int[] nums, int n) {
+        int add = 0;
+        long total = 0;
+        int index = 0;
+        while(total < (long)n){
+            if(index < nums.length && nums[index] <= total + 1){
+                total = total + nums[index];
+                index ++;
+            } else {
+                total = total + total + 1;
+                add ++;
+            }
+        }
+        return add;
+    }
+}
