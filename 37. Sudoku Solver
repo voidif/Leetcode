@@ -1,0 +1,63 @@
+class Solution {
+    
+    boolean[][][] data = new boolean[3][9][10];
+    
+    public void solveSudoku(char[][] board) {
+        for(int i = 0; i < 9; i ++){
+            for(int j = 0; j < 9; j ++){
+                if(board[i][j] != '.'){
+                    data[0][i][board[i][j] - '0'] = true;
+                    data[1][j][board[i][j] - '0'] = true;
+                    data[2][(i / 3) * 3 + j / 3][board[i][j] - '0'] = true;
+                }
+            }
+        }
+        backtracking(board, 0, 0);
+    }
+    
+    public int backtracking(char[][] board, int i, int j){
+        if(i >= 9){
+            return 1;
+        }
+        if(board[i][j] != '.'){
+            int nextI = i;
+            int nextJ = j;
+            if(j == 8){
+                nextI = i + 1;
+                nextJ = 0;
+            } else {
+                nextJ ++;
+            }
+            return backtracking(board, nextI, nextJ);
+        }
+        for(int k = 1; k <= 9; k ++){
+            if(data[0][i][k] || data[1][j][k] || data[2][(i / 3) * 3 + j / 3][k]){
+                continue;
+            }
+            board[i][j] = (char)(k + '0');
+            
+            data[0][i][k] = true;
+            data[1][j][k] = true;
+            data[2][(i / 3) * 3 + j / 3][k] = true;
+            
+            int nextI = i;
+            int nextJ = j;
+            if(j == 8){
+                nextI = i + 1;
+                nextJ = 0;
+            } else {
+                nextJ ++;
+            }
+            int res = backtracking(board, nextI, nextJ);
+            if(res == 1){
+                return 1;
+            } else {
+                data[0][i][k] = false;
+                data[1][j][k] = false;
+                data[2][(i / 3) * 3 + j / 3][k] = false;
+                board[i][j] = '.';
+            }
+        }
+        return 0;
+    }
+}
