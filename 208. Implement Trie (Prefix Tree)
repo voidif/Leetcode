@@ -1,0 +1,83 @@
+class Trie {
+
+    //root node, val is 0;
+    private TrieTree root;
+    
+    /** Initialize your data structure here. */
+    public Trie() {
+        root = new TrieTree((char)0);
+    }
+    
+    /** Inserts a word into the trie. */
+    public void insert(String word) {
+        insertHelper(word.toCharArray(), 0, root);
+    }
+    
+    private void insertHelper(char[] word, int index, TrieTree root){
+        if(index == word.length){
+            root.end = true;
+            return;
+        }
+        if(root.childs[word[index] - 'a'] != null){
+            insertHelper(word, index + 1, root.childs[word[index] - 'a']);
+        } else{
+            TrieTree child = new TrieTree(word[index]);
+            root.childs[word[index] - 'a'] = child;
+            insertHelper(word, index + 1, child);
+        }
+        
+    }
+    
+    /** Returns if the word is in the trie. */
+    public boolean search(String word) {
+        char[] wordArray = word.toCharArray();
+        int i = 0;
+        TrieTree cur = root;
+        while(i < wordArray.length){
+            if(cur.childs[wordArray[i] - 'a'] != null){
+                cur = cur.childs[wordArray[i] - 'a'];
+                i ++;
+            } else {
+                return false;
+            }
+        }
+        return cur.end;
+    }
+    
+    
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    public boolean startsWith(String prefix) {
+        char[] wordArray = prefix.toCharArray();
+        int i = 0;
+        TrieTree cur = root;
+        while(i < wordArray.length){
+            if(cur.childs[wordArray[i] - 'a'] != null){
+                cur = cur.childs[wordArray[i] - 'a'];
+                i ++;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+class TrieTree{
+    char val;
+    public TrieTree[] childs;
+    boolean end;
+    
+    public TrieTree(char val){
+        this.val = val;
+        childs = new TrieTree[26];
+        end = false;
+    }
+}
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie obj = new Trie();
+ * obj.insert(word);
+ * boolean param_2 = obj.search(word);
+ * boolean param_3 = obj.startsWith(prefix);
+ */
