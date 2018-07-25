@@ -1,0 +1,20 @@
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> set = new HashSet<>();
+        for(String tmp : wordDict){
+            set.add(tmp);
+        }
+        char[] charArray = s.toCharArray();
+        boolean table[] = new boolean[s.length() + 1];
+        table[0] = true;
+        for(int i = 1; i <= s.length(); i ++){
+            for(int j = 0; j <= i; j ++){
+                if(table[j] && set.contains(new String(charArray, j, i - j))){
+                    table[i] = true;
+                    break;
+                }
+            }
+        }
+        return table[s.length()];
+    }
+}
