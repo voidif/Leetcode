@@ -1,0 +1,40 @@
+//convert 3 sum to 2 sum
+class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+        int abs = Integer.MAX_VALUE;
+        int sum = nums[0] + nums[1] + nums[2];
+        for(int i = 0; i < nums.length - 2; i ++){
+            int subSum = target - nums[i];
+            int l = i + 1;
+            int r = nums.length - 1;
+            while(l < r){
+                int tmpSum = nums[l] + nums[r];
+                if(tmpSum == subSum){
+                    return target;
+                } else {
+                    if(abs > Math.abs(subSum - tmpSum)){
+                        abs = Math.abs(subSum - tmpSum);
+                        sum = tmpSum + nums[i];
+                    }
+                }
+                if(tmpSum < subSum){
+                    while(l < r && nums[l + 1] == nums[l]){
+                        l ++;
+                    }
+                    l ++;
+                } else {
+                    while(l < r && nums[r - 1] == nums[r]){
+                        r --;
+                    }
+                    r --;
+                }
+            }
+            while(i < nums.length - 1 && nums[i + 1] == nums[i]){
+                i ++;
+            }
+
+        }
+        return sum;
+    }
+}
