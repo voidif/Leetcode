@@ -1,0 +1,44 @@
+//convert it to 3 sum problem
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        Arrays.sort(nums);
+        for(int i = 0; i < nums.length - 3; i ++){
+            for(int j = i + 1; j < nums.length - 2; j ++){
+                int sum = target - nums[i] - nums[j];
+                int l = j + 1;
+                int r = nums.length - 1;
+                while(l < r){
+                    int tmpSum = nums[l] + nums[r];
+                    if(tmpSum == sum){
+                        ArrayList<Integer> tmp = new ArrayList<>();
+                        tmp.add(nums[i]);
+                        tmp.add(nums[j]);
+                        tmp.add(nums[l]);
+                        tmp.add(nums[r]);
+                        res.add(tmp);
+                        while(l < r && nums[l + 1] == nums[l]){
+                            l ++;
+                        }
+                        l ++;
+                        while(l < r && nums[r - 1] == nums[r]){
+                            r --;
+                        }
+                        r --;
+                    } else if(tmpSum < sum){
+                        l ++;
+                    } else if(tmpSum > sum){
+                        r --;
+                    }
+                }
+                while(j < nums.length - 1 && nums[j + 1] == nums[j]){
+                    j ++;
+                }     
+            }
+            while(i < nums.length - 1 && nums[i + 1] == nums[i]){
+                i ++;
+            } 
+        }
+        return res;
+    }
+}
