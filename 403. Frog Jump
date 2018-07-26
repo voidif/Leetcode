@@ -1,0 +1,34 @@
+class Solution {
+    public boolean canCross(int[] stones) {
+        if(stones.length >= 2 && stones[1] > 1){
+            return false;
+        }
+        Map<Integer, HashSet<Integer>> table = new HashMap<>();
+        HashSet<Integer> tmpSet = new HashSet<>();
+        tmpSet.add(1);
+        table.put(0, tmpSet);
+        for(int i = 1; i < stones.length; i ++){
+            table.put(stones[i], new HashSet<Integer>());
+        }
+        
+        for(int i = 0; i < stones.length; i ++){
+            for(int step : table.get(stones[i])){
+                if(step == 0){
+                    continue;
+                }
+                int nextStone = stones[i] + step;
+                if(nextStone == stones[stones.length - 1]){
+                    return true;
+                }
+                HashSet<Integer> steps = table.get(nextStone);
+                if(steps == null){
+                    continue;
+                }
+                steps.add(step - 1);
+                steps.add(step);
+                steps.add(step + 1);
+            }
+        }
+        return false;
+    }
+}
