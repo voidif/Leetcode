@@ -1,0 +1,77 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    
+    int switchSmall;
+    int switchLarge;
+    int prev;
+    boolean small = false;
+    boolean large = false;
+    boolean prevSwitch = false;
+    
+    
+    public void recoverTree(TreeNode root) {
+        if(root == null){
+            return;
+        }
+        switchSmall = root.val - 1;
+        switchLarge = root.val - 1;
+        prev = root.val - 1;
+        preOrder1(root);
+        //System.out.println(switchSmall + " " + switchLarge);
+        preOrder2(root);
+    }
+    
+    //find swap position
+    public void preOrder1(TreeNode root){
+        if(root.left != null){
+            preOrder1(root.left);
+        }
+        if(!prevSwitch){
+            prev = root.val;
+            prevSwitch = true;
+        }
+        //System.out.println(root.val);
+        set(prev, root.val);
+        prev = root.val;
+        if(root.right != null){
+            preOrder1(root.right);
+        }
+    }
+    
+    //swap
+    public void preOrder2(TreeNode root){
+        if(root.left != null){
+            preOrder2(root.left);
+        }
+            //System.out.println(root.val);
+        if(root.val == switchSmall){
+            root.val = switchLarge;
+        } else if(root.val == switchLarge){
+            root.val = switchSmall;
+        }
+        if(root.right != null){
+            preOrder2(root.right);
+        }
+    }
+    
+    public void set(int prev, int cur){
+        if(prev > cur){
+            //System.out.println(prev + " " + cur);
+            if(!large){
+                switchLarge = prev;
+                switchSmall = cur;
+                large = true;
+            } else {
+                switchSmall = cur;
+            }
+        }
+    }
+}
