@@ -1,0 +1,46 @@
+//https://leetcode.com/problems/reverse-pairs/discuss/97268/General-principles-behind-problems-similar-to-%22Reverse-Pairs%22
+class Solution {
+    public int reversePairs(int[] nums) {
+        return mergeSort(nums, 0, nums.length - 1);
+    }
+    
+    public int mergeSort(int[] nums, int begin, int end){
+        if(begin >= end){
+            return 0;
+        }
+        int mid = (begin + end) / 2;
+        int count = mergeSort(nums, begin, mid) + mergeSort(nums, mid + 1, end);
+        count += merge(nums, begin, end, mid);
+        return count;
+    }
+    
+    public int merge(int[] nums, int begin, int end, int mid){
+        int count = 0;
+        int[] helper = new int[end - begin + 1];
+        int j = mid;
+        int t = mid + 1;
+        int index = 0;
+        for(int i = begin; i <= mid; i ++){
+            while(j < end){
+                long tmp = 2 * (long)nums[j + 1];
+                if(tmp < (long)nums[i]){
+                    j ++;
+                } else {
+                    break;
+                }
+            }
+            while(t <= end && nums[i] > nums[t]){
+                helper[index] = nums[t];
+                t ++;
+                index ++;
+            }
+            count += (j - mid);
+            helper[index] = nums[i];
+            index ++;
+        }
+        for(int i = 0; i < index; i ++){
+            nums[begin + i] = helper[i];
+        }
+        return count;
+    }
+}
