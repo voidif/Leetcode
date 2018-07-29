@@ -1,0 +1,45 @@
+class Solution {
+    public int countRangeSum(int[] nums, int lower, int upper) {
+        long[] sum = new long[nums.length + 1];
+        for(int i = 1; i <= nums.length; i ++){
+            sum[i] = sum[i - 1] + nums[i - 1];
+        }
+        return mergeSort(sum, 0, nums.length, lower, upper);
+    }
+    
+    public int mergeSort(long[] sum, int begin, int end, int lower, int upper){
+        if(begin >= end){
+            return 0;
+        }
+        int mid = (begin + end) / 2;
+        int count = mergeSort(sum, begin, mid, lower, upper) + mergeSort(sum, mid + 1, end, lower, upper);
+        count += merge(sum, mid, begin, end, lower, upper);
+        return count;
+    }
+    
+    public int merge(long[] sum, int mid, int begin, int end, int lower, int upper){
+        int count = 0;
+        long[] helper = new long[end - begin + 1];
+        int low = mid;
+        int up = mid;
+        int t = mid + 1;
+        int index = 0;
+        for(int i = begin; i <= mid; i ++){
+            while(low + 1 <= end && sum[low + 1] - sum[i] < lower){low ++;}
+            while(up + 1 <= end && sum[up + 1] - sum[i] <= upper){up ++;}
+            while(t <= end && sum[t] < sum[i]){
+                helper[index] = sum[t];
+                t ++;
+                index ++;
+            }
+            helper[index] = sum[i];
+            index ++;
+            
+            count += up - low;
+        }
+        for(int i = 0; i < index; i ++){
+            sum[begin + i] = helper[i];
+        }
+        return count;
+    }
+}https://leetcode.com/submissions/detail/166383200/
