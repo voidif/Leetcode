@@ -1,0 +1,39 @@
+class Solution {
+    public int maximalSquare(char[][] matrix) {
+        if(matrix.length == 0){
+            return 0;
+        }
+        int max = 0;
+        int[] pre = new int[matrix[0].length];
+        for(int i = 0; i < matrix[0].length; i ++){
+            pre[i] = matrix[0][i] - '0';
+            max = Math.max(max, pre[i]);
+        }
+        
+        int[] later = new int[matrix[0].length];
+
+        for(int i = 1; i < matrix.length; i ++){
+            later[0] = matrix[i][0] - '0';
+            max = Math.max(max, later[0]);
+            for(int j = 1; j < matrix[0].length; j ++){
+                int preAera = pre[j - 1];
+                if(matrix[i][j] == '1'){{
+                    int m = 1;
+                    for(; m <= preAera; m ++){
+                        if(matrix[i - m][j] == '0' || matrix[i][j - m] == '0'){
+                            break;
+                        }
+                    }
+                    later[j] = m;
+                    max = Math.max(max, m);
+                    } 
+                } else {
+                    later[j] = 0;
+                }
+            }
+            pre = later;
+            later = new int[matrix[0].length];
+        }
+        return max * max;
+    }
+}
