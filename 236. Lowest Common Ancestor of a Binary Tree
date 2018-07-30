@@ -1,0 +1,53 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        ArrayList<Integer>[] res = new ArrayList[2];
+        helper(res, new ArrayList<Integer>(), p.val, q.val, new int[]{0}, root);
+        //System.out.println(res[0]);
+        //System.out.println(res[1]);
+        TreeNode target = root;
+        int i = 0;
+        while(i < Math.min(res[0].size(), res[1].size()) && res[0].get(i) == res[1].get(i)){
+            if(res[0].get(i) == 0){
+                target = target.left;
+            } else {
+                target = target.right;
+            }
+            i ++;
+        }
+        return target;
+    }
+    
+    
+    public void helper(ArrayList[] res, ArrayList<Integer> tmpRes, int a, int b, int[] total, TreeNode root) {
+        //System.out.print(root.val + " ");
+        if(total[0] == 2){
+            return;
+        }
+        if(root.val == a || root.val == b){
+            res[total[0]] = new ArrayList<Integer>(tmpRes);
+            total[0] ++;
+            //System.out.print("total:" + total[0] + " ");
+        }
+        if(root.left != null){
+            tmpRes.add(0);
+            helper(res, tmpRes, a, b, total, root.left);
+            tmpRes.remove(tmpRes.size() - 1);
+        }
+        
+        if(root.right != null){
+            tmpRes.add(1);
+            helper(res, tmpRes, a, b, total, root.right);
+            tmpRes.remove(tmpRes.size() - 1);
+        }
+    }
+    
+}
