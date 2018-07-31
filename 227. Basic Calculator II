@@ -1,0 +1,40 @@
+class Solution {
+    public int calculate(String s) {
+        Stack<Integer> stack = new Stack<>();
+        int num = 0;
+        char sign = '+';
+        for(int idx = 0; idx < s.length(); idx ++){
+            if(s.charAt(idx) == ' '){
+                continue;
+            }
+            if(s.charAt(idx) >= '0' && s.charAt(idx) <= '9'){
+                num = num * 10 + s.charAt(idx) - '0';
+            } else {
+                cal(num, sign, stack);
+                sign = s.charAt(idx);
+                num = 0;
+            }
+        }
+        cal(num, sign, stack);
+        int sum = 0;
+        while(!stack.isEmpty()){
+            sum += stack.pop();
+        }
+        return sum;
+    }
+    
+    public void cal(int b, char sign, Stack<Integer> stack){
+        if(sign == '+'){
+            stack.push(b);
+        }
+        if(sign == '-'){
+            stack.push(- b);
+        }
+        if(sign == '*'){
+            stack.push(stack.pop() * b);
+        }
+        if(sign == '/'){
+            stack.push(stack.pop() / b);
+        }
+    }
+}
