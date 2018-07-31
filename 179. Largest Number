@@ -1,0 +1,66 @@
+class Solution {
+    public String largestNumber(int[] nums) {
+        Integer[] tmpArray = Arrays.stream(nums).boxed().toArray( Integer[]::new );
+        Arrays.sort(tmpArray, new Comparator<Integer>(){
+            @Override
+            public int compare(Integer a, Integer b){
+                if(a == b){
+                    return 0;
+                }
+                int[] numA = getNumArray(a);
+                int[] numB = getNumArray(b);
+                int[] compareA = new int[numA.length + numB.length];
+                int[] compareB = new int[numA.length + numB.length];
+                for(int i = 0; i < numA.length; i ++) {
+                    compareA[i] = numA[i];
+                    compareB[i + numB.length] = numA[i];
+                }
+                for(int i = 0; i < numB.length; i ++){
+                    compareA[i + numA.length] = numB[i];
+                    compareB[i] = numB[i];
+                }
+                for(int i = 0; i < compareA.length; i ++){
+                    if(compareA[i] == compareB[i]){
+                        continue;
+                    }
+                    if(compareA[i] < compareB[i]){
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+                return numA.length - numB.length;
+            }
+        });
+        StringBuilder res = new StringBuilder();
+        for(int tmp : tmpArray){
+            res.append(Integer.toString(tmp));
+        }
+        for(int i = 0; i < res.length() - 1;){
+            if(res.charAt(i) == '0'){
+                res.deleteCharAt(i);
+            } else {
+                break;
+            }
+        }
+        return res.toString();
+    }
+    
+    public int[] getNumArray(int n){
+        if(n == 0){
+            return new int[]{0};
+        }
+        int[] tmpRes = new int[10];
+        int index = 0;
+        while(n > 0){
+            tmpRes[index] = n % 10;
+            n = n / 10;
+            index ++;
+        }
+        int[] res = new int[index];
+        for(int i = 0; i < index; i ++){
+            res[i] = tmpRes[index - i - 1];
+        }
+        return res;
+    }
+}
