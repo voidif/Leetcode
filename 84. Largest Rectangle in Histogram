@@ -1,0 +1,19 @@
+class Solution {
+    // using stack, a very clear method to calculte width for currently height
+    public int largestRectangleArea(int[] heights) {
+        //stack storage index, for every index, the correspond height is increasing at any time
+        Stack<Integer> stack = new Stack<>();
+        int maxArea = 0;
+        //add 0 height to end
+        for(int i = 0; i <= heights.length; i ++){
+            int currentHeight = (i == heights.length ? 0 : heights[i]);
+            while(!stack.isEmpty() && heights[stack.peek()] > currentHeight){
+                int newPrevHighest = heights[stack.pop()];
+                int areaLeftBorder = (stack.isEmpty() ? -1 : stack.peek());
+                maxArea = Math.max(maxArea, (i - areaLeftBorder - 1) * newPrevHighest);
+            }
+            stack.push(i);
+        }
+        return maxArea;
+    }
+}
