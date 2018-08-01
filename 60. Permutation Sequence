@@ -1,0 +1,40 @@
+class Solution {
+    public String getPermutation(int n, int k) {
+        int[] num = new int[n];
+        int count = n;
+        int total = 1;
+        while(count - 1 > 1){
+            total = total * (count - 1);
+            count --;
+        }
+        StringBuilder res = new StringBuilder();
+
+        helper(num, total, n - 1, res, k - 1);
+        return res.toString();
+    }
+
+    public void helper(int[] num, int peroid, int n, StringBuilder tmpRes, int k){
+        if(n == 0){
+            for(int i = 0; i < num.length; i ++){
+                if(num[i] == 0){
+                    tmpRes.append(i + 1);
+                    return;
+                }
+            }
+        }
+        //if(peroid == 1)
+        int index = k / peroid;
+        for(int i = 0; i < num.length; i ++){
+            if(num[i] == 0){
+                index --;
+                if(index < 0){
+                    index = i;
+                    num[index] = 1;
+                    break;
+                }
+            }
+        }
+        tmpRes.append(index + 1);
+        helper(num, peroid / n, n - 1, tmpRes, k % peroid);
+    }
+}
