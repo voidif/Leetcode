@@ -1,0 +1,47 @@
+class Solution {
+    public boolean isScramble(String s1, String s2) {
+        //System.out.println(s1 + " " + s2);
+        if(s1.equals(s2)){
+            return true;
+        }
+        if(s1.length() != s2.length()){
+            //System.out.println("length not equal");
+            return false;
+        }
+        if(s1.length() == 1){
+            return s1.equals(s2);
+        }
+        if(!helper(s1, s2)){
+            //System.out.println(s1 + " " + s2);
+            //System.out.println("helper not good");
+            return false;
+        }
+        for(int mid = 1; mid < s1.length(); mid ++){
+            if(isScramble(s1.substring(0, mid), s2.substring(0, mid)) && 
+                          isScramble(s1.substring(mid), s2.substring(mid))){
+                return true;
+            }
+            if(isScramble(s1.substring(0, mid), s2.substring(s2.length() - mid)) && 
+                        isScramble(s1.substring(mid), s2.substring(0, s2.length() - mid))){
+                return true;
+            }
+        }
+        //System.out.println("generally fail");
+        return false;
+        
+    }
+    
+    public boolean helper(String s1, String s2){
+        int[] table = new int[128];
+        for(char tmp : s1.toCharArray()){
+            table[tmp] ++;
+        }
+        for(char tmp : s2.toCharArray()){
+            table[tmp] --;
+            if(table[tmp] < 0){
+                return false;
+            } 
+        }
+        return true;
+    }
+}
