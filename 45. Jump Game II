@@ -1,0 +1,34 @@
+class Solution {
+    public int jump(int[] nums) {
+        if(nums.length <= 1){
+            return 0;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(0);
+        int max = 0;
+        int count = 1;
+        int queueLength = 1;
+        while(queueLength > 0){
+            int tmpLength = queueLength;
+            queueLength = 0;
+            while(tmpLength > 0){
+                int curIndex = queue.poll();
+                int curMax = nums[curIndex] + curIndex;
+                if(curMax >= nums.length - 1){
+                    return count;
+                }
+                if(curMax > max){
+                    while(max < curMax){
+                        max ++;
+                        queue.add(max);
+                        queueLength ++;
+                    }
+                }
+                tmpLength --;
+            }
+            count ++;
+        }
+        
+        return -1;
+    }
+}
