@@ -1,0 +1,21 @@
+class Solution {
+    public boolean canJump(int[] nums) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(0);
+        int max = 0;
+        while(!queue.isEmpty()){
+            int curIndex = queue.poll();
+            int curMax = nums[curIndex] + curIndex;
+            if(curMax >= nums.length - 1){
+                return true;
+            }
+            if(curMax > max){
+                while(max < curMax){
+                    max ++;
+                    queue.add(max);
+                }
+            }
+        }
+        return false;
+    }
+}
