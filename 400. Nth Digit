@@ -1,0 +1,24 @@
+class Solution {
+    public int findNthDigit(int n) {
+        long numberLen = 1;
+        long numberCount = 9;
+        while(n > numberCount * numberLen){
+            n = (int)(n - numberCount * numberLen);
+            numberLen ++;
+            numberCount = numberCount * 10;
+        }
+
+        int numberNum = (int)((n - 1) / numberLen);
+        int numberIndex = (int)((n - 1) % numberLen);
+        int baseNum = 1;
+        while(numberLen > 1){
+            numberLen = numberLen - 1;
+            baseNum = baseNum * 10;
+        }
+        int reallyNum = baseNum + numberNum;
+        // System.out.println(numberIndex);
+        // System.out.println(reallyNum);
+        String numString = String.valueOf(reallyNum);
+        return numString.charAt(numberIndex) - '0';
+    }
+}
