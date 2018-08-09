@@ -1,0 +1,23 @@
+//full adder
+class Solution {
+    public int getSum(int a, int b) {
+        int[] res = new int[32];
+        int carry = 0;
+        for(int i = 0; i < 32; i ++){
+            int aBit = a & 1;
+            int bBit = b & 1;
+            res[i] = (aBit ^ bBit) ^ carry;
+            carry = ((aBit ^ bBit) & carry) | (aBit & bBit);
+            //System.out.print(res[i]);
+            //System.out.println(" " + carry);
+            a = a >> 1;
+            b = b >> 1;
+        }
+        int resInt = 0;
+        for(int i = 0; i < 32; i ++){
+            resInt = resInt << 1;
+            resInt = resInt + res[31 - i];
+        }
+        return resInt;
+    }
+}
