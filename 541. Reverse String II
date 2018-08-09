@@ -1,0 +1,32 @@
+class Solution {
+    public String reverseStr(String s, int k) {
+        char[] charArray = s.toCharArray();
+        char[] res = new char[charArray.length];
+        boolean reverse = true;
+        for(int i = 0 ; i < charArray.length;){
+            if(i > 0 && i % k == 0){
+                reverse = !reverse;
+            }
+            if(reverse){
+                reverseK(charArray, res, k, i);
+                i = i + k;
+            } else {
+                res[i] = charArray[i];
+                i ++;
+            }
+        }
+        return new String(res);
+    }
+    
+    public void reverseK(char[] original, char[] res, int k, int index){
+        int len;
+        if(index + k >= original.length){
+            len = original.length - index;
+        } else {
+            len = k;
+        }
+        for(int i = 0; i < len; i ++){
+            res[index + i] = original[index + len - 1 - i];
+        }
+    }
+}
