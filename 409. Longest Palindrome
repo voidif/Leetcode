@@ -1,0 +1,17 @@
+class Solution {
+    public int longestPalindrome(String s) {
+        int[] count = new int['z' - 'A' + 1];
+        for(char tmpChar : s.toCharArray()){
+            count[tmpChar - 'A'] ++;
+        }
+        int res = 0;
+        int odd = 0;
+        for(int tmp : count){
+            if(tmp % 2 != 0){
+                odd = 1;
+            }
+            res += tmp / 2 * 2;
+        }
+        return res + odd;
+    }
+}
