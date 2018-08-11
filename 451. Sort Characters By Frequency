@@ -1,0 +1,55 @@
+class Solution {
+    public String frequencySort(String s) {
+        int[] count = new int[128];
+        int[] index = new int[128];
+        for(int i = 0; i < 128; i ++){
+            index[i] = i;
+        }
+        for(char tmp : s.toCharArray()){
+            count[tmp] ++;
+        }
+        quickSort(count, index, 0, 127);
+        StringBuilder res = new StringBuilder();
+        for(int i = 0; i < 128; i ++){
+            int total = count[i];
+            if(total == 0){
+                break;
+            }
+            for(int j = 0; j < total; j ++){
+                res.append((char)index[i]);
+            }
+        }
+        return res.toString();
+    }
+    
+    public void quickSort(int[] count, int[] index, int begin, int end){
+        if(begin >= end){
+            return;
+        }
+        int baseNum = count[begin];
+        int i = begin;
+        int j = end;
+        while(i < j){
+            while(i < j && count[j] <= baseNum){
+                j --;
+            }
+            while(i < j && count[i] >= baseNum){
+                i ++;
+            }
+            if(i < j){
+                swap(count, i, j);
+                swap(index, i ,j);
+            }
+        }
+        swap(count, begin, i);
+        swap(index, begin, i);
+        quickSort(count, index, begin, i - 1);
+        quickSort(count, index, i + 1, end);
+    }
+    
+    public void swap(int[] array, int i, int j){
+        int tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+}
