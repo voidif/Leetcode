@@ -1,0 +1,72 @@
+class Solution {
+    public List<int[]> getSkyline(int[][] buildings) {
+        List<int[]> res = new ArrayList<>();
+        if(buildings.length == 0){
+            return res;
+        }
+        ArrayList<Integer> tmpRes = divideConquer(buildings, 0, buildings.length - 1);
+        for(int i = 0; i < tmpRes.size();){
+            res.add(new int[]{tmpRes.get(i), tmpRes.get(i + 1)});
+            i += 2;
+        }
+        return res;
+    }
+    
+    public ArrayList<Integer> divideConquer(int[][] skylines, int begin, int end){
+        ArrayList<Integer> res = new ArrayList<>();
+        if(begin >= end){
+            res.add(skylines[begin][0]);
+            res.add(skylines[begin][2]);
+            res.add(skylines[begin][1]);
+            res.add(0);
+            return res;
+        }
+        int mid = (begin + end) / 2;
+        ArrayList<Integer> left = divideConquer(skylines, begin, mid);
+        ArrayList<Integer> right = divideConquer(skylines, mid + 1, end);
+        merge(left, right, res);
+        return res;
+    }
+    
+    public void merge(ArrayList<Integer> left, ArrayList<Integer> right, ArrayList<Integer> res){
+        int l = 0;
+        int r = 0;
+        int leftHeight = 0;
+        int rightHeight = 0;
+        int curIndex = 0;
+        int curMax = 0;
+        while(l < left.size() && r < right.size()){
+            boolean bl = false;
+            boolean br = false;
+            if(left.get(l) <= right.get(r)){
+                leftHeight = left.get(l + 1);
+                curIndex = left.get(l);
+                bl = true;
+            } 
+            if(left.get(l) >= right.get(r)) {
+                rightHeight = right.get(r + 1);
+                curIndex = right.get(r);
+                br = true;
+            }
+            if(Math.max(leftHeight, rightHeight) != curMax){
+                res.add(curIndex);
+                res.add(Math.max(leftHeight, rightHeight));
+                curMax = res.get(res.size() - 1);
+            } 
+            if(bl){
+                l += 2;
+            }
+            if(br){
+                r += 2;
+            }
+        }
+        while(l < left.size()){
+            res.add(left.get(l));
+            l ++;
+        }
+        while(r < right.size()){
+            res.add(right.get(r));
+            r ++;
+        }
+    }
+}
