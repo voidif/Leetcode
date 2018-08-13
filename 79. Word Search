@@ -1,0 +1,45 @@
+class Solution {
+    public boolean exist(char[][] board, String word) {
+        if(word.length() == 0){
+            return true;
+        }
+        if(board.length == 0){
+            return false;
+        }
+        int[][] recorder = new int[board.length][board[0].length];
+        for(int i = 0; i < board.length; i ++){
+            for(int j = 0; j < board[0].length; j ++){
+                if(backtracking(board, recorder, word, 0, i, j)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public boolean backtracking(char[][] board, int[][] recorder, String word, int index, int i, int j){
+        if(i < 0 || i >= board.length || j < 0 || j >= board[0].length){
+            return false;
+        }
+        if(word.charAt(index) != board[i][j]){
+            return false;
+        }
+        if(recorder[i][j] == 1){
+            return false;
+        }
+        if(index == word.length() - 1){
+            return true;
+        }
+        recorder[i][j] = 1;
+        if(backtracking(board, recorder, word, index + 1, i + 1, j) ||
+          backtracking(board, recorder, word, index + 1, i -+ 1, j) ||
+          backtracking(board, recorder, word, index + 1, i, j + 1) ||
+          backtracking(board, recorder, word, index + 1, i, j - 1)){
+            return true;
+        } else {
+            recorder[i][j] = 0;
+            return false;
+        }
+        
+    }
+}
