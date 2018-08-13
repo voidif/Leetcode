@@ -1,0 +1,18 @@
+class Solution {
+    public int findComplement(int num) {
+        int j = 1 << 31;
+        int res = 0;
+        boolean leadingZero = true;
+        for(int i = 0 ; i < 32; i ++){
+            if(leadingZero){
+                leadingZero = (num & j) == 0 ? true : false;
+            }
+            if(!leadingZero){
+                res += (num & j) ^ j;
+            }
+            j >>>= 1;
+
+        }
+        return res;
+    }
+}
