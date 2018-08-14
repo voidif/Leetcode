@@ -1,0 +1,37 @@
+class Solution {
+    public int myAtoi(String str) {
+
+        boolean positive = true;
+        long res = 0;
+        int i = 0;
+        while(i < str.length() && str.charAt(i) == ' '){
+            i ++;
+        }
+        if(str.length() <= i){
+            return 0;
+        }
+        if(str.charAt(i) == '-'){
+            positive = false;
+            i ++;
+        } else if(str.charAt(i) == '+'){
+            positive = true;
+            i ++;
+        }
+        while(i < str.length() && str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+            res = res * 10 + str.charAt(i) - '0';
+            if(res > (long)Integer.MAX_VALUE && positive) {
+                return Integer.MAX_VALUE;
+            }
+            if(!positive && res > (long)Integer.MAX_VALUE + 1) {
+                return Integer.MIN_VALUE;
+            }
+            i ++;
+        }
+        if(positive){
+            return (int)res;
+        } else {
+            return -(int)res;
+        }
+        
+    }
+}
