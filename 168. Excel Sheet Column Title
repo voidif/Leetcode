@@ -1,0 +1,19 @@
+class Solution {
+    public String convertToTitle(int n) {
+        StringBuilder res = new StringBuilder();
+        long divider = 26;
+        while(n > 0){
+            if(n % divider == 0){
+                res.insert(0, 'Z');
+                n -= divider;
+            } else {
+                long addon = n % divider;
+                res.insert(0, (char)((addon * 26 / divider) - 1 + 'A'));
+                n = (int)(n - addon);
+            }
+            divider = divider * 26;
+            
+        }
+        return res.toString();
+    }
+}
