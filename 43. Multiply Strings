@@ -1,0 +1,25 @@
+class Solution {
+    public String multiply(String num1, String num2) {
+        int n = num1.length();
+        int m = num2.length();
+        int[] sumArray = new int[n + m];
+        for(int i = n - 1; i >= 0; i --){
+            for(int j = m - 1; j >= 0; j --){
+                int pow = (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
+                int high = i + j;
+                int low = i + j + 1;
+                int sum = sumArray[low] + pow;
+                sumArray[low] = sum % 10;
+                sumArray[high] += sum / 10;
+            }
+        }
+        StringBuilder res = new StringBuilder();
+        for(int tmp : sumArray){
+            if(tmp == 0 && res.length() == 0){
+                continue;
+            }
+            res.append(tmp);
+        }
+        return res.length() == 0 ? "0" : res.toString();
+    }
+}
