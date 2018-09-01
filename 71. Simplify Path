@@ -1,0 +1,36 @@
+class Solution {
+    public String simplifyPath(String path) {
+        if(path.length() == 0){
+            return "/";
+        }
+        String myPath;
+        if(path.charAt(path.length() - 1) != '/'){
+            myPath = path + "/";
+        } else {
+            myPath = new String(path);
+        }
+        String[] array = myPath.split("/");
+        ArrayList<String> resArray = new ArrayList<>();
+        for(String tmp : array){
+            if(tmp.length() == 0){
+                continue;
+            }
+            if(tmp.equals("..")){
+                if(resArray.size() > 0){
+                    resArray.remove(resArray.size() - 1);
+                }
+            } else if(!tmp.equals(".")){
+                resArray.add(tmp);
+            }
+        }
+        if(resArray.size() == 0){
+            return "/";
+        }
+        StringBuilder res = new StringBuilder();
+        for(String tmp : resArray){
+            res.append("/");
+            res.append(tmp);
+        }
+        return res.toString();
+    }
+}
