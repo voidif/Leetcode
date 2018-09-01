@@ -1,0 +1,37 @@
+class Solution {
+    public int divide(int dividend, int divisor) {
+        if(divisor == 1){
+            return dividend;
+        }
+        if(divisor == -1 && dividend == Integer.MIN_VALUE){
+            return Integer.MAX_VALUE;
+        }
+        boolean positive = true;
+        if(dividend < 0){
+            positive = ! positive;
+        }
+        if(divisor < 0){
+            positive = ! positive;
+        }
+        long nDividend = Math.abs((long)dividend);
+        long nDivisor = Math.abs((long)divisor);
+        if(nDividend < nDivisor){
+            return 0;
+        }
+        long n = nDivisor;
+        int res = 0;
+        while(nDivisor * 10 <= nDividend) {
+            nDivisor = nDivisor * 10;
+        }
+        while(nDivisor >= n){
+            long cur = 0;
+            if(nDividend >= nDivisor){
+                cur = nDividend / nDivisor;
+                nDividend = nDividend - cur * nDivisor;
+            }
+            res = res * 10 + (int)cur;
+            nDivisor = nDivisor / 10;  
+        }
+        return positive ? res : - res;
+    }
+}
