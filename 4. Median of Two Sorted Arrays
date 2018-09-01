@@ -1,0 +1,33 @@
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int[] shortArray = nums1.length > nums2.length ? nums2 : nums1;
+        int[] longArray = nums1.length > nums2.length ? nums1 : nums2;
+        int m = shortArray.length;
+        int n = longArray.length;
+        int sl = 0;
+        int sr = m;
+        int sIndex = (sl + sr) / 2;
+        int lIndex = (m + n) / 2 - sIndex;
+        while(sl <= sr){
+            if((sIndex <= sl || shortArray[sIndex - 1] <= longArray[lIndex]) && 
+                        (sIndex >= sr || shortArray[sIndex] >= longArray[lIndex - 1])){
+                int Ai = sIndex <= 0 ? Integer.MIN_VALUE : shortArray[sIndex - 1];
+                int Bi = lIndex <= 0 ? Integer.MIN_VALUE : longArray[lIndex - 1];
+                int Aii = sIndex >= m ? Integer.MAX_VALUE : shortArray[sIndex];
+                int Bii = lIndex >= n ? Integer.MAX_VALUE : longArray[lIndex];
+                if((m + n) % 2 == 0){
+                    return (Math.max(Ai, Bi) + Math.min(Aii, Bii)) / 2.0f;
+                } else {
+                    return Math.min(Aii, Bii);
+                }
+            } else if(shortArray[sIndex] <= longArray[lIndex - 1]){
+                sl = sIndex + 1;
+            } else {
+                sr = sIndex;
+            }
+            sIndex = (sl + sr) / 2;
+            lIndex = (m + n) / 2 - sIndex;
+        }
+        return 0.0f;
+    }
+}
