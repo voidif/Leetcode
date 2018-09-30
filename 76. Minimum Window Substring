@@ -1,5 +1,53 @@
 class Solution {
     public String minWindow(String s, String t) {
-        
+        //corner case 1: t == "" or s == ""
+        if(t.length() == 0 || s.length() == 0) {
+            return "";
+        }
+        //store t's char and corresponed count
+        Map<Character, Integer> charCountOfT= new HashMap<>();
+        for(char tmp : t.toCharArray()) {
+            int tmpCount = charCountOfT.getOrDefault(tmp, 0);
+            charCountOfT.put(tmp, tmpCount + 1);
+        }
+        //Initialize two pointers to s's index(inclusive)
+        int slow = 0;
+        int fast = -1;
+        int Contained = 0;
+        //result recorder
+        int left = -1;
+        int right = -1;
+        int length = s.length() + 1;
+        //main circulation
+        while(fast < s.length() - 1){
+            //fast pointer move
+            while(Contained < t.length() && fast < s.length() - 1){
+                fast ++;
+                if(charCountOfT.containsKey(s.charAt(fast))){
+                    int tmpCount = charCountOfT.get(s.charAt(fast));
+                    charCountOfT.put(s.charAt(fast), tmpCount - 1);
+                    if(tmpCount > 0){
+                        Contained ++;
+                    }
+                }
+            }
+            while(Contained == t.length()){
+                //update result
+                if(fast - slow + 1 < length){
+                    left = slow;
+                    right = fast;
+                    length = fast - slow + 1;
+                }
+                if(charCountOfT.containsKey(s.charAt(slow))){
+                    int tmpCount = charCountOfT.get(s.charAt(slow));
+                    charCountOfT.put(s.charAt(slow), tmpCount + 1);
+                    if(tmpCount >= 0){
+                        Contained --;
+                    }
+                }
+                slow ++;
+            }
+        }
+        return left == -1 ? "" : s.substring(left, right + 1);
     }
 }
