@@ -1,0 +1,54 @@
+class Solution {
+    //it is obvious a backtracking problem
+    public List<String> restoreIpAddresses(String s) {
+        
+        List<String> res = new ArrayList<>();
+        //corner cases
+        if(s == null || s.length() < 4 || s.length() > 12){
+            return res;
+        }
+        backtracking(res, new StringBuilder(), 0, 0, s);
+        return res;
+    }
+    
+    /**
+    * looking for all possible ip address from a string
+    *
+    * @param res final res
+    * @param tmpRes tmpRes
+    * @param curSeg indicate current address semgement, begin with 0
+    * @param curSeg current parsing index of s 
+    * @param s the original s
+    */
+    public void backtracking(List<String> res, StringBuilder tmpRes, int curSeg, int curIndex, String s){
+        if(curSeg == 4 && curIndex == s.length()){
+            res.add(tmpRes.substring(0, tmpRes.length() - 1));
+            return;
+        }
+        int remainingNum = s.length() - curIndex;
+        //impossible pattern, return
+        if(remainingNum > (4 - curSeg) * 3 || remainingNum < 4 - curSeg){
+            return;
+        }
+        //if current char of s is 0, consider it as a special case
+        if(s.charAt(curIndex) - '0' == 0){
+            // System.out.println("oh no");
+            tmpRes.append("0.");
+            backtracking(res, tmpRes, curSeg + 1, curIndex + 1, s);
+            tmpRes.delete(tmpRes.length() - 2, tmpRes.length());
+            return;
+        }
+        //looking all possible combination for current segement
+        for(int i = 1; i <= Math.min(3, remainingNum); i ++){
+            //special case for final segement
+            int num = Integer.parseInt(s.substring(curIndex, curIndex + i));
+            if(num > 255){
+                return;
+            }
+            tmpRes.append(s.substring(curIndex, curIndex + i) + ".");
+            backtracking(res, tmpRes, curSeg + 1, curIndex + i, s);
+            tmpRes.delete(tmpRes.length() - i - 1, tmpRes.length());   
+        }
+    }
+    
+}
