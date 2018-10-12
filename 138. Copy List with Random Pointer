@@ -1,0 +1,50 @@
+//there are better way cost o1 space and o(n) time
+/**
+ * Definition for singly-linked list with a random pointer.
+ * class RandomListNode {
+ *     int label;
+ *     RandomListNode next, random;
+ *     RandomListNode(int x) { this.label = x; }
+ * };
+ */
+public class Solution {
+    public RandomListNode copyRandomList(RandomListNode head) {
+        if(head == null){
+            return null;
+        }
+        //using arraylist to store my new list to get o(1) random acess
+        ArrayList<RandomListNode> nodeList = new ArrayList<>();
+        //using hash map to store hashcode and index for original list
+        Map<Integer, Integer> objectMap = new HashMap<>();
+        //begin iterate and copy list
+        RandomListNode cur = head;
+        int index = 0;
+        while(cur != null){
+            objectMap.put(cur.hashCode(), index);
+            
+            //copy lable and next
+            RandomListNode newNode = new RandomListNode(cur.label);
+            nodeList.add(newNode);
+            if(nodeList.size() > 1){
+                nodeList.get(nodeList.size() - 2).next = newNode;
+            }
+            
+            cur = cur.next;
+            index ++;
+        }
+        
+        //begin iterate to copy random
+        cur = head;
+        index = 0;
+        int randomIndex = -1;
+        while(cur != null){
+            if(cur.random != null){
+                randomIndex = objectMap.get(cur.random.hashCode());
+                nodeList.get(index).random = nodeList.get(randomIndex);
+            }
+            cur = cur.next;
+            index ++;
+        }
+        return nodeList.get(0);
+    }
+}
