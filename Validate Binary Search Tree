@@ -1,0 +1,35 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    private boolean isBinary = true;
+    private ArrayList<Integer> preorderList = new ArrayList<>();
+    public boolean isValidBST(TreeNode root) {
+        if(root == null) return true;
+        //do preorder for the tree, if the entirely list is in increasing
+        //it is valid, otherwise it is not valid
+        preorder(root);
+        return isBinary;
+    }
+    
+    //preorder for the tree
+    private void preorder(TreeNode root){
+        //if the binary is already invalid, return
+        if(!isBinary){
+            return;
+        }
+        if(root.left != null) preorder(root.left);
+        if(preorderList.size() > 0 && preorderList.get(preorderList.size() - 1) >= root.val){
+            isBinary = false;
+            return;
+        }
+        preorderList.add(root.val);
+        if(root.right != null) preorder(root.right);
+    }
+}
