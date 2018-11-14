@@ -1,0 +1,79 @@
+class Solution {
+    public boolean isNumber(String s) {
+        String number = s;
+        //delete starting and ending space
+        while(number.length() > 0 && number.charAt(0) == ' '){
+            number = number.substring(1, number.length());
+        }
+        //remove single + or -
+        if(number.length() > 0){
+            char tmp = number.charAt(0);
+            if(tmp == '+' || tmp == '-'){
+                number = number.substring(1, number.length());
+            }
+        }
+        while(number.length() > 0 && number.charAt(number.length() - 1) == ' '){
+            number = number.substring(0, number.length() - 1);
+        }
+        if(number.length() == 0){
+            return false;
+        }
+        
+        if(number.contains("e")){
+            if(number.charAt(number.length() - 1) == 'e'){
+                return false;
+            }
+            String[] numberArray = number.split("e");
+            //whole string is a single, false //more than 2 e in string, false
+            if(numberArray.length != 2){
+                return false;
+            }
+            //the characters after e is not all numbers, false
+            else {
+                if(numberArray[1].contains(".") || numberArray[0].contains(" ") || numberArray[1].contains(" ")){
+                    return false;
+                } else {
+                    return isNumber(numberArray[0]) && isNumber(numberArray[1]);
+                }
+            }
+        }
+        
+        if(number.contains(".")){
+            if(number.charAt(number.length() - 1) == '.'){
+                return isAllNumber(number.substring(0, number.length() - 1));
+            }
+            //System.out.println(numberArray[0]);
+            String[] beforeE = number.split("\\.");
+            //System.out.println(beforeE.length);
+            //more than 2 points, false
+            if(beforeE.length != 2){
+                //System.out.println("1");
+                return false;
+            }
+            //single point, two part should all be pure numbers.
+            else {
+                //System.out.println("2");
+                if(beforeE[0].equals("")){
+                    return isAllNumber(beforeE[1]);
+                } else {
+                    return isAllNumber(beforeE[0]) && isAllNumber(beforeE[1]);
+                }
+               
+            }
+        }
+        
+        return isAllNumber(number);
+    }
+
+    public boolean isAllNumber(String num){
+        if(num.length() == 0){
+            return false;
+        }
+        for(char tmp : num.toCharArray()){
+            if(tmp < '0' || tmp > '9'){
+                return false;
+            }
+        }
+        return true;
+    }
+}
