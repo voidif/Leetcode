@@ -1,0 +1,36 @@
+class Solution {
+    //dp
+    public boolean isInterleave(String s1, String s2, String s3) {
+        int m = s1.length();
+        int n = s2.length();
+        int l = s3.length();
+        if(m + n != l){
+            return false;
+        }
+        if(m == 0){
+            return s2.equals(s3);
+        }
+        if(n == 0){
+            return s1.equals(s3);
+        }
+        //table fill mode: northwest to southeast
+        boolean[][] table = new boolean[m + 1][n + 1];
+        //fill row 1 and column 1
+        for(int i = 0; i <= m; i ++){
+            table[i][0] = s1.substring(0, i).equals(s3.substring(0, i));
+        }
+        for(int i = 0; i <= n; i ++){
+            table[0][i] = s2.substring(0, i).equals(s3.substring(0, i));
+        }
+        //fill from northwest to southeast
+        for(int len = 2; len <= s3.length(); len ++){
+            //s1 contirbutes i characters, min 1, max len(s1), min len - len(s2), max len - 1
+            for(int i = Math.max(1, len - n); i <= Math.min(len - 1, m); i ++){
+                int j = len - i;
+                table[i][j] = (table[i - 1][j] && s1.charAt(i - 1) == s3.charAt(len - 1)) || 
+                    (table[i][j - 1] && s2.charAt(j - 1) == s3.charAt(len - 1));
+            }
+        }
+        return table[m][n];
+    }
+}
