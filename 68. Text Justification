@@ -1,0 +1,64 @@
+class Solution {
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        ArrayList<String> res = new ArrayList<>();
+        //an array to storage one line's string
+        ArrayList<String> line = new ArrayList<>();
+        int lineLength = 0;
+        for(int i = 0; i < words.length; i ++){
+            int newLength = words[i].length();
+            //find a line, process it
+            if(lineLength + newLength + line.size() > maxWidth){
+                helper(res, line, lineLength, maxWidth);
+                line = new ArrayList<>();
+                line.add(words[i]);
+                lineLength = newLength;
+            } else {
+                lineLength += newLength;
+                line.add(words[i]);
+            }
+        }
+        //final line process
+        StringBuilder string = new StringBuilder();
+        for(int i = 0; i < line.size(); i ++){
+            string.append(line.get(i));
+            //construct n-spaces string
+            string.append(' ');
+        }
+        string.deleteCharAt(string.length() - 1);
+        while(string.length() < maxWidth){
+            string.append(' ');
+        }
+        res.add(string.toString());
+        return res;
+    }
+    
+    public void helper(List<String> res, List<String> line, int LineLength, int maxWidth){
+        if(line.size() == 1){
+            StringBuilder string = new StringBuilder();
+            string.append(line.get(0));
+            for (int i = 0; i < maxWidth - LineLength; i++){
+               string.append(" ");
+            }
+            res.add(string.toString());
+            return;
+        }
+        int spaceLength = (maxWidth - LineLength) / (line.size() - 1);
+        //System.out.println(maxWidth + " " + LineLength + " " + line.size());
+        int totalLength = spaceLength * (line.size() - 1) + LineLength;
+        int[] spaceAlloc = new int[line.size() - 1];
+        Arrays.fill(spaceAlloc, spaceLength);
+        for(int i = 0; i < maxWidth - totalLength; i ++){
+            spaceAlloc[i] ++;
+        }
+        StringBuilder string = new StringBuilder();
+        for(int i = 0; i < spaceAlloc.length; i ++){
+            string.append(line.get(i));
+            //construct n-spaces string
+            for (int j = 0; j < spaceAlloc[i]; j ++){
+               string.append(" ");
+            }
+        }
+        string.append(line.get(line.size() - 1));
+        res.add(string.toString());
+    }
+}
