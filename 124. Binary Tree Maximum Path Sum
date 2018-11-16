@@ -1,0 +1,45 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public long maxLen = Integer.MIN_VALUE;
+    public int maxPathSum(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+        maxPossiblePath(root);
+        return (int)maxLen;
+    }
+    
+    //return the longest path begin with root node
+    //update maxLen with max possible path go through root node
+    //all 2 values must contains node root
+    public long maxPossiblePath(TreeNode root){
+        long val = root.val;
+        long left = Integer.MIN_VALUE;
+        long right = Integer.MIN_VALUE;
+        if(root.left != null){
+            left = maxPossiblePath(root.left); 
+        }
+        if(root.right != null){
+            right = maxPossiblePath(root.right);
+        }
+        long longestPath = 0;
+        long longestHeight = 0;
+        //longest height, max from {root, root + left, root + right}
+        longestHeight = Math.max(val, root.val + left);
+        longestHeight = Math.max(longestHeight, val + right);
+        //longest path, max from {root, root + left, root + right, root + left + right}
+        longestPath = Math.max(longestHeight, val + left + right);
+        //update maxLen
+        maxLen = Math.max(maxLen, longestPath);
+        //System.out.println(longestHeight + " " + longestPath);
+        return longestHeight;
+    }
+}
