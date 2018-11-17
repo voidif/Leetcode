@@ -1,0 +1,35 @@
+class Solution {
+    //Dynamic Programming , O(n^3) time, O(n) space 
+    //if we storage the palindrome by n x n matrix, the runtime can be reduced to n^2
+    public int minCut(String s) {
+        int n = s.length();
+        //a list to storage the min cut of substring(0, i)
+        int[] table = new int[n + 1];
+        Arrays.fill(table, Integer.MAX_VALUE);
+        table[0] = -1;
+        table[1] = 0;
+        //looking through substring(0, 2) to substring(0, n)
+        for(int i = 2; i <= n; i ++){
+            //min cut including i, is min {0~k} + 1, (k from 0 ~ i - 1, k+1~i is palindrome)
+            for(int j = 0; j < i; j ++){
+                if(isPalindrome(s.substring(j, i))){
+                    table[i] = Math.min(table[i], table[j] + 1);
+                }
+            }
+        }
+        return table[n];
+    }
+    
+    public boolean isPalindrome(String s){
+        int begin = 0;
+        int end = s.length() - 1;
+        while(begin < end){
+            if(s.charAt(begin) != s.charAt(end)){
+                return false;
+            }
+            begin ++;
+            end --;
+        }
+        return true;
+    }
+}
