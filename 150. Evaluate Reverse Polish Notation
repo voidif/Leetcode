@@ -1,0 +1,36 @@
+class Solution {
+    private int processIndex = 0;
+    public int evalRPN(String[] tokens) {
+        processIndex = tokens.length - 1;
+        //For RPN, iterate from last to first
+        
+        return helper(tokens);
+        
+    }
+    
+    //helper function, calculate RPN result for String with index processIndex
+    private int helper(String[] tokens) {
+        String string = tokens[processIndex];
+        processIndex --;
+        //if we found integer, return whatever it is
+        if(!string.equals("+") &&
+            !string.equals("-") &&
+            !string.equals("*") &&
+            !string.equals("/")) {
+            return Integer.parseInt(string);
+        } else {
+            //for operator, find two operands
+            char operator = string.charAt(0);
+            int SecondOperand = helper(tokens);
+            int FirstOperand = helper(tokens);
+            int res = 0;
+            switch (operator) {
+                case '+' : res = FirstOperand + SecondOperand; break;
+                case '-' : res = FirstOperand - SecondOperand; break;
+                case '*' : res = FirstOperand * SecondOperand; break;
+                case '/' : res = FirstOperand / SecondOperand; break;
+            }
+            return res;
+        }
+    }
+}
