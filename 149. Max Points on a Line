@@ -9,26 +9,62 @@
  */
 class Solution {
     public int maxPoints(Point[] points) {
-        Map<Integer, Map<Integer>> recorder = new HashMap<>();
+        Map<Integer, Map<Integer, Integer>> recorder = new HashMap<>();
+        int res = 0;
         for(int i = 0; i < points.length; i ++) {
+            int tmpRes = 0;
+            int overlap = 1;
             for(int j = i + 1; j < points.length; j ++) {
                 int x0 = points[j].x - points[i].x;
                 int y0 = points[j].y - points[i].y;
                 //Dealing with overlap points
                 if(x0 == 0 && y0 == 0) {
-                    //TODO
+                    overlap ++;
+                    continue;
                 }
-                int gcd = gcd(x0, y0);
+                int gcd = gcd(Math.abs(x0), Math.abs(y0));
+                //make sure x0/gcd is positive
+                if(x0 < 0) {
+                    gcd = -gcd;
+                }
+                //vertical or horizonal line
+                if(gcd == 0) {
+                    gcd = (x0 == 0 ? y0 : x0);
+                }
                 x0 = x0 / gcd;
                 y0 = y0 / gcd;
+                Map<Integer, Integer> tmp = recorder.getOrDefault(x0, new HashMap<Integer, Integer>());
+                int curCount = tmp.getOrDefault(y0, 0);
+                tmpRes = Math.max(tmpRes, curCount + 1);
+                tmp.put(y0, curCount + 1);
+                recorder.putIfAbsent(x0, tmp);
+                // x0 = x0 / gcd;
+                // y0 = y0 / gcd;
                 //TODO, put them into map
             }
+            tmpRes = tmpRes + overlap;
+            res = Math.max(res, tmpRes);
+            recorder = new HashMap<>();
         }
-        
+        return res;
     }
     
     //return gcd of a and b, ensuring a/gcd >= 0
     public int gcd(int a, int b) {
-        //TODO
+        //System.out.println("a: " + a + " b: " + b);
+        if(a == b) {
+            return a;
+        }
+        if(a == 0 || b == 0) {
+            return 0;
+        }
+        int t = 1;
+        while(t != 0)
+        {
+            t = a % b;
+            a = b;
+            b = t;
+        }
+        return a;
     }
 }
