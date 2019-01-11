@@ -1,0 +1,21 @@
+public class Solution {
+    public String reverseWords(String s) {
+        String[] array = s.split(" ");
+        if(array.length == 0) {
+            return "";
+        }
+        if(array.length == 1) {
+            return array[0];
+        }
+        StringBuilder res = new StringBuilder();
+        for(int i = array.length - 1; i >= 0; i --){
+            if(array[i].length() != 0){
+                res.append(array[i]);
+                res.append(' ');
+            }
+            
+        }
+        res.deleteCharAt(res.length() - 1);
+        return res.toString();
+    }
+}
