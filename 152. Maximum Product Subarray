@@ -1,0 +1,21 @@
+class Solution {
+    public int maxProduct(int[] nums) {
+        int len = nums.length;
+        int[] table = new int[len];
+        int res = Integer.MIN_VALUE;
+        //init
+        for(int i = 0; i < len; i ++) {
+            table[i] = nums[i];
+            res = Math.max(res, table[i]);
+        }
+        
+        //dp table[i][j] represents product of subarray [i, j](both inclusive)
+        for(int subLen = 2; subLen <= len; subLen ++) {
+            for(int i = 0; i < len - subLen + 1; i ++) {
+                table[i] = table[i] * nums[i + subLen - 1];
+                res = Math.max(res, table[i]);
+            }
+        }
+        return res;
+    }
+}
