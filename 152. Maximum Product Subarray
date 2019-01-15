@@ -1,20 +1,18 @@
 class Solution {
+    //dp on time and on space, the space can reduce to o1.
+    //ref: https://blog.csdn.net/camellhf/article/details/71104508
     public int maxProduct(int[] nums) {
         int len = nums.length;
-        int[] table = new int[len];
-        int res = Integer.MIN_VALUE;
-        //init
-        for(int i = 0; i < len; i ++) {
-            table[i] = nums[i];
-            res = Math.max(res, table[i]);
-        }
-        
-        //dp table[i][j] represents product of subarray [i, j](both inclusive)
-        for(int subLen = 2; subLen <= len; subLen ++) {
-            for(int i = 0; i < len - subLen + 1; i ++) {
-                table[i] = table[i] * nums[i + subLen - 1];
-                res = Math.max(res, table[i]);
-            }
+        //dp max[i] represent the max product of subarray [x, i] (0 <= x <= i)
+        int[] max = new int[len];
+        int[] min = new int[len];
+        max[0] = nums[0];
+        min[0] = nums[0];
+        int res = max[0];
+        for(int i = 1; i < len; i ++) {
+            max[i] = Math.max(Math.max(max[i - 1] * nums[i], nums[i]), min[i - 1] * nums[i]);
+            min[i] = Math.min(Math.min(max[i - 1] * nums[i], nums[i]), min[i - 1] * nums[i]);
+            res = Math.max(max[i], res);
         }
         return res;
     }
