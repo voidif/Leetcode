@@ -1,0 +1,61 @@
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param root: the root of binary tree
+     * @return: the root of the maximum average of subtree
+     */
+     
+    private TreeNode maxNode = null;
+    private int maxValue = Integer.MIN_VALUE;
+    private int maxNum = 0;
+    
+    public TreeNode findSubtree2(TreeNode root) {
+        // write your code here
+        if(root != null) {
+            helper(root);
+        }
+        return maxNode;
+    }
+    
+    // return [0] the number of node within this subtree
+    // [1] total value
+    // this function will update maxNode and maxValue
+    public int[] helper(TreeNode root) {
+        int[] left = new int[2];
+        int[] right = new int[2];
+        int total = 0;
+        int nodeNum = 0;
+        if(root.left != null) {
+            left = helper(root.left);
+            total += left[1];
+            nodeNum += left[0];
+        }
+        if(root.right != null) {
+            right = helper(root.right);
+            total += right[1];
+            nodeNum += right[0];
+        }
+        total += root.val;
+        nodeNum ++;
+        //  a / b > c / d > ad > bc
+        
+        if(total * maxNum > maxValue * nodeNum) {
+            maxValue = total;
+            maxNum = nodeNum;
+            maxNode = root;
+        }
+        int[] result = new int[]{nodeNum, total};
+        return result;
+    }
+}
