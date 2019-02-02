@@ -1,0 +1,45 @@
+class Solution {
+    public String mostCommonWord(String paragraph, String[] banned) {
+        Set<String> bannedSet = new HashSet<>();
+        for(String tmp : banned) {
+            bannedSet.add(tmp);
+        }
+        int maxFreq = 0;
+        String res = "";
+        StringBuilder wordBuilder = new StringBuilder();
+        Map<String, Integer> wordFreq = new HashMap<>();
+        for(int i = 0; i < paragraph.length(); i ++) {
+            char tmp = paragraph.charAt(i);
+            if(isValidWord(tmp)) {
+                if (tmp >= 'A' && tmp <= 'Z') {
+                    wordBuilder.append((char)(tmp - ('A' - 'a')));
+                } else {
+                    wordBuilder.append(tmp);
+                }
+            } 
+            if((!isValidWord(tmp) || i == paragraph.length() - 1) && wordBuilder.length() > 0){
+                String word = wordBuilder.toString();
+                wordBuilder = new StringBuilder();
+                if (bannedSet.contains(word)) {
+                    continue;
+                }
+                int freq = wordFreq.getOrDefault(word, 0);
+                freq ++;
+                if(freq > maxFreq) {
+                    maxFreq  = freq;
+                    res = word;
+                }
+                wordFreq.put(word, freq);
+            }
+        }
+        return res;
+    }
+    
+    public boolean isValidWord(char tmp) {
+        if((tmp >= 'a' && tmp <= 'z') || (tmp >= 'A' && tmp <= 'Z') || tmp == '-') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
