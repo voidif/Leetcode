@@ -1,0 +1,36 @@
+class Solution {
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        //slide window algrothem
+        //this array recorder words count in our window
+        int[] wordsInWindow = new int[256];
+        //window: [L, R]
+        int windowL = 0;
+        int windowR = -1;
+        int uniqueWordInWindow = 0;
+        //record max len of valid window
+        int maxLen = 0;
+        while(windowR < s.length()) {
+            if(uniqueWordInWindow <= k) {
+                maxLen = Math.max(maxLen, windowR - windowL + 1);
+            }
+            if(uniqueWordInWindow <= k ){
+                windowR ++;
+                if (windowR == s.length()) {
+                    break;
+                }
+                wordsInWindow[s.charAt(windowR)] ++;
+                if(wordsInWindow[s.charAt(windowR)] == 1) {
+                    uniqueWordInWindow ++;
+                }
+            } else {
+                windowL ++;
+                wordsInWindow[s.charAt(windowL - 1)] --;
+                if(wordsInWindow[s.charAt(windowL - 1)] == 0) {
+                    uniqueWordInWindow --;
+                }
+            }
+        }
+        
+        return maxLen;
+    }
+}
