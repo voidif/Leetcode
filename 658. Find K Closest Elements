@@ -1,0 +1,58 @@
+//https://leetcode.com/problems/find-k-closest-elements/discuss/106419/O(log-n)-Java-1-line-O(log(n)-%2B-k)-Ruby
+class Solution {
+    // idea: find a number in array that is most close to x, 
+    //search from that position - k + 1 or 0, add k number to our subarray
+    // then search from the next value not in our subarray but in array.
+    // if that value is more close toward x than our first value in our subarray
+    // add that value to end, delete first value in subarray.
+    // search until we reach end of array or that condition is not satisfied.
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        int index = binarySearch(arr, x);
+        // System.out.print(index);
+        // find scan position
+        int begin = index - k + 1;
+        if(begin < 0) {
+            begin = 0;
+        }
+        List<Integer> res = new LinkedList<>();
+        for(int i = 0; i < k; i ++) {
+            res.add(arr[begin]);
+            begin ++;
+        }
+        
+        while(begin < arr.length && Math.abs(arr[begin] - x) < Math.abs(res.get(0) - x)) {
+            res.remove(0);
+            res.add(arr[begin]);
+            begin ++;
+        }
+        
+        
+        return res;
+    }
+    
+    
+//     banary search the closet value toward val
+    public int binarySearch(int[] array, int val) {
+        int l = 0;
+        int r = array.length - 1;
+        int mid = l + (r - l) / 2;
+        while(l < r - 1 && array[mid] != val) {
+            
+            if (array[mid] > val) {
+                r = mid;
+            } else if(array[mid] < val) {
+                l = mid;
+            }
+            mid = l + (r - l) / 2;
+        }
+        // System.out.println("l: " + l + "--" + array[l] + "r: " + r + "--" + array[r]);
+        if(array[mid] == val) {
+            return mid;
+        }
+        if(Math.abs(array[l] - val) <= Math.abs(array[r] - val)) {
+            return l;
+        } else {
+            return r;
+        }
+    }
+}
