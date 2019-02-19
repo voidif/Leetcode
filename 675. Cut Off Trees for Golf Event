@@ -1,0 +1,144 @@
+class Solution {
+    public int cutOffTree(List<List<Integer>> forest) {
+        int res = 0;
+        if(forest == null || forest.size() == 0) {
+            return res;
+        }
+        //first find all trees in forest, storage it in a array
+        ArrayList<Tree> treeList = new ArrayList<>();
+        //add first step
+        treeList.add(new Tree(new Point(0, 0), -1));
+        
+        for(int i = 0; i < forest.size(); i ++) {
+            for(int j = 0; j < forest.get(i).size(); j ++) {
+                int height = forest.get(i).get(j);
+                if (height > 1) {
+                    treeList.add(new Tree(new Point(i, j), height));
+                }
+            }
+        }
+        //sort from low to high
+        Collections.sort(treeList, (o1, o2) -> o1.height - o2.height);
+        // for(Tree tree : treeList) {
+        //     System.out.print(tree.height + " ");
+        // }
+        for(int i = 0; i < treeList.size() - 1; i ++) {
+            int step = bfs(treeList.get(i).point, treeList.get(i + 1).point, new HashMap<Integer, HashSet<Integer>>(), forest);
+            if (step != -1) {
+                //System.out.println(step);
+                res += step;
+            } else {
+                return -1;
+            }
+        }
+        return res;
+    }
+    
+    
+    
+    private int bfs(Point start, Point end, HashMap<Integer, HashSet<Integer>> visitedList, List<List<Integer>> forest) {
+        //if current point is invalid return -1
+        if(!isPointWalkable(start, visitedList, forest)) {
+            return -1;
+        }
+        if(start.x == end.x && start.y == end.y) {
+            return 0;
+        }
+        int res = -1;
+        int i = 1;
+        Queue<Point> queue = new LinkedList<>();
+        queue.add(start);
+        
+        HashSet<Integer> set1 = visitedList.getOrDefault(start.x, new HashSet<Integer>());
+        set1.add(start.y);
+        visitedList.putIfAbsent(start.x, set1);
+        
+        while(queue.size() > 0) {
+            int curNodeSize = queue.size();
+            while(curNodeSize > 0) {
+                Point curPoint = queue.remove();
+                //add to visited list
+                HashSet<Integer> set2 = visitedList.getOrDefault(curPoint.x, new HashSet<Integer>());
+                set2.add(curPoint.y);
+                visitedList.putIfAbsent(curPoint.x, set2);
+                
+                Point leftPoint = new Point(curPoint.x, curPoint.y - 1);
+                Point upPoint = new Point(curPoint.x - 1, curPoint.y);
+                Point rightPoint = new Point(curPoint.x, curPoint.y + 1);
+                Point downPoint = new Point(curPoint.x + 1, curPoint.y);
+                
+                if((leftPoint.x == end.x && leftPoint.y == end.y) ||
+                    (upPoint.x == end.x && upPoint.y == end.y) ||
+                    (rightPoint.x == end.x && rightPoint.y == end.y) ||
+                    (downPoint.x == end.x && downPoint.y == end.y)) {
+                    return i;
+                }
+                
+                if(isPointWalkable(leftPoint, visitedList, forest)) {
+                    queue.add(leftPoint);
+                    HashSet<Integer> set = visitedList.getOrDefault(leftPoint.x, new HashSet<Integer>());
+                    set.add(leftPoint.y);
+                    visitedList.putIfAbsent(leftPoint.x, set);
+                }
+                if(isPointWalkable(upPoint, visitedList, forest)) {
+                    queue.add(upPoint);
+                    HashSet<Integer> set = visitedList.getOrDefault(upPoint.x, new HashSet<Integer>());
+                    set.add(upPoint.y);
+                    visitedList.putIfAbsent(upPoint.x, set);
+                }
+                if(isPointWalkable(rightPoint, visitedList, forest)) {
+                    queue.add(rightPoint);
+                    HashSet<Integer> set = visitedList.getOrDefault(rightPoint.x, new HashSet<Integer>());
+                    set.add(rightPoint.y);
+                    visitedList.putIfAbsent(rightPoint.x, set);
+                }
+                if(isPointWalkable(downPoint, visitedList, forest)) {
+                    queue.add(downPoint);
+                    HashSet<Integer> set = visitedList.getOrDefault(downPoint.x, new HashSet<Integer>());
+                    set.add(downPoint.y);
+                    visitedList.putIfAbsent(downPoint.x, set);
+                }
+                curNodeSize --;
+            }
+            i ++;
+        }
+        return res;
+    }
+    
+    private boolean isPointWalkable(Point start, HashMap<Integer, HashSet<Integer>> visitedList, List<List<Integer>> forest) {
+        //out of border, stop
+        if(start.x < 0 || start.x >= forest.size() || start.y < 0 || start.y >= forest.get(start.x).size()) {
+            return false;
+        }
+        //visited node, stop
+        if(visitedList.get(start.x) != null && visitedList.get(start.x).contains(start.y)) {
+            return false;
+        }
+        //find obstacle, return
+        if(forest.get(start.x).get(start.y) == 0) {
+            return false;
+        }
+        return true;
+    }
+}
+
+
+//storage point x and y(x is row and y is column index)
+class Point {
+    int x;
+    int y;
+    public Point (int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+//tree with height and point
+class Tree{
+    Point point;
+    int height;
+    public Tree (Point point, int height) {
+        this.point = point;
+        this.height = height;
+    }
+}
