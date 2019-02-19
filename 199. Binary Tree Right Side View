@@ -1,0 +1,39 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+//time o(n) node, space o(height)
+class Solution {
+    public List<Integer> rightSideView(TreeNode root) {
+        ArrayList<Integer> resList = new ArrayList<>();
+        if(root != null) {
+            update(0, resList, root);
+        }
+        return resList;
+    }
+    
+    /*
+    * For each level, looking from right to left, if resList.get(level) is not empty
+    * then some node in our right must fill it, just do nothing in this level
+    * @paras level, current level in tree root is level 0
+    * @paras resList, res to return 
+    */
+    public void update(int level, ArrayList<Integer> resList, TreeNode root) {
+        //if current level recorder is empty, add new one
+        if(resList.size() == level) {
+            resList.add(root.val);
+        }
+        //looking right child first
+        if(root.right != null) {
+            update(level + 1, resList, root.right);
+        }
+        if(root.left != null) {
+            update(level + 1, resList, root.left);
+        }
+    }
+}
