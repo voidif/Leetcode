@@ -1,0 +1,78 @@
+class Solution {
+    //using string "123456" to represent a state node
+    //i.e. the goal state is"123450", so it a graph search
+    public int slidingPuzzle(int[][] board) {
+        StringBuilder tmp = new StringBuilder();
+        for(int[] row: board) {
+            for(int val : row) {
+                tmp.append(val);
+            }
+        }
+        String start = new String(tmp);
+        //run bfs to find min
+        return bfs(start, "123450");
+    }
+    
+    public int bfs(String start, String end) {
+        if(start.equals(end)) {
+            return 0;
+        }
+        //storage distance and visited node
+        HashMap<String, Integer> dist = new HashMap<>();
+        dist.put(start, 0);
+        //queue for bfs
+        Queue<String> queue = new LinkedList<>();
+        queue.add(start);
+        while(queue.size() != 0) {
+            String cur = queue.remove();
+            int newDist = dist.get(cur) + 1;
+            for(String next : getNextNodes(cur)) {
+                if(next.equals(end)) {
+                    return newDist;
+                } else if(dist.containsKey(next)) {
+                    continue;
+                } else {
+                    dist.put(next, newDist);
+                    queue.add(next);
+                }
+            }
+        }
+        return -1;
+        
+    }
+    
+    //given a state, find next valid stats
+    public ArrayList<String> getNextNodes(String cur) {
+        int index = cur.indexOf('0');
+        int row = index / 3;
+        int col = index % 3;
+        
+        ArrayList<String> res = new ArrayList<>();
+        //up 
+        if(row - 1 >= 0) {
+            res.add(swap(row, col, row - 1, col, cur));
+        }
+        //right 
+        if(col + 1 <= 2) {
+            res.add(swap(row, col, row, col + 1, cur));
+        }
+        //down 
+        if(row + 1 <= 1) {
+            res.add(swap(row, col, row + 1, col, cur));
+        }
+        //left 
+        if(col - 1 >= 0) {
+            res.add(swap(row, col, row, col - 1, cur));
+        }
+        return res;
+    }
+    
+    //swap two tiles
+    public String swap(int row1, int col1, int row2, int col2, String cur) {
+        // System.out.println(row1 + " " + col1 + " " + row2 +  " " + col2); 
+        StringBuilder next = new StringBuilder(cur);
+        next.setCharAt((row1) * 3 + col1, cur.charAt(row2 * 3 + col2));
+        next.setCharAt((row2) * 3 + col2, cur.charAt(row1 * 3 + col1));
+        return next.toString();
+    }
+}
