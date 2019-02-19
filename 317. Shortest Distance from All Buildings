@@ -1,0 +1,93 @@
+class Solution {
+    //basic idea, looking every 1's in map, do bfs for every
+    //1, find the one that we need
+    public int shortestDistance(int[][] grid) {
+        int dist = Integer.MAX_VALUE;
+        //this array represents the distance of current block to all buildings(only for 0)
+        //value: > 0 dist
+        //0: init value
+        //-1: unreachable point, never consider
+        int[][] dists = new int[grid.length][grid[0].length];
+        
+        ArrayList<String> buildingList = new ArrayList<>();
+        for(int row = 0; row < grid.length; row ++) {
+            for(int column = 0; column < grid[0].length; column ++) {
+                if(grid[row][column] == 1) {
+                    buildingList.add(row + " " + column);
+                }
+            }
+        }
+        //for each building, do bfs
+        for(String building: buildingList) {
+            int[][] newDistList = bfs(building, grid);
+            for(int row = 0; row < dists.length; row ++) {
+                for(int column = 0; column < dists[0].length; column ++) {
+                    if(newDistList[row][column] > 0 && dists[row][column] != -1) {
+                        dists[row][column] += newDistList[row][column];
+                    } else {
+                        dists[row][column] = -1;
+                    }
+                }
+            }
+        }
+        for(int row = 0; row < dists.length; row ++) {
+            for(int column = 0; column < dists[0].length; column ++) {
+                if(dists[row][column] > 0) {
+                    dist = Math.min(dist, dists[row][column]);
+                }
+            }
+        }
+        if(dist != Integer.MAX_VALUE) {
+            return dist;
+        } else {
+            return -1;
+        }
+    }
+    
+    //return start point's total distance to all building
+    //the hashmap's key is "row column" string, split by a whitespace 
+    public int[][] bfs(String begin, int[][] grid) {
+        //
+        int[][] res = new int[grid.length][grid[0].length];
+        //hashmap storage distance and visited node
+        HashMap<String, Integer> dist = new HashMap<>();
+        Queue<String> queue = new LinkedList<>();
+        queue.add(begin);
+        dist.put(begin, 0);
+        while(queue.size() != 0) {
+            String cur = queue.remove();
+            int newDist = dist.get(cur) + 1;
+            for(String next: getNexts(cur, grid)) {
+                if(!dist.containsKey(next)) {
+                    queue.add(next);
+                    dist.put(next, newDist);
+                    res[Integer.valueOf(next.split(" ")[0])][Integer.valueOf(next.split(" ")[1])] = newDist;
+                }
+            }
+        }
+        return res;
+    }
+    
+    public ArrayList<String> getNexts(String cur, int[][] grid) {
+        int row = Integer.valueOf(cur.split(" ")[0]);
+        int column = Integer.valueOf(cur.split(" ")[1]);
+        ArrayList<String> res = new ArrayList<>();
+        //up
+        if(row - 1 >= 0 && grid[row - 1][column] == 0) {
+            res.add(row - 1 + " " + column);
+        } 
+        //right
+        if(column + 1 < grid[0].length && grid[row][column + 1] == 0) {
+            res.add(row + " " + (column + 1));
+        } 
+        //down
+        if(row + 1 < grid.length && grid[row + 1][column] == 0) {
+            res.add(row + 1 + " " + column);
+        } 
+        //left
+        if(column - 1 >= 0 && grid[row][column - 1] == 0) {
+            res.add(row + " " + (column - 1));
+        } 
+        return res;
+    }
+}
