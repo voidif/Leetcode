@@ -109,3 +109,102 @@ class DoublyLinkedList {
  */
  
  //a more elegant way
+class LRUCache {
+    class Node<K, V> {
+        K key;
+        V val;
+        public Node(K key, V val) {
+            this.key = key;
+            this.val = val;
+
+        }
+        Node<K, V> pre = null;
+        Node<K, V> next = null;
+    }
+
+    private void remove(Node node) {
+        if(node.pre != null) {
+            node.pre.next = node.next;
+        }
+        if(node.next != null) {
+            node.next.pre = node.pre;
+        }
+        if(head == node) {
+            head = node.next;
+        }
+        if(end == node) {
+            end = node.pre;
+        }
+        node.pre = null;
+        node.next = null;
+
+    }
+
+    private void insert(Node node) {
+        if(head == null) {
+            head = node;
+            end = node;
+        } else {
+            end.next = node;
+            node.pre = end;
+            end = node;
+        }
+    }
+
+    private HashMap<Integer, Node<Integer, Integer>> map;
+    private Node<Integer, Integer> head;
+    private Node<Integer, Integer> end;
+
+    private int capacity = 0;
+    private int size = 0;
+
+    public LRUCache(int capacity) {
+        map = new HashMap<Integer, Node<Integer, Integer>>();
+        this.capacity = capacity;
+        this.size = 0;
+        head = null;
+        end = null;
+    }
+
+    public int get(int key) {
+        Node<Integer, Integer> node = map.get(key);
+        if(node != null) {
+            remove(node);
+            insert(node);
+            return node.val;
+        } else {
+            return -1;
+        }
+
+    }
+
+    public void put(int key, int value) {
+        Node<Integer, Integer> node = map.get(key);
+        if(node == null) {
+            Node<Integer, Integer> newNode = new Node<>(key, value);
+            map.put(key, newNode);
+            insert(newNode);
+            size ++;
+        } else {
+            node.val = value;
+            remove(node);
+            insert(node);
+        }
+       
+        if(size > capacity) {
+            int oldKey = head.key;
+            Node oldNode = head;
+            head = head.next;
+            map.remove(oldKey);
+            remove(oldNode);
+            size --;
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
