@@ -1,0 +1,86 @@
+class Solution {
+    //1 find all gates in map
+    //2 run bfs to all gates
+    //3 upate distance in each run
+    public void wallsAndGates(int[][] rooms) {
+        ArrayList<String> gatesPosition = new ArrayList<>();
+        
+        for(int row = 0; row < rooms.length; row ++) {
+            for(int col = 0; col < rooms[0].length; col ++) {
+                if(rooms[row][col] == 0) {
+                    gatesPosition.add(row + " " + col);
+                }
+            }
+        }
+        
+        for(String gate: gatesPosition) {
+            bfs(gate, rooms);
+        }
+    }
+    
+    public void bfs(String start, int[][] rooms) {
+        //init visited map and queue
+        HashMap<String, Integer> dist = new HashMap<>();
+        Queue<String> queue = new LinkedList<>();
+        queue.add(start);
+        dist.put(start, 0);
+        while(queue.size() != 0) {
+            String cur = queue.remove();
+            //childs only include empty rooms
+            ArrayList<String> childs = getChilds(cur, rooms);
+            int newDist = dist.get(cur) + 1;
+            for(String child : childs) {
+                if(!dist.containsKey(child)) {
+                    int[] rowCol = parseString(child);
+                    int row = rowCol[0];
+                    int col = rowCol[1];
+                    rooms[row][col] = Math.min(newDist, rooms[row][col]);
+                    
+                    queue.add(child);
+                    dist.put(child, newDist);
+                }
+            }
+        }    
+    }
+    
+    public ArrayList<String> getChilds(String cur, int[][] rooms) {
+        int[] rowCol = parseString(cur);
+        int row = rowCol[0];
+        int col = rowCol[1];
+        
+        ArrayList<String> res = new ArrayList<>();
+        //up
+        if(row - 1 >= 0 && rooms[row - 1][col] > 0) {
+            res.add(row - 1 + " " + col);
+        }
+        //right
+        if(col + 1 < rooms[0].length && rooms[row][col + 1] > 0) {
+            res.add(row + " " + (col + 1));
+        }
+        
+        //down
+        if(row + 1 < rooms.length && rooms[row + 1][col] > 0) {
+            res.add(row + 1 + " " + col);
+        }
+        //left
+        if(col - 1 >= 0 && rooms[row][col - 1] > 0) {
+            res.add(row + " " + (col - 1));
+        }
+        return res;
+    }
+    
+    public int[] parseString(String str) {
+        int[] res = new int[2];
+        int val = 0;
+        for(char tmp:str.toCharArray()) {
+            if(tmp != ' ') {
+                val = val * 10 + tmp - '0';
+            } else {
+                res[0] = val;
+                val = 0;
+            }
+        }
+        res[1] = val;
+        return res;
+    }
+}
