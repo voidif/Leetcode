@@ -1,0 +1,36 @@
+//union find
+class Solution {
+    //for a tree, node number must = edge number + 1
+    //and there is only one connected graph
+    //union find
+    public boolean validTree(int n, int[][] edges) {
+        if(edges.length + 1 != n) {
+            return false;
+        } else {
+            int[] idList = new int[n];
+            for(int i = 0; i < n; i ++) {
+                idList[i] = i;
+            }
+            for(int[] edge: edges) {
+                int p = find(idList, edge[0]);
+                int q = find(idList, edge[1]);
+                if(p != q) {
+                    idList[p] = q; //quick union
+                    n --;
+                }
+            }
+            return n == 1;
+        }
+    }
+    
+    //using quick union
+    public int find(int[] idList, int p) {
+        while(p != idList[p]) {
+            idList[p] = idList[idList[p]]; //path compress
+            p = idList[p];
+        }
+        return p;
+    }
+    
+    
+}
