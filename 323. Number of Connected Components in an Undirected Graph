@@ -1,0 +1,35 @@
+//ref: https://blog.csdn.net/dm_vincent/article/details/7655764
+class Solution {
+    int num;
+    //using union find, quick-union
+    public int countComponents(int n, int[][] edges) {
+        num = n;
+        int[] idList = new int[n];
+        for(int i = 0; i < n; i ++) {
+            idList[i] = i;
+        }
+        
+        for(int[] edge: edges) {
+            int p = find(edge[0], idList);
+            int q = find(edge[1], idList);
+            union(idList, p, q);
+        }
+        return num;
+    }
+    
+    public int find(int node, int[] idList) {
+        while(idList[node] != node) {
+            node = idList[idList[node]];
+        }
+        return node;
+        
+    }
+    
+    public void union(int[] list, int p, int q) {
+        if(p != q) {
+            list[p] = q;
+            num --;
+        }
+        
+    }
+}
