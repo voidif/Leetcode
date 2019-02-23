@@ -1,0 +1,25 @@
+//o n time o 2 space
+class Solution {
+    //[i, j] sbustring both inclusive
+    public int lengthOfLongestSubstringTwoDistinct(String s) {
+        int i = 0;
+        int j = 0;
+        HashMap<Character, Integer> count = new HashMap<>();
+        int res = 0;
+        while(j < s.length()) {
+            count.put(s.charAt(j), count.getOrDefault(s.charAt(j), 0) + 1);
+            if(count.size() == 3) {
+                while(count.size() == 3) {
+                    count.put(s.charAt(i), count.get(s.charAt(i)) - 1);
+                    if(count.get(s.charAt(i)) == 0) {
+                        count.remove(s.charAt(i));
+                    }
+                    i ++;
+                }
+            }
+            res = Math.max(res, j - i + 1);
+            j ++;
+        }
+        return res;
+    }
+}
