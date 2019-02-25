@@ -1,0 +1,34 @@
+class Solution {
+    //dp
+    public int minCostII(int[][] costs) {
+        //using min1 and min2 to track min cost to previous house, index represent index
+        int min1 = 0;
+        int min2 = 0;
+        int index = -1;
+        
+        int res = Integer.MAX_VALUE;
+        for(int i = 0; i < costs.length; i ++) {
+            int tmpMin1 = min1;
+            int tmpMin2 = min2;
+            int tmpIndex = index;
+            min1 = Integer.MAX_VALUE;
+            min2 = Integer.MAX_VALUE;
+            for(int j = 0; j < costs[0].length; j ++) { 
+                int newCost;
+                if(j != tmpIndex) {
+                    newCost = tmpMin1 + costs[i][j];
+                } else {
+                    newCost = tmpMin2 + costs[i][j];
+                }
+                if(min1 > newCost) {
+                    min2 = min1;
+                    min1 = newCost;
+                    index = j;
+                } else {
+                    min2 = Math.min(min2, newCost);
+                }
+            }
+        }
+        return min1;
+    }
+}
