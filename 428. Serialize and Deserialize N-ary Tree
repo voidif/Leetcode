@@ -1,0 +1,80 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> children;
+
+    public Node() {}
+
+    public Node(int _val,List<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+
+// space represent next val is a child
+// \t represent current node has no more child, return last
+class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(Node root) {
+        if(root == null) {
+            return "";
+        }
+        StringBuilder res = new StringBuilder();
+        res.append(root.val);
+        if(root.children != null && root.children.size() != 0) {
+            for(Node child: root.children) {
+                res.append(" ");
+                res.append(serialize(child));
+            }
+        } 
+        res.append('\t');
+        return res.toString();
+    }
+
+    // Decodes your encoded data to tree.
+    public Node deserialize(String data) {
+        if(data == null || data.length() == 0) {
+            return null;
+        }
+        // System.out.println(data);
+        int[] index = new int[]{0};
+        return helper(data, index);
+    }
+    
+    private Node helper(String data, int[] index) {
+        int value = parseValue(data, index);
+        Node node = new Node(value, new ArrayList<Node>());
+        
+        char command = parseCommand(data, index);
+        while(command == ' ') {
+            node.children.add(helper(data, index));
+            command = parseCommand(data, index);
+        }
+        return node;
+    }
+    
+    private int parseValue(String data, int[] index) {
+        int pos = index[0];
+        while(data.charAt(pos) != ' ' && data.charAt(pos) != '\t') {
+            pos ++;
+        }
+        int val = Integer.valueOf(data.substring(index[0], pos));
+        index[0] = pos;
+        // System.out.print(val);
+        return val;
+    }
+    
+    private char parseCommand(String data, int[] index) {
+        char res = data.charAt(index[0]);
+        index[0] += 1;
+        // System.out.print(res);
+        return res;
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.deserialize(codec.serialize(root));
