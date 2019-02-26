@@ -36,3 +36,46 @@ class Solution {
         return s.substring(l, r + 1);
     }
 }
+
+//second method
+class Solution {
+    
+    public String longestPalindrome(String s) {
+        String res = "";
+        if(s == null || s.length() == 0) {
+            return res;
+        }
+        int n = s.length();
+        int centerIndex = 0;
+        while(centerIndex <= 2 * n - 1) {
+            String tmpRes = getLongestPalindromic(s, centerIndex);
+            if(tmpRes.length() > res.length()) {
+                res = tmpRes;
+            }
+            centerIndex ++;
+        }
+        return res;
+    }
+    //0 1 2 3 4 5
+    //0123456789
+    
+    private String getLongestPalindromic(String s, int center) {
+        //oven 
+        int left;
+        int right;
+        if(center % 2 == 0) {
+            left = center / 2;
+            right = center / 2;
+        } else {
+            //odd
+            left = center / 2 + 1;
+            right = center / 2;
+        }
+        while(left - 1 >= 0 && right + 1 < s.length() && s.charAt(left - 1) == s.charAt(right + 1)) {
+            left --;
+            right ++;
+        }
+        return s.substring(left,  right + 1);
+        
+    }
+}
