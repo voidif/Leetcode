@@ -26,3 +26,48 @@ class Solution {
         return table[char1.length][char2.length];
     }
 }
+
+
+//
+class Solution {
+    //dp
+    //define optimal match: match with min distance
+    //acbb and abb
+    //acbb
+    //a-bb, distance is 1
+    
+    //for s1 0 - m, s2 0 - n
+    //there must be one of following three situations if
+    //1. m is match n in optimal match, + 1 distance if char(m) != char(n)
+    //2. m is not match
+    //3. n is not match
+    public int minDistance(String word1, String word2) {
+        int m = word1.length();
+        int n = word2.length();
+        //dp[i][j] represent the min distance between sub[0, i - 1] sub[0, j - 1]
+        int[][] dp = new int[m + 1][n + 1];
+        
+        //fill first row
+        for(int i = 0; i < n + 1; i ++) {
+            dp[0][i] = i;
+        }
+        //fill first column
+        for(int i = 0; i < m + 1; i ++) {
+            dp[i][0] = i;
+        }
+        //fill one line by one line
+        for(int i = 1; i < m + 1; i ++) {
+            for(int j = 1; j < n + 1; j ++) {
+                int equalDist = word1.charAt(i - 1) == word2.charAt(j - 1) ? 0 : 1;
+                //case 1, 2, 3
+                int dist1 = dp[i - 1][j - 1] + equalDist;
+                int dist2 = dp[i - 1][j] + 1;
+                int dist3 = dp[i][j - 1] + 1;
+                dp[i][j] = Math.min(Math.min(dist1, dist2), dist3);
+            }
+        }
+        return dp[m][n];
+        
+        
+    }
+}
