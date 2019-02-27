@@ -1,0 +1,31 @@
+class Solution {
+    public String fractionToDecimal(int numerator, int denominator) {
+        if((long)numerator % denominator == 0) {
+            return String.valueOf((long)numerator / denominator);
+        }
+        long num = Math.abs((long)numerator);
+        long deno = Math.abs((long)denominator);
+        String sign = (long)numerator * denominator < 0 ? "-" : "";
+        
+        Map<Long, Integer> map = new HashMap<>();
+        long intPart = num / deno;
+        long remaining = num % deno;
+        
+        StringBuilder fractionalPart = new StringBuilder();
+        int i = 0;
+        
+        while(remaining != 0) {
+            if(map.containsKey(remaining)) {
+                int index = map.get(remaining);
+                return sign + intPart + '.' + fractionalPart.substring(0, index) + '(' + fractionalPart.substring(index) + ')';
+            } else {
+                map.put(remaining, i);
+                remaining *= 10;
+                fractionalPart.append(remaining / deno);
+                remaining %= deno; 
+            }
+            i ++;
+        } 
+        return sign + intPart + '.' + fractionalPart.toString();
+    }
+}
