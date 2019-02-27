@@ -1,0 +1,18 @@
+class Solution {
+    public int compareVersion(String version1, String version2) {
+        String[] v1 = version1.split("\\.");
+        String[] v2 = version2.split("\\.");
+        int v1Index = 0;
+        int v2Index = 0;
+        while(v1Index < v1.length || v2Index < v2.length) {
+            int number1 = v1Index < v1.length ? Integer.valueOf(v1[v1Index]) : 0;
+            int number2 = v2Index < v2.length ? Integer.valueOf(v2[v2Index]) : 0;
+            if(number1 != number2) {
+                return number1 > number2 ? 1 : -1;
+            }
+            v1Index ++;
+            v2Index ++;
+        }
+        return 0;
+    }
+}
