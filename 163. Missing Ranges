@@ -1,0 +1,40 @@
+class Solution {
+    public List<String> findMissingRanges(int[] nums, int lower, int upper) {
+        List<String> res = new ArrayList<>();
+        if(nums.length == 0) {
+            if(lower == upper) {
+                res.add(String.valueOf(lower));
+            } else if(lower < upper){
+                res.add(lower + "->" + upper);
+            }
+            return res;
+        }
+        helper(nums, 0, lower, upper, res);
+        return res;
+    }
+    
+    public void helper(int[] nums, int index, int lower, int upper, List<String> res) {
+        //too big
+        if(index >= nums.length || nums[index] > upper) {
+            if(lower == upper) {
+                res.add(String.valueOf(lower));
+            } else if(lower < upper){
+                res.add(lower + "->" + upper);
+            }
+        } else if(nums[index] < lower) {
+            helper(nums, index + 1, lower, upper, res);
+        } else {
+            if(lower + 1 == nums[index]) {
+                res.add(String.valueOf(lower));
+            } else if(lower != nums[index]) {
+                res.add(lower + "->" + (nums[index] - 1));
+            }
+            if(nums[index] < upper) {
+                helper(nums, index + 1, nums[index] + 1, upper, res);
+            }
+            
+        }
+    }
+    
+
+}
