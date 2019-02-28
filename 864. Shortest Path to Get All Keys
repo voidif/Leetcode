@@ -1,0 +1,89 @@
+class Solution {
+    public int shortestPathAllKeys(String[] grid) {
+        //first, iterate all elements in grid
+        //find start point, find whole key status
+        int startRow = 0;
+        int startCol = 0;
+        int key = 0;
+        int m = grid.length;
+        int n = grid[0].length();
+        for(int i = 0; i < m; i ++) {
+            for(int j = 0; j < n; j ++) {
+                if(grid[i].charAt(j) == '@') {
+                    startRow = i;
+                    startCol = j;
+                }
+                //find key, add key set
+                if(grid[i].charAt(j) <= 'z' && grid[i].charAt(j) >= 'a') {
+                    key = key | (1 << (grid[i].charAt(j) - 'a'));
+                }
+            }
+        }
+        
+        //bfs, search state space (row, column, current hold key)
+        String start = startRow + " " + startCol + " " + 0;
+        //map storage visited node and distances
+        HashMap<String, Integer> dists = new HashMap<>();
+        dists.put(start, 0);
+        Queue<String> queue = new LinkedList<>();
+        queue.add(start);
+        
+        //main while loop
+        while(queue.size() != 0) {
+            String curNode = queue.remove();
+            int newDist = dists.get(curNode) + 1;
+            ArrayList<String> children = getChildren(curNode, grid);
+            for(String child : children) {
+                //if not visited
+                if(!dists.containsKey(child)) {
+                    int keyStatus = Integer.valueOf(child.split(" ")[2]);
+                    //if we find goal, return 
+                    if(keyStatus == key) {
+                        return newDist;
+                    } else {
+                        dists.put(child, newDist);
+                        queue.add(child);
+                    }
+                }
+            }
+        }
+        //impossible, return -1
+        return -1;
+    }
+    
+    
+    private ArrayList<String> getChildren(String curNode, String[] grid) {
+        String[] array = curNode.split(" ");
+        int row = Integer.valueOf(array[0]);
+        int col = Integer.valueOf(array[1]);
+        int key = Integer.valueOf(array[2]);
+        ArrayList<String> returnArray = new ArrayList<>();
+        
+        int[][] offsets = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        for(int[] offset: offsets) {
+            int newRow = row + offset[0];
+            int newCol = col + offset[1];
+        
+            if(newRow >= 0 && newRow < grid.length && newCol >= 0 && newCol < grid[0].length()) {
+                char next = grid[newRow].charAt(newCol);
+                //if it is empty
+                if(next == '.' || next == '@') {
+                    returnArray.add(newRow + " " + newCol + " " + key);
+                    //if it is a key
+                } else if(next >= 'a' && next <= 'z') {
+                    int newKey = key | (1 << (next - 'a'));
+                    returnArray.add(newRow + " " + newCol + " " + newKey);
+                    //if it is a lock
+                } else if(next >= 'A' && next <= 'Z') {
+                    int lock = 1 << (next - 'A');
+                    if((lock & key) == lock) {
+                        returnArray.add(newRow + " " + newCol + " " + key);
+                    }
+                }
+            }
+        }
+        return returnArray;
+
+    }
+    
+}
