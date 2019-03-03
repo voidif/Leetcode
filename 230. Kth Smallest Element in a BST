@@ -72,3 +72,39 @@ class Solution {
       }
    }
 }
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    int count;
+    int val;
+    public int kthSmallest(TreeNode root, int k) {
+        count = k;
+        inorder(root);
+        return val;
+    }
+    
+    public void inorder(TreeNode root) {
+        if(count <= 0) {
+            return;
+        }
+        if(root.left != null) {
+            inorder(root.left);
+        } 
+        if(count == 1) {
+            val = root.val;
+        }
+        count --;
+        if(root.right != null) {
+            inorder(root.right);
+        }
+        
+    }
+}
