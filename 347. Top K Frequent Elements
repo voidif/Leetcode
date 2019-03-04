@@ -32,3 +32,104 @@ class EntryComparator implements Comparator<Map.Entry<Integer, Integer>>{
       }
    }
 }
+
+
+//self achieved heap
+class Solution {
+    
+    public List<Integer> topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> count = new HashMap<>();
+        for(int num : nums) {
+            count.put(num, count.getOrDefault(num, 0) + 1);
+        }
+        MinHeap<Freq> heap = new MinHeap<Freq>((o1, o2) -> o1.count - o2.count);
+        for(Integer num : count.keySet()) {
+            heap.insert(new Freq(num, count.get(num)));
+            if(heap.size() > k) {
+                heap.remove();
+            }
+        }
+        
+        List<Integer> res = new ArrayList<>();
+        for(int i = 0; i < k && heap.size() > 0; i ++) {
+            res.add(heap.remove().num);
+        }
+        return res;
+        
+    }
+    
+    
+}
+
+class Freq {
+    int num;
+    int count;
+    public Freq(int num, int count) {
+        this.num = num;
+        this.count = count;
+    }
+}
+
+
+class MinHeap<T> {
+    private ArrayList<T> array;
+    private Comparator<T> comparator;
+    
+    public MinHeap(Comparator<T> comp) {
+        array = new ArrayList<T>();
+        array.add(null);
+        comparator = comp;
+    }
+    
+    public int size() {
+        return array.size() - 1;
+    }
+    
+    public void insert(T object) {
+        array.add(object);
+        heapifyUp(array.size() - 1);
+    }
+    
+    public T remove() {
+        if(array.size() <= 1) {
+            return null;
+        }
+        T target = array.get(1);
+        swap(1, array.size() - 1);
+        array.remove(array.size() - 1);
+        heapifyDown(1);
+        return target;
+    }
+    
+    private void heapifyUp(int index) {
+        if(index == 1) {
+            return;
+        }
+        int parent = index / 2;
+        if(comparator.compare(array.get(index), array.get(parent)) < 0) {
+            swap(index, parent);
+            heapifyUp(parent);
+        }
+    }
+    
+    private void heapifyDown(int index) {
+        int child1 = index * 2;
+        int child2 = index * 2 + 1;
+        //goal index
+        int goal = index;
+        if(child1 < array.size() && comparator.compare(array.get(child1), array.get(index)) < 0) {
+            goal = child1;
+        }
+        if(child2 < array.size() && comparator.compare(array.get(child2), array.get(goal)) < 0) {
+            goal = child2;
+        }
+        if(goal != index) {
+            swap(index, goal);
+            heapifyDown(goal);
+        }
+    }
+    
+    private void swap(int index1, int index2) {
+        Collections.swap(array, index1, index2);
+    }
+}
