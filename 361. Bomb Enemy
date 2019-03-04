@@ -1,0 +1,42 @@
+class Solution {
+    //scan from left top to right bottom, line by line
+    public int maxKilledEnemies(char[][] grid) {
+        int m = grid.length;
+        int n = (m == 0 ? 0 : grid[0].length);
+        //using a int storage current line count during scan
+        int rowCount = 0;
+        //using a int array to storage column counts, will use multipy times
+        int[] colCounts = new int[n];
+        int result = 0;
+        for(int i = 0; i < m; i ++) {
+            for(int j = 0; j < n; j++) {
+                //if this is a new row or encounter wall before
+                if(j == 0 || grid[i][j - 1] == 'W') {
+                    rowCount = 0;
+                    int k = j;
+                    while(k < n && grid[i][k] != 'W') {
+                        if(grid[i][k] == 'E') {
+                            rowCount ++;
+                        }
+                        k ++;
+                    }
+                }
+                //the same, now we are updating the column count
+                if(i == 0 || grid[i - 1][j] == 'W') {
+                    colCounts[j] = 0;
+                    int k = i;
+                    while(k < m && grid[k][j] != 'W') {
+                        if(grid[k][j] == 'E') {
+                            colCounts[j] ++;
+                        }
+                        k ++;
+                    }
+                }
+                if(grid[i][j] == '0') {
+                    result = Math.max(result, rowCount + colCounts[j]);
+                }
+            }
+        }
+        return result;
+    }
+}
