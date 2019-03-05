@@ -1,0 +1,33 @@
+class Solution {
+    // o nlogn time ~ on^2 o1 space
+    public boolean verifyPreorder(int[] preorder) {
+        return verifyHelper(preorder, 0, preorder.length - 1, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    
+    //verify if subarray [start, end](both inclusive) is valid preorder sequence
+    public boolean verifyHelper(int[] preorder, int start, int end, int min, int max) {
+        if(start > end) {
+            return true;
+        }
+
+        int rootVal = preorder[start];
+        if(rootVal > max || rootVal < min) {
+            return false;
+        }
+        if(start == end) {
+            return rootVal >= min && rootVal <= max;
+        }
+        
+        //find right child begin val
+        int rightIndex = start + 1;
+        while(rightIndex <= end && preorder[rightIndex] <= rootVal) {
+            rightIndex ++;
+        }
+        boolean leftVerify = verifyHelper(preorder, start + 1, rightIndex - 1, min, rootVal);
+        boolean rightVerify = verifyHelper(preorder, rightIndex, end, rootVal, max);
+        return leftVerify && rightVerify;
+        
+    }
+}
+
+//on time on space
