@@ -1,0 +1,13 @@
+class Solution {
+    public int numJewelsInStones(String J, String S) {
+        int[] jewels = new int[128];
+        for(char jewel : J.toCharArray()) {
+            jewels[jewel] = 1;
+        }
+        int count = 0;
+        for(char stone : S.toCharArray()) {
+            count += jewels[stone];
+        }
+        return count;
+    }
+}
