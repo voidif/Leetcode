@@ -1,0 +1,33 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> findLeaves(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        getHeight(root, res);
+        return res;
+    }
+    
+    //calculate height for current node, leaf is 0, when get height, add this node's val to res's height th index
+    public int getHeight(TreeNode root, List<List<Integer>> res) {
+        if(root == null) {
+            return -1;
+        }
+        int leftHeight = getHeight(root.left, res);
+        int rightHeight = getHeight(root.right, res);
+        
+        int height = Math.max(leftHeight, rightHeight) + 1;
+        if(height >= res.size()) {
+            res.add(new ArrayList<Integer>());
+        }
+        List<Integer> list = res.get(height);
+        list.add(root.val);
+        return height;
+    }
+}
