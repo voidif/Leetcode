@@ -47,3 +47,47 @@ class Solution {
     }
     
 }
+
+class Solution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        //first step, set graph
+        //queue to storage empty indegree node
+        Queue<Integer> avaliableCourses = new LinkedList<>();
+        Map<Integer, Integer> InDegreeMap = new HashMap<>();
+        Map<Integer, Set<Integer>> childrenMap = new HashMap<>();
+        
+        for(int[] edge : prerequisites) {
+            Set<Integer> child = childrenMap.getOrDefault(edge[1], new HashSet<Integer>());
+            child.add(edge[0]);
+            childrenMap.putIfAbsent(edge[1], child);
+            
+            InDegreeMap.put(edge[0], InDegreeMap.getOrDefault(edge[0], 0) + 1);
+        }
+        for(int i = 0; i < numCourses; i ++) {
+            if(! InDegreeMap.containsKey(i)) {
+                avaliableCourses.add(i);
+            }
+        }
+        
+        int[] result = new int[numCourses];
+        int index = 0;
+        //step 2, looping
+        while(avaliableCourses.size() != 0) {
+            int currentCourse = avaliableCourses.remove();
+            result[index] = currentCourse;
+            index ++;
+            
+            Set<Integer> childrenCourses = childrenMap.getOrDefault(currentCourse, new HashSet<Integer>());
+            for(int childCourse : childrenCourses) {
+                int remainingPre = InDegreeMap.get(childCourse) - 1;
+                InDegreeMap.put(childCourse, remainingPre);
+                if(remainingPre == 0) {
+                    avaliableCourses.add(childCourse);
+                }
+            }
+        }
+        return index == numCourses ? result : new int[0];
+        
+        
+    }
+}
