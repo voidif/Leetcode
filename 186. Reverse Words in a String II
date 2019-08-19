@@ -1,0 +1,38 @@
+class Solution {
+    private char WORD_SEPRATOR = ' ';
+    public void reverseWords(char[] s) {
+        reverseCharForEveryWordsInArray(s);
+        reverseArray(s);
+    }
+    
+    private void reverseArray(char[] wordsArray) {
+        reverseInRange(wordsArray, 0, wordsArray.length);
+    }
+    
+    private void reverseCharForEveryWordsInArray(char[] wordsArray) {
+        int wordHeadPosition = 0;
+        int wordTrailPosition = 0;
+        while (wordTrailPosition < wordsArray.length) {
+            if (wordsArray[wordTrailPosition] == WORD_SEPRATOR) {
+                reverseInRange(wordsArray, wordHeadPosition, wordTrailPosition);
+                wordHeadPosition = wordTrailPosition + 1;
+            }
+            wordTrailPosition ++;
+        }
+        reverseInRange(wordsArray, wordHeadPosition, wordTrailPosition);
+    }
+    
+    private void reverseInRange(char[] wordsArray, int wordHeadPosition, int wordTrailPosition) {
+        while (wordHeadPosition < wordTrailPosition - 1) {
+            swap(wordsArray, wordHeadPosition, wordTrailPosition - 1);
+            wordHeadPosition ++;
+            wordTrailPosition --;
+        }
+    }
+    
+    private void swap(char[] wordsArray, int firstPos, int secondPos) {
+        char tmp = wordsArray[firstPos];
+        wordsArray[firstPos] = wordsArray[secondPos];
+        wordsArray[secondPos] = tmp;
+    }
+}
