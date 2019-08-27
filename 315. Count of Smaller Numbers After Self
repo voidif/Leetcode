@@ -55,3 +55,75 @@ class Solution {
     }
 }
 
+//nlogn to n2
+BST
+class Solution {
+    public List<Integer> countSmaller(int[] nums) {
+        LinkedList<Integer> smallerCount = new LinkedList<>();
+        BST tree = new BST();
+        for(int i = nums.length - 1; i >= 0; i --) {
+            smallerCount.addFirst(tree.insert(nums[i]));
+        }
+        return smallerCount;
+    }
+}
+
+
+class BST {
+    public BSTNode rootNode = null;
+    
+    public int insert(int val) {
+        if (rootNode == null) {
+            rootNode = new BSTNode(val, 0);
+            return 0;
+        } else {
+            BSTNode newNode = new BSTNode(val, 0);
+            return insertAtNode(rootNode, newNode, 0);
+        }
+    }
+    
+    private int insertAtNode(BSTNode parentNode, BSTNode newNode, int smallCount) {
+        if (newNode.val < parentNode.val) {
+            return insertLeft(parentNode, newNode, smallCount);
+        } else {
+            return insertRight(parentNode, newNode, smallCount);
+        }
+    }
+    
+    private int insertLeft(BSTNode parentNode, BSTNode newNode, int smallCount) {
+        parentNode.smallerChildCount ++;
+        if (parentNode.left == null) {
+            parentNode.left = newNode;
+            return smallCount;
+        } else {
+            return insertAtNode(parentNode.left, newNode, smallCount);
+        }
+    }
+    
+    private int insertRight(BSTNode parentNode, BSTNode newNode, int smallCount) {
+        if (parentNode.val < newNode.val) {
+           smallCount += parentNode.smallerChildCount + 1;
+        } else {
+            smallCount += parentNode.smallerChildCount;
+        }
+        if (parentNode.right == null) {
+            parentNode.right = newNode;
+            return smallCount;
+        } else {
+            return insertAtNode(parentNode.right, newNode, smallCount);
+        }
+    }
+}
+
+    class BSTNode {
+        public int val;
+        public int smallerChildCount;
+        
+        public BSTNode left = null;
+        public BSTNode right = null;
+        
+        public BSTNode(int val, int smallerChildCount) {
+            this.val = val;
+            this.smallerChildCount = smallerChildCount;
+        }
+    }
