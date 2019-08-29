@@ -1,0 +1,15 @@
+class Solution {
+    public int maxCount(int m, int n, int[][] ops) {
+        int rowMax = m;
+        int colMax = n;
+        for (int[] operation : ops) {
+            if (operation[0] < rowMax) {
+                rowMax = operation[0];
+            }
+            if (operation[1] < colMax) {
+                colMax = operation[1];
+            }
+        }
+        return rowMax * colMax;
+    }
+}
