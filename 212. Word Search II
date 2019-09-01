@@ -1,0 +1,81 @@
+class Solution {
+    private Set<String> foundWords = new HashSet<>();
+    
+    public List<String> findWords(char[][] board, String[] words) {
+        if (board.length == 0 || board[0].length == 0 || words.length == 0) {
+            return new ArrayList<String>(foundWords);
+        }
+        
+        Trie trie = new Trie();
+        for (String word: words) {
+            trie.insert(word);
+        }
+        return findWords(board, trie);
+    }
+    
+    private List<String> findWords(char[][] board, Trie wordTrie) {
+        int rowSize = board.length;
+        int colSize = board[0].length;
+        int[][] visitedBoard = new int[rowSize][colSize];
+        for (int row = 0; row < rowSize; row++) {
+            for (int col = 0; col < colSize; col++) {
+                findWordsFromPosition(board, visitedBoard, wordTrie.root, row, col);
+            }
+        }
+        return new ArrayList<String>(foundWords);
+    }
+    
+    private void findWordsFromPosition(char[][] board, int[][] visitedBoard, TrieNode currentCharNode, int row, int col) {
+        if (row >= board.length || row < 0 || col >= board[0].length || col < 0 || visitedBoard[row][col] == 1) {
+            return;
+        } else {
+            char currentChar = board[row][col];
+            TrieNode nextCharNode = currentCharNode.childs[currentChar - 'a'];
+            if (nextCharNode != null) {
+                if (nextCharNode.isEnd) {
+                    foundWords.add(nextCharNode.word);
+                } 
+                visitedBoard[row][col] = 1;
+                // left
+                findWordsFromPosition(board, visitedBoard, nextCharNode, row, col - 1);
+                // top
+                findWordsFromPosition(board, visitedBoard, nextCharNode, row - 1, col);
+                // right
+                findWordsFromPosition(board, visitedBoard, nextCharNode, row, col + 1);
+                // down
+                findWordsFromPosition(board, visitedBoard, nextCharNode, row + 1, col);
+                visitedBoard[row][col] = 0;
+            }
+        }
+    }
+}
+
+class TrieNode {
+    public TrieNode[] childs = new TrieNode[26];
+    public boolean isEnd = false;
+    public String word = "";
+    
+    public void insert(StringBuilder word) {
+        if (word.length() == 0) {
+            isEnd = true;
+        } else {
+            char nextChar = word.charAt(0);
+            if (childs[nextChar - 'a'] == null) {
+                childs[nextChar - 'a'] = new TrieNode();
+                childs[nextChar - 'a'].word = this.word + nextChar;
+            }
+            word.deleteCharAt(0);
+            childs[nextChar - 'a'].insert(word);
+        } 
+    }
+    
+}
+
+class Trie {
+    public TrieNode root = new TrieNode();
+    
+    public void insert(String word) {
+        StringBuilder wordBuilder = new StringBuilder(word);
+        root.insert(wordBuilder);
+    }
+}
