@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int countNodes(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int height = getTreeHeight(root);
+        int NodeCountExceptLastLevel = (int)Math.pow(2, height - 1) - 1;
+        int lastLevelNodeCount = getLastLevelNodeCount(root, height);
+        return NodeCountExceptLastLevel + lastLevelNodeCount;
+    }
+    
+    private int getTreeHeight(TreeNode root) {
+        return root.left == null ? 1 : 1 + getTreeHeight(root.left);
+    }
+    
+    private int getLastLevelNodeCount(TreeNode root, int height) {
+        int minLastLevelNodeIndex = 0;
+        int maxLastLevelNodeIndex = (int)Math.pow(2, height - 1);
+        // binary search
+        while (minLastLevelNodeIndex < maxLastLevelNodeIndex) {
+            int mid = minLastLevelNodeIndex + (maxLastLevelNodeIndex - minLastLevelNodeIndex) / 2;
+            if (checkNodeExisted(root, mid, height)) {
+                minLastLevelNodeIndex = mid + 1;
+            } else {
+                maxLastLevelNodeIndex = mid;
+            }
+        }
+        return maxLastLevelNodeIndex;
+    }
+    
+    private boolean checkNodeExisted(TreeNode root, int nodeIndex, int height) {
+        int minIndex = 0;
+        int maxIndex = (int)Math.pow(2, height - 1);
+        TreeNode curNode = root;
+        while (minIndex + 1 < maxIndex) {
+            int mid = minIndex + (maxIndex - minIndex) / 2;
+            if (nodeIndex >= mid) {
+                curNode = curNode.right;
+                minIndex = mid;
+            } else {
+                curNode = curNode.left;
+                maxIndex = mid;
+            }
+        }
+        return curNode != null;
+    }
+}
