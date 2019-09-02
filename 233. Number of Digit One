@@ -1,0 +1,32 @@
+class Solution {
+    public int countDigitOne(int n) {
+        if (n <= 0) {
+            return 0;
+        }
+        if (n < 10) {
+            return 1;
+        }
+        int digitsCount = getDigitsCount(n);
+        int bigNum = (int)Math.pow(10, digitsCount - 1);
+        int firstDigits = n / bigNum;
+        int remainingDigits = n % bigNum;
+        if (firstDigits == 1) {
+            return remainingDigits + 1 + 
+                    countDigitOne(remainingDigits) + 
+                    countDigitOne(bigNum - 1);
+        } else {
+            return bigNum + 
+                    countDigitOne(remainingDigits) +
+                    firstDigits * countDigitOne(bigNum - 1);
+        }
+    }
+    
+    private int getDigitsCount(int n) {
+        int digitsCount = 0;
+        while(n > 0) {
+            n = n / 10;
+            digitsCount ++;
+        }
+        return digitsCount;
+    }
+}
