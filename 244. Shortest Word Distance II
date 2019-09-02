@@ -1,0 +1,38 @@
+class WordDistance {
+    private Map<String, Set<Integer>> wordCount = new HashMap<>();
+
+    public WordDistance(String[] words) {
+        for (int i = 0; i < words.length; i++) {
+            Set<Integer> count = wordCount.getOrDefault(words[i], new TreeSet<>());
+            count.add(i);
+            wordCount.putIfAbsent(words[i], count);
+        }
+    }
+    
+    public int shortest(String word1, String word2) {
+        Set<Integer> word1Count = wordCount.get(word1);
+        Set<Integer> word2Count = wordCount.get(word2);
+        Iterator<Integer> word1Iter = word1Count.iterator();
+        Iterator<Integer> word2Iter = word2Count.iterator();
+        
+        int word1Index = word1Iter.next();
+        int word2Index = word2Iter.next();
+        int distance = Math.abs(word1Index - word2Index);
+        while (word1Index != -1 && word2Index != -1) {
+            distance = Math.min(distance, Math.abs(word1Index - word2Index));
+            if (word1Index > word2Index) {
+                word2Index = word2Iter.hasNext() ? word2Iter.next() : -1;
+            } else {
+                word1Index = word1Iter.hasNext() ? word1Iter.next() : -1;
+            }
+            
+        }
+        return distance;
+    }
+}
+
+/**
+ * Your WordDistance object will be instantiated and called as such:
+ * WordDistance obj = new WordDistance(words);
+ * int param_1 = obj.shortest(word1,word2);
+ */
