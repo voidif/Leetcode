@@ -1,0 +1,45 @@
+class Solution {
+    private char[] StrobogrammaticNum = {'0', '1', '6', '9', '8'};
+    private char[] oneDigitStrobogrammaticNum = {'0', '1', '8'};
+    private List<String> result = new ArrayList<>();
+    public List<String> findStrobogrammatic(int n) {
+        if (n <= 0) {
+            return new ArrayList<>();
+        } 
+        StringBuilder num = new StringBuilder();
+        if (n % 2 == 1) {
+            for (char digit : oneDigitStrobogrammaticNum) {
+                num.append(digit);
+                backtracking(n - 1, num);
+                num.setLength(0);
+            }
+        } else {
+            backtracking(n, num);
+        }
+        return result;
+    }
+    
+    private void backtracking(int remaningNum, StringBuilder num) {
+        if (remaningNum == 0) {
+            if (num.length() == 1 || num.charAt(0) != '0') {
+                result.add(num.toString());
+            }
+        } else {
+            for (char tmp : StrobogrammaticNum) {
+                num.insert(0, tmp);
+                num.append(getReversedNum(tmp));
+                backtracking(remaningNum - 2, num);
+                num.deleteCharAt(0);
+                num.deleteCharAt(num.length() - 1);
+            }
+        }
+    }
+    
+    private char getReversedNum(char digit) {
+        if (digit == '6' || digit == '9') {
+            return digit == '6' ? '9' : '6';
+        } else {
+            return digit;
+        }
+    }
+}
