@@ -1,0 +1,41 @@
+class Solution {
+    private int count = 0;
+    private static final char[][] pairs = {{'0', '0'}, {'1', '1'}, {'6', '9'}, {'8', '8'}, {'9', '6'}};
+    
+    public int strobogrammaticInRange(String low, String high) {
+        int lowLen = low.length();
+        int highLen = high.length();
+        for (int len = lowLen; len <= highLen; len++) {
+            char[] digits = new char[len];
+            calculateStrobogrammatic(low, high, 0, len - 1, digits);
+        }
+        return count;
+    }
+    
+    private void calculateStrobogrammatic(String low, String high, int firstIndex, int lastIndex, char[] digits) {
+        if (firstIndex > lastIndex) {
+            if (digitsInRange(low, high, digits)) {
+                count ++;           
+            }
+        } else {
+            for (char[] pair : pairs) {
+                digits[firstIndex] = pair[0];
+                digits[lastIndex] = pair[1];
+                if (digits.length > 1 && firstIndex == 0 && digits[firstIndex] == '0') {
+                    continue;
+                }
+                if (firstIndex == lastIndex && pair[0] != pair[1]) {
+                    continue;
+                }
+                calculateStrobogrammatic(low, high, firstIndex + 1, lastIndex - 1, digits);
+            }
+        }
+    }
+    
+    private boolean digitsInRange(String low, String high, char[] digits) {
+        String num = new String(digits);
+        boolean lowerThanLow = num.length() == low.length() && num.compareTo(low) < 0;
+        boolean largerThanHigh = num.length() == high.length() && num.compareTo(high) > 0;
+        return !lowerThanLow && !largerThanHigh;
+    }
+}
