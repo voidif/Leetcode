@@ -1,0 +1,35 @@
+class Solution {
+    public int mctFromLeafValues(int[] arr) {
+        if (arr.length == 0) {
+            return 0;
+        }
+        // the number into stack are always decreasing, thinking why?
+        // hint1: a number can only be destroyed by a number larger than it.
+        // hint2: a number tend to choose smallest number to destory itself.
+        // hint3: By destroy a number, a larger number take its place.
+        int sum = 0;
+        Stack<Integer> stack = new Stack<>();
+        int index = 0;
+        stack.push(arr[index]);
+        index ++;
+        while (index < arr.length) {
+            while (!stack.isEmpty() && arr[index] > stack.peek()) {
+                int rightNum = arr[index];
+                int centerNum = stack.pop();
+                if (!stack.isEmpty() && arr[index] > stack.peek()) {
+                    // destory a number by left neigbor
+                    sum += stack.peek() * centerNum;
+                } else {
+                    sum += rightNum * centerNum;
+                }
+            }
+            stack.push(arr[index]);
+            index ++;
+        }
+        // destory num remaing in stack
+        while (stack.size() > 1) {
+            sum += stack.pop() * stack.peek();
+        }
+        return sum;
+    }
+}
