@@ -1,0 +1,57 @@
+class Solution {
+    public String lastSubstring(String s) {
+        if (s.length() == 0) {
+            return "";
+        }
+        HashSet<Integer> maxCharIndexSet = calculateMaxCharIndex(s);
+        return calcuateLastSubtring(maxCharIndexSet, s);
+    }
+    
+    // return a hash set that storage lasttest character occur indices
+    private HashSet<Integer> calculateMaxCharIndex(String s) {
+        HashSet<Integer> maxCharIndexSet = new HashSet<>();
+        char maxChar = 'a';
+        for (int index = 0; index < s.length(); index++) {
+            if (s.charAt(index) > maxChar) {
+                maxChar = s.charAt(index);
+                maxCharIndexSet.clear();
+            }
+            if (s.charAt(index) == maxChar) {
+                maxCharIndexSet.add(index);
+            }
+        }
+        return maxCharIndexSet;
+    }
+    
+    private String calcuateLastSubtring(HashSet<Integer> maxCharIndexSet, String s) {
+        int len = 1;
+        while (maxCharIndexSet.size() > 1) {
+            char maxChar = 'a';
+            // find max char
+            for (int beginIndex : maxCharIndexSet) {
+                int index = beginIndex + len;
+                if (index < s.length() && s.charAt(index) > maxChar) {
+                    maxChar = s.charAt(index);
+                }
+            }
+            // delete index that has smaller char or out of bound
+            Iterator<Integer> iter = maxCharIndexSet.iterator();
+            List<Integer> overlapSubstringIndex = new ArrayList<>();
+            while (iter.hasNext()) {
+                int beginIndex = iter.next();
+                int index = beginIndex + len;
+                if (index >= s.length() || s.charAt(index) != maxChar) {
+                    iter.remove();
+                } else {
+                    overlapSubstringIndex.add(index);
+                }
+            }
+            for (int index : overlapSubstringIndex) {
+                maxCharIndexSet.remove(index);
+            }
+            len++;
+        }
+        int substringIndex = maxCharIndexSet.iterator().next();
+        return s.substring(substringIndex);
+    }
+}
