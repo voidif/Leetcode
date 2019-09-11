@@ -1,0 +1,24 @@
+class Solution {
+    public int minDominoRotations(int[] A, int[] B) {
+        if (A.length == 0 || B.length == 0) {
+            return 0;
+        }
+        int minA = findMinDominoRotationsForValue(A, B, A[0]);
+        int minB = findMinDominoRotationsForValue(A, B, B[0]);
+        return minA != -1 && minB != -1 ? Math.min(minA, minB) : Math.max(minA, minB);
+    }
+    
+    private int findMinDominoRotationsForValue(int[] A, int[] B, int value) {
+        int countA = 0;
+        int countB = 0;
+        for (int index = 0; index < A.length; index++) {
+            if (A[index] != value && B[index] != value) {
+                return -1;
+            } else {
+                countA += A[index] == value ? 0 : 1;
+                countB += B[index] == value ? 0 : 1;
+            } 
+        }
+        return Math.min(countA, countB);
+    }
+}
