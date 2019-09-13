@@ -30,3 +30,39 @@ public class Solution extends Reader4 {
         return pos;
     }
 }
+
+
+/**
+ * The read4 API is defined in the parent class Reader4.
+ *     int read4(char[] buf);
+ */
+public class Solution extends Reader4 {
+    /**
+     * @param buf Destination buffer
+     * @param n   Number of characters to read
+     * @return    The number of actual characters read
+     */
+    public int read(char[] buf, int n) {
+        int index = 0;
+        char[] readBuf = new char[4];
+        int readNum = 4;
+        while(n > 0 && readNum == 4) {
+            readNum = read4(readBuf);
+            int copyLen = Math.min(readNum, n);
+            copyData(readBuf, buf, copyLen, index);
+            index += copyLen;
+            n -= copyLen;
+        }
+        return index;
+    }
+    
+    private void copyData(char[] fromBuf, char[] toBuf, int len, int index) {
+        int subIndex = 0;
+        while (len > 0) {
+            // System.out.println(fromBuf[subIndex]);
+            toBuf[index + subIndex] = fromBuf[subIndex];
+            len--;
+            subIndex++;
+        }
+    } 
+}
