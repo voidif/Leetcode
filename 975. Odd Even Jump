@@ -1,0 +1,28 @@
+class Solution {
+    private TreeMap<Integer, Integer> rightMap = new TreeMap<>();
+    public int oddEvenJumps(int[] A) {
+        int len = A.length;
+        // dp the upper level represent start at j and begins with odd jump
+        // the lowert represent even jump
+        int[][] dp = new int[2][len];
+        dp[0][len - 1] = 1;
+        dp[1][len - 1] = 1;
+        int count = 1;
+        rightMap.put(A[len - 1], len - 1);
+        for (int i = len - 2; i >= 0; i--) {
+            Integer oddNextPos = findNextPos(A, i, true);
+            Integer evenNextPos = findNextPos(A, i, false);
+            dp[0][i] = oddNextPos == null ? 0 : dp[1][oddNextPos];
+            dp[1][i] = evenNextPos == null ? 0 : dp[0][evenNextPos];
+            count += dp[0][i];
+            rightMap.put(A[i], i);
+        }
+        return count;
+    }
+    
+    private Integer findNextPos(int[] A, int index, boolean isOddJump) {
+        int curValue = A[index];
+        Integer targetKey = isOddJump ? rightMap.ceilingKey(curValue) : rightMap.floorKey(curValue);
+        return targetKey == null ? null : rightMap.get(targetKey);
+    }
+}
