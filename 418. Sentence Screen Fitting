@@ -1,0 +1,43 @@
+// runtime: O(sentence.length * rows)
+class Solution {
+    public int wordsTyping(String[] sentence, int rows, int cols) {
+        Queue<Integer> lineQueue = new LinkedList<>();
+        Queue<Integer> countQueue = new LinkedList<>();
+        int nextWordIndex = 0;
+        int rowIndex = 0;
+        int sum = 0;
+        int totalLen = (String.join(" ", sentence) + " ").length();
+        
+        while (rowIndex < rows) {
+            int colIndex = 0;
+            int lineCount = 0;
+            if (cols >= totalLen) {
+                lineCount = cols / totalLen;
+                colIndex = totalLen * lineCount;
+            }
+            while (cols - colIndex >= sentence[nextWordIndex].length()) {
+                colIndex += sentence[nextWordIndex].length();
+                // whitespace
+                colIndex ++;
+                nextWordIndex++;
+                if (nextWordIndex == sentence.length) {
+                    nextWordIndex = 0;
+                    lineCount++;
+                }
+            }
+            sum += lineCount;
+            lineQueue.add(rowIndex + 1);
+            countQueue.add(lineCount);
+            if (nextWordIndex == 0) {
+                int additionalLine = rows % (rowIndex + 1);
+                sum = sum * (rows / (rowIndex + 1));
+                while (lineQueue.size() > 0 && lineQueue.poll() <= additionalLine) {
+                    sum += countQueue.poll();
+                }
+                return sum;
+            }
+            rowIndex++;
+        }
+        return sum;
+    }
+}
