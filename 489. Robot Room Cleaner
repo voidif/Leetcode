@@ -1,0 +1,100 @@
+/**
+ * // This is the robot's control interface.
+ * // You should not implement it, or speculate about its implementation
+ * interface Robot {
+ *     // Returns true if the cell in front is open and robot moves into the cell.
+ *     // Returns false if the cell in front is blocked and robot stays in the current cell.
+ *     public boolean move();
+ *
+ *     // Robot will stay in the same cell after calling turnLeft/turnRight.
+ *     // Each turn will be 90 degrees.
+ *     public void turnLeft();
+ *     public void turnRight();
+ *
+ *     // Clean the current cell.
+ *     public void clean();
+ * }
+ */
+class Solution {
+    private Set<Point> visitedPoints = new HashSet<>();
+    private Direction direction = Direction.UP;
+    private int[][] pointDiffs = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+    
+    public void cleanRoom(Robot robot) {
+        dfsAndClean(robot, 0, 0);
+    }
+    
+    private void dfsAndClean(Robot robot, int row, int col) {
+        Direction curDirection = direction;
+        robot.clean();
+        visitedPoints.add(new Point(row, col));
+        // left
+        moveToNewPos(robot, Direction.LEFT, row, col);
+        // down
+        moveToNewPos(robot, Direction.DOWN, row, col);
+        // right
+        moveToNewPos(robot, Direction.RIGHT, row, col);
+        // top
+        moveToNewPos(robot, Direction.UP, row, col);
+        // return to parent pos
+        Direction newDirection = curDirection.next().next();
+        turnToDirection(robot, newDirection);
+        robot.move();
+        
+    }
+    private void moveToNewPos(Robot robot, Direction direction, int curRow, int curCol) {
+        turnToDirection(robot, direction);
+        int[] posDiff = pointDiffs[direction.ordinal()];
+        if (!visitedPoints.contains(new Point(curRow + posDiff[0], curCol + posDiff[1])) && robot.move()) {
+            dfsAndClean(robot, curRow + posDiff[0], curCol + posDiff[1]);
+        }
+    }
+    
+    private void turnToDirection(Robot robot, Direction newDirection) {
+        while (direction != newDirection) {
+            turnLeft(robot);
+        }
+    }
+    
+    private void turnLeft(Robot robot) {
+        robot.turnLeft();
+        direction = direction.next();
+    }
+}
+
+enum Direction {
+    UP, 
+    LEFT, 
+    DOWN, 
+    RIGHT {
+        @Override
+        public Direction next() {
+            return values()[0];
+        }
+    };
+    
+    public Direction next() {
+        return values()[ordinal() + 1];
+    }
+}
+
+class Point {
+    int row;
+    int col;
+    
+    public Point (int row, int col) {
+        this.row = row;
+        this.col = col;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        Point p = (Point)o;
+        return p.row == this.row && p.col == this.col;
+    }
+    
+    @Override
+    public int hashCode() {
+        return new Integer(row * 31 + col).hashCode();
+    }
+}
