@@ -1,0 +1,37 @@
+class Solution {
+    // int dp[s][t] represent the biggest index that S.substring(0, s)
+    // contains T.substring(0, t) as subsequence
+    // -1 represents no such substring
+    // so if S.charAt(s - 1) equals t.charAt(t - 1);
+    // dp[s][t] = dp[s - 1][t - 1]
+    // else dp[s][t] = dp[s - 1][t]
+    public String minWindow(String S, String T) {
+        int sLen = S.length();
+        int tLen = T.length();
+        int[][] dp = new int[sLen + 1][tLen + 1];
+        for (int i = 1; i < tLen + 1; i++) {
+            dp[0][i] = -1;
+        }
+        for (int i = 0; i < sLen + 1; i++) {
+            dp[i][0] = i;
+        }
+        for (int substringLenS = 1; substringLenS <= sLen; substringLenS++) {
+            for (int substringLenT = 1; substringLenT <= tLen; substringLenT++) {
+                if (S.charAt(substringLenS - 1) == T.charAt(substringLenT - 1)) {
+                    dp[substringLenS][substringLenT] = dp[substringLenS - 1][substringLenT - 1];
+                } else {
+                    dp[substringLenS][substringLenT] = dp[substringLenS - 1][substringLenT];
+                }
+            }
+        }
+        String result = "";
+        int len = sLen + 1;
+        for (int i = 0; i <= sLen; i++) {
+            if (dp[i][tLen] != -1 && i - dp[i][tLen] < len) {
+                result = S.substring(dp[i][tLen], i);
+                len = i - dp[i][tLen];
+            }
+        }
+        return result;
+    }
+}
