@@ -1,0 +1,29 @@
+class Solution {
+    // dp[i][j] means maxVacationDays if stay on i at jth week
+    // dp[i][j] = max(dp[k][j - 1]) for k = 0 to all place and there is a flight from k to j
+    public int maxVacationDays(int[][] flights, int[][] days) {
+        int cityCount = days.length;
+        int weekCount = days.length > 0 ? days[0].length : 0;;
+        int[][] dp = new int[cityCount][weekCount];
+        dp[0][0] = days[0][0];
+        for (int i = 1; i < cityCount; i++) {
+            dp[i][0] = flights[0][i] == 1 ? days[i][0] : -1;
+        }
+        for (int week = 1; week < weekCount; week++) {
+            for (int cityIndex = 0; cityIndex < cityCount; cityIndex++) {
+                int maxDaysOff = dp[cityIndex][week - 1];
+                for (int previousCity = 0; previousCity < cityCount; previousCity++) {
+                    if (flights[previousCity][cityIndex] == 1 && dp[previousCity][week - 1] != -1) {
+                        maxDaysOff = Math.max(maxDaysOff, dp[previousCity][week - 1]);
+                    }
+                }
+                dp[cityIndex][week] = maxDaysOff == -1 ? -1 : maxDaysOff + days[cityIndex][week];
+            }
+        }
+        int maxVacationDays = 0;
+        for (int[] cityDays: dp) {
+            maxVacationDays = Math.max(maxVacationDays, cityDays[weekCount - 1]);
+        }
+        return maxVacationDays;
+    }
+}
