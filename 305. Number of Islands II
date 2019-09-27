@@ -1,0 +1,100 @@
+class Solution {
+    private int isLandNumbers = 0;
+    private Point[][] islandIndex;
+    private HashMap<Point, Integer> weight;
+    private int height;
+    private int width;
+    
+    public List<Integer> numIslands2(int m, int n, int[][] positions) {
+        width = n;
+        height = m;
+        islandIndex = new Point[m][n];
+        weight = new HashMap<>();
+        
+        List<Integer> islandNumber = new LinkedList<>();
+        for (int[] position: positions) {
+            int row = position[0];
+            int col = position[1];
+            
+            if (islandIndex[row][col] == null) {
+                Point curPoint = new Point(row, col);
+                islandIndex[row][col] = curPoint;
+                isLandNumbers++;
+                weight.put(curPoint, 1);
+                // left
+                quickUnion(curPoint, new Point(row, col - 1));
+                // right
+                quickUnion(curPoint, new Point(row, col + 1));
+                // down
+                quickUnion(curPoint, new Point(row + 1, col));
+                // up
+                quickUnion(curPoint, new Point(row - 1, col));
+            }
+            
+
+            islandNumber.add(isLandNumbers);
+        }
+        
+        return islandNumber;
+    }
+    
+    private Point find(Point p) {
+        while (!islandIndex[p.row][p.col].equals(p)) {
+            Point father = islandIndex[p.row][p.col];
+            islandIndex[p.row][p.col] = islandIndex[father.row][father.col];
+            p = father;
+        }
+        return p;
+    }
+    
+    private void quickUnion(Point p1, Point p2) {
+        if (isLand(p1) && isLand(p2)) {
+            Point p1Root = find(p1);
+            Point p2Root = find(p2);
+            if (!p1Root.equals(p2Root)) {
+                int p1Weight = weight.get(p1Root);
+                int p2Weight = weight.get(p2Root);
+                if (p1Weight < p2Weight) {
+                    islandIndex[p1Root.row][p1Root.col] = p2Root;
+                    weight.remove(p1Root);
+                    weight.put(p2Root, p1Weight + p2Weight);
+                } else {
+                    islandIndex[p2Root.row][p2Root.col] = p1Root;
+                    weight.remove(p2Root);
+                    weight.put(p1Root, p1Weight + p2Weight);
+                }
+                isLandNumbers--;
+            }
+        }
+    }
+    
+    private boolean isLand(Point p) {
+        return isValidPos(p) && islandIndex[p.row][p.col] != null;
+    }
+    
+    private boolean isValidPos(Point p) {
+        return p.row >= 0 && p.col >= 0 && p.row < height && p.col < width;
+    }
+}
+
+
+class Point{
+    public int row;
+    public int col;
+    
+    public Point(int row, int col) {
+        this.row = row;
+        this.col = col;
+    }
+    
+    @Override 
+    public boolean equals(Object o1) {
+        Point p = (Point)(o1);
+        return this.row == p.row && this.col == p.col;
+    }
+    
+    @Override
+    public int hashCode() {
+        return row * (1 << 10) + col;
+    }
+}
