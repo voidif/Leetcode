@@ -1,0 +1,29 @@
+class Solution {
+    // greedy + pruning
+    public double mincostToHireWorkers(int[] quality, int[] wage, int K) {
+        int n = quality.length;
+        // wage / quality
+        int[][] ratio = new int[n][2];
+        for (int i = 0; i < n; i++) {
+            ratio[i][0] = quality[i];
+            ratio[i][1] = wage[i];
+        }
+        Arrays.sort(ratio, (int[] a1, int[] a2) -> a1[1] * a2[0] - a2[1] * a1[0]);
+        
+        int totalQuality = 0;
+        PriorityQueue<int[]> q = new PriorityQueue<>(K, (int[] a1, int[] a2) -> a2[0] - a1[0]);
+        for (int i = 0; i < K; i++) {
+            q.add(ratio[i]);
+            totalQuality += ratio[i][0];
+        }
+        double minWage = (double)totalQuality * (double)ratio[K - 1][1] / (double)ratio[K - 1][0];
+        for (int i = K; i < n; i++) {
+            totalQuality -= q.poll()[0];
+            totalQuality += ratio[i][0];
+            q.add(ratio[i]);
+            double newWage = (double)totalQuality * (double)ratio[i][1] / (double)ratio[i][0];
+            minWage = Math.min(minWage, newWage);
+        }
+        return minWage;
+    }
+}
