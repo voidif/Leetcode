@@ -1,0 +1,29 @@
+class Solution {
+    public int totalFruit(int[] tree) {
+        int[] fruitType = new int[2];
+        Arrays.fill(fruitType, -1);
+        int maxCount = 0;
+        int consecutiveCount = 0;
+        int basketCount = 0;
+        int lastType = -1;
+        for (int fruit: tree) {
+            if (fruit == fruitType[0] || fruit == fruitType[1]) {
+                basketCount++;
+                if (fruit == lastType) {
+                    consecutiveCount++;
+                } else {
+                    consecutiveCount = 1;
+                    lastType = fruit == fruitType[0] ? fruitType[0] : fruitType[1];
+                }
+            } else {
+                basketCount = consecutiveCount + 1;
+                fruitType[0] = lastType;
+                fruitType[1] = fruit;
+                lastType = fruit;
+                consecutiveCount = 1;
+            }
+            maxCount = Math.max(maxCount, basketCount);
+        }
+        return maxCount;
+    }
+}
