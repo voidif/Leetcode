@@ -1,0 +1,24 @@
+class Solution {
+    public int numUniqueEmails(String[] emails) {
+        Set<String> emailSet = new HashSet<>();
+        for (String email: emails) {
+            String realEmail = getRealEmail(email);
+            emailSet.add(realEmail);
+        }
+        return emailSet.size();
+    }
+    
+    private String getRealEmail(String email) {
+        String[] data = email.split("@");
+        String localName = data[0];
+        StringBuilder realLocalName = new StringBuilder();
+        for (char nextChar: localName.toCharArray()) {
+            if (nextChar == '+') {
+                break;
+            } else if (nextChar != '.') {
+                realLocalName.append(nextChar);
+            }
+        }
+        return realLocalName.toString() + "@" + data[1];
+    }
+}
