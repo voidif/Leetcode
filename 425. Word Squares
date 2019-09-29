@@ -1,0 +1,97 @@
+// Trie + backtracking dfs run time: O(K^n * k) k is word len and n is words.length
+// runtime 
+class Solution {
+    private List<List<String>> squares = new LinkedList<>();
+    
+    public List<List<String>> wordSquares(String[] words) {
+        TrieNode root = Trie.constructTrie(words);
+        for (String word: words) {
+            List<String> square = new ArrayList<>();
+            square.add(word);
+            backtrackingDfs(square, root, words[0].length());
+            square.remove(square.size() - 1);
+        }
+        return squares;
+    }
+                
+    private void backtrackingDfs(List<String> square, TrieNode root, int n) {
+        // System.out.println(square.size());
+        if (square.size() == n) {
+            squares.add(new LinkedList<String>(square));
+            return;
+        } 
+        
+        // findBeginNode /////////////////////
+        int nextLineIndex = square.size();
+        StringBuilder prefixBuilder = new StringBuilder();
+        for (int i = 0; i < square.size(); i++) {
+            prefixBuilder.append(square.get(i).charAt(nextLineIndex));
+        }
+        String prefix = prefixBuilder.toString();
+        TrieNode beginNode = TrieNode.query(root, prefix);
+        //////////////////////////////////////////
+        
+        List<String> allAvailableSuffixs = new LinkedList<>();
+        if (beginNode != null) {
+            getAvailableSuffixs(beginNode, allAvailableSuffixs, new StringBuilder(), n - nextLineIndex);
+        }
+        // System.out.println(allAvailableSuffixs.size());
+        for (String nextAvailableSuffix : allAvailableSuffixs) {
+            square.add(prefix + nextAvailableSuffix);
+            backtrackingDfs(square, root, n);
+            square.remove(square.size() - 1);
+        }
+    }
+
+    
+    private void getAvailableSuffixs(TrieNode node, List<String> result, StringBuilder suffix, int n) {
+        if (suffix.length() == n) {
+            result.add(suffix.toString());
+        } else {
+            for (int i = 0; i < 26; i++) {
+                if (node.children[i] != null) {
+                    suffix.append((char)('a' + i));
+                    getAvailableSuffixs(node.children[i], result, suffix, n);
+                    suffix.deleteCharAt(suffix.length() - 1);
+                }
+            }
+        }
+    }
+}
+
+
+class TrieNode {
+    TrieNode[] children = new TrieNode[26];
+    
+    public static TrieNode query(TrieNode root, String prefix) {
+        for (int i = 0; i < prefix.length() && root != null; i++) {
+            root = root.children[prefix.charAt(i) - 'a'];
+        }
+        return root;
+    }
+    
+    public void insert(String word) {
+        insert(word, 0); 
+    }
+    
+    private void insert(String word, int index) {
+        if (index >= word.length()) {
+            return;
+        }
+        if (children[word.charAt(index) - 'a'] == null) {
+            children[word.charAt(index) - 'a'] = new TrieNode();
+        }
+        children[word.charAt(index) - 'a'].insert(word, index + 1);
+        
+    }
+}
+
+class Trie {
+    public static TrieNode constructTrie(String[] words) {
+        TrieNode root = new TrieNode();
+        for (String word: words) {
+            root.insert(word);
+        }
+        return root;
+    }
+}
