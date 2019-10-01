@@ -1,0 +1,172 @@
+class Solution {
+  
+  
+  private UnionFound unionFound;
+  private int[][] grid;
+  private int rowLen;
+  private int colLen;
+  private int[][] posOffsets = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+  
+  public int[] hitBricks(int[][] grid, int[][] hits) {
+    this.grid = grid;
+    rowLen = grid.length;
+    colLen = grid[0].length;
+    // delete all hits first
+    for (int[] hit: hits) {
+      grid[hit[0]][hit[1]] = grid[hit[0]][hit[1]] == 1 ? 0 : -1;
+    }
+    
+    initializeAndAddNonDrop();
+    doUnionForRemainingBricks();
+    int[] dropedBricksCounts = reverseAddBricksAndCount(hits);
+    return dropedBricksCounts;
+
+  }
+  
+  private void initializeAndAddNonDrop() {
+    int[] array = new int[rowLen * colLen];
+    Arrays.fill(array, -1);
+    for (int row = 0; row < rowLen; row++) {
+      for (int col = 0; col < colLen; col++) {
+        int id = validPointToId(row, col);
+        if (grid[row][col] == 1) {
+          array[id] = id;
+        }
+      }
+    }
+    HashSet<Integer> nonDropSet = new HashSet<>();
+    for (int i = 0; i < colLen; i++) {
+      if (grid[0][i] == 1) {
+        nonDropSet.add(i);
+      }
+    }
+    unionFound = new UnionFound(array, nonDropSet);
+  }
+  
+  private void doUnionForRemainingBricks() {
+    for (int row = 0; row < rowLen; row++) {
+      for (int col = 0; col < colLen; col++) {
+        for (int[] posOffset: posOffsets) {
+          unionFound.quickUnion(validPointToId(row, col), validPointToId(row + posOffset[0], col + posOffset[1]));
+        }
+      }
+    }
+  }
+  
+  private int[] reverseAddBricksAndCount(int[][] hits) {
+    int[] count = new int[hits.length];
+    for (int i = hits.length - 1; i >= 0; i--) {
+      int[] hit = hits[i];
+      if (grid[hit[0]][hit[1]] == -1) {
+        grid[hit[0]][hit[1]] = 0;
+        count[i] = 0;
+        // System.out.println("ss");
+      } else {
+        grid[hit[0]][hit[1]] = 1;
+        int curId = validPointToId(hit[0], hit[1]);
+        unionFound.addPoint(curId, curId < colLen);
+        int addedBricks = 0;
+        // after adding brick, do following
+        // 1. check neigbor's root id
+        // 2. get neibor's drop status
+        // 3. get neibor's count
+        // 4. union added bricks and neigbor
+        for (int[] posOffset: posOffsets) {
+          int newRow = hit[0] + posOffset[0];
+          int newCol = hit[1] + posOffset[1];
+          int root = unionFound.find(curId);
+          int neigborRoot = unionFound.find(validPointToId(newRow, newCol));
+          if (root != neigborRoot) {
+            if (!unionFound.nonDropSet.contains(neigborRoot)) {
+              addedBricks += unionFound.weigthMap.getOrDefault(neigborRoot, 0);
+            }
+            unionFound.quickUnion(root, neigborRoot);
+
+          }
+        }
+        count[i] = unionFound.nonDropSet.contains(unionFound.find(curId)) ? addedBricks : 0;
+      }
+    }
+    return count;
+  }
+  
+  private int validPointToId(int row, int col) {
+    if (row >= 0 && row < grid.length && col >= 0 && col < grid[0].length) {
+      return row * colLen + col;
+    } else {
+      return -1;
+    }
+  }
+  
+}
+
+
+class UnionFound {
+  public int[] array;
+  public HashMap<Integer, Integer> weigthMap = new HashMap<>(); 
+  public HashSet<Integer> nonDropSet = new HashSet<>();
+  
+  public UnionFound(int[] array, HashSet<Integer> nonDropSet) {
+    this.array = array;
+    this.nonDropSet = nonDropSet;
+    for (int i = 0; i < array.length; i++) {
+      if (array[i] != -1) {
+        weigthMap.put(i, 1);
+      }
+    }
+  }
+  
+  public void addPoint(int id, boolean isNonDrop) {
+    if (id >= 0 && id < array.length && array[id] == -1) {
+      array[id] = id;
+      weigthMap.put(id, 1);
+      if (isNonDrop) {
+        nonDropSet.add(id);
+      }
+    }
+  }
+  
+  public int find(int f1) {
+    while (isValidID(f1) && array[f1] != f1) {
+      int parent = array[f1];
+      array[f1] = array[parent];
+      f1 = parent;
+    }
+    return f1;
+  }
+  
+  public int quickUnion(int u1, int u2) {
+    if (isValidID(u1) && isValidID(u2)) {
+      int u1Root = find(u1);
+      int u2Root = find(u2);
+      if (u1Root != u2Root) {
+        int u1Weight = weigthMap.get(u1Root);
+        int u2Weight = weigthMap.get(u2Root);
+        int finalRoot = 0;
+        if (u1Weight > u2Weight) {
+          array[u2Root] = u1Root;
+          weigthMap.remove(u2Root);
+          finalRoot = u1Root;
+        } else {
+          array[u1Root] = u2Root;
+          weigthMap.remove(u1Root);
+          finalRoot = u2Root;
+        }
+        weigthMap.put(finalRoot, u1Weight + u2Weight);
+        
+        if (nonDropSet.contains(u1Root) || nonDropSet.contains(u2Root)) {
+          nonDropSet.remove(u1Root);
+          nonDropSet.remove(u2Root);
+          nonDropSet.add(finalRoot);
+        }
+      }
+      return u2Root;
+    } else {
+      return -1;
+    }
+  }
+  
+  private boolean isValidID(int id) {
+    return id >= 0 && id < array.length && array[id] != -1;
+  }
+}
