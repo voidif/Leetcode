@@ -1,0 +1,48 @@
+class Solution {
+  public int minTotalDistance(int[][] grid) {
+    int width = grid[0].length;
+    int height = grid.length;
+    int[] widthPoints = new int[width];
+    int[] heightPoints = new int[height];
+    
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        if (grid[i][j] == 1) {
+          widthPoints[j]++;
+          heightPoints[i]++;
+        }
+      }
+    }
+    int widthMedian = getMedian(widthPoints);
+    int heightMedian = getMedian(heightPoints);
+    return getDis(widthPoints, widthMedian) + getDis(heightPoints, heightMedian);
+  }
+  
+  private int getMedian(int[] array) {
+    int begin = 0;
+    int end = array.length - 1;
+    int beginCount = array[begin];
+    int endCount = array[end];
+    while (begin < end) {
+      while (beginCount == 0 && begin < end) {
+        begin++;
+        beginCount = array[begin];
+      }
+      beginCount -= beginCount > 0 ? 1 : 0;
+      while (endCount == 0 && begin < end) {
+        end--;
+        endCount = array[end];
+      }
+      endCount -= endCount > 0 ? 1 : 0;
+    }
+    return begin;
+  }
+  
+  private int getDis(int[] array, int index) {
+    int sum = 0;
+    for (int i = 0; i < array.length; i++) {
+      sum += Math.abs(index - i) * array[i];
+    }
+    return sum;
+  }
+}
