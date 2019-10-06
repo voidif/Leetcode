@@ -1,0 +1,60 @@
+// for every node, it has c(n, 2) * 6 branch, which is n * (n - 1) / 2 * 6, so runtime is n ^ (n ^ n) (roughly)
+class Solution {
+  private char[] operators = {'+', '-', '*', '/', '=', '_'};
+  public boolean judgePoint24(int[] nums) {
+    ArrayList<Double> doubleNums = new ArrayList<>();
+    for (int num: nums) {
+      doubleNums.add((double)num);
+    }
+    return judgePoint24(doubleNums);
+  }
+    
+  private boolean judgePoint24(ArrayList<Double> nums) {
+    if (nums.size() == 1) {
+      return doubleEquals(nums.get(0), 24);
+    } else {
+      for (int i = 0; i < nums.size(); i++) {
+        for (int j = i + 1; j < nums.size(); j++) {
+          for (char operator: operators) {
+            if (!(operator == '/' && doubleEquals(nums.get(j), 0)) || 
+                !(operator == '_' && doubleEquals(nums.get(i), 0))) {
+              double num = calulate(nums.get(i), nums.get(j), operator);
+              ArrayList<Double> nextNums = copy(nums, i, j);
+              nextNums.add(num);
+              if (judgePoint24(nextNums)) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+      return false;
+    }
+  }
+  
+  private ArrayList copy(ArrayList origin, int skip1, int skip2) {
+    ArrayList array = new ArrayList();
+    for (int i = 0; i < origin.size(); i++) {
+      if (i != skip1 && i != skip2) {
+        array.add(origin.get(i));
+      }
+    }
+    return array;
+  }
+  
+  private double calulate(double a, double b, char operator) {
+    switch (operator) {
+      case '+': return a + b;
+      case '-': return a - b;
+      case '/': return a / b;
+      case '*': return a * b;
+      case '=': return b - a;
+      case '_': return b / a;
+    }
+    return 0;
+  }
+  
+  private boolean doubleEquals(double a, double b) {
+    return Math.abs(a - b) < 0.001;
+  }
+}
