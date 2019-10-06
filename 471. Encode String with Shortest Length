@@ -1,0 +1,41 @@
+class Solution {
+    // how to use dp?
+    // 1. define problem string dp[i][j] represent the shortest pattern for substring(i, j+1)
+    // 2. subproblem: for substring(i, j+1), there are only two situations:
+    //    --1. substring(i, j+1) need to be split to two or more subtring and use their shortest pattern
+    //    --2. substirng(i, j+1) = a * x, which a is a shorter string, x is repeat times
+    public String encode(String s) {
+        int len = s.length();
+        String[][] dp = new String[len][len];
+        for (int l = 1; l <= len; l++) {
+            for (int i = 0; i <= len - l; i++) {
+                int j = i + l - 1;
+                // if string length smaller than 4, use original string is optimal
+                dp[i][j] = s.substring(i, j + 1);
+                if (l > 4) {
+                    // k represent end of string segement 1, inclusive, this is subproblem 1
+                    for (int k = i; k < j; k++) {
+                        if (dp[i][j].length() > dp[i][k].length() + dp[k + 1][j].length()) {
+                            dp[i][j] = dp[i][k] + dp[k + 1][j];
+                        }
+                    }
+                    // search solution for subproblem 2, k is len now
+                    for (int k = 1; k <= l; k++){
+                        if (l % k == 0) {
+                            String curSubstring = s.substring(i, j + 1);
+                            String repeatPattern = curSubstring.substring(0, k);
+                            if (curSubstring.replaceAll(repeatPattern, "").length() == 0) {
+                                int repeatTime = l / k;
+                                String pattern = repeatTime + "[" + dp[i][i + k - 1] + "]";
+                                if (pattern.length() < dp[i][j].length()) {
+                                    dp[i][j] = pattern;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return dp[0][len - 1];
+    }
+}
