@@ -1,0 +1,43 @@
+class Solution {
+    public double minmaxGasDist(int[] stations, int K) {
+        Arrays.sort(stations);
+        int n = stations.length;
+        PriorityQueue<DistanceBetweenTwoGas> pq = new PriorityQueue<>(n - 1, (DistanceBetweenTwoGas a, DistanceBetweenTwoGas b) -> {
+            double diff = b.getDistance() - a.getDistance();
+            if (Math.abs(diff) < 0.0000001) {
+                return 0;
+            } else {
+                return diff < 0.0 ? -1 : 1;
+            }
+        });
+        int totalDis = stations[n - 1] - stations[0];
+        int remaining = K;
+        for (int i = 0; i < n - 1; i++) {
+            int preAssigned = (int)(K * ((double)(stations[i + 1] - stations[i]) / totalDis));
+            pq.add(new DistanceBetweenTwoGas(stations[i + 1] - stations[i], preAssigned));
+            remaining -= preAssigned;
+        }
+        
+        while (remaining > 0) {
+            DistanceBetweenTwoGas currentMaxDistance = pq.poll();
+            currentMaxDistance.newBuildedGasNumber += 1;
+            remaining -= 1;
+            pq.add(currentMaxDistance);
+        }
+        return pq.peek().getDistance();
+    }
+}
+
+class DistanceBetweenTwoGas {
+    public double distance;
+    public int newBuildedGasNumber;
+    
+    public DistanceBetweenTwoGas(int distance, int newBuildedGasNumber) {
+        this.distance = (double)distance;
+        this.newBuildedGasNumber = newBuildedGasNumber;
+    }
+    
+    public double getDistance() {
+        return distance / (newBuildedGasNumber + 1); 
+    }
+}
