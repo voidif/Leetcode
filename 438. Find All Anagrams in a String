@@ -1,0 +1,99 @@
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> result = new LinkedList<>();
+        if (p.length() > s.length()) {
+            return result;
+        }
+        int[] pCharCount = new int[26];
+        int notMatchCount = 0;
+        for (char nextChar: p.toCharArray()) {
+            pCharCount[nextChar - 'a']++;
+            notMatchCount += pCharCount[nextChar - 'a'] == 1 ? 1 : 0;
+        }
+        int start = 0;
+        int end = p.length();
+        for (int i = 0; i < end; i++) {
+            char nextChar = s.charAt(i);
+            pCharCount[nextChar - 'a']--;
+            if (pCharCount[nextChar - 'a'] == 0) {
+                notMatchCount--;
+            } else {
+                notMatchCount += pCharCount[nextChar - 'a'] == -1 ? 1 : 0;
+            }
+        }
+        if (notMatchCount == 0) {
+            result.add(0);
+        }
+        while (end < s.length()) {
+            char removeChar = s.charAt(start);
+            char addChar = s.charAt(end);
+            pCharCount[removeChar - 'a']++;
+            if (pCharCount[removeChar - 'a'] == 0) {
+                notMatchCount--;
+            } else {
+                notMatchCount += pCharCount[removeChar - 'a'] == 1 ? 1 : 0;
+            }
+            pCharCount[addChar - 'a']--;
+            if (pCharCount[addChar - 'a'] == 0) {
+                notMatchCount--;
+            } else {
+                notMatchCount += pCharCount[addChar - 'a'] == -1 ? 1 : 0;
+            }
+            if (notMatchCount == 0) {
+                result.add(start + 1);
+            }
+            start++;
+            end++;
+        }
+        return result;
+    }
+}class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> result = new LinkedList<>();
+        if (p.length() > s.length()) {
+            return result;
+        }
+        int[] pCharCount = new int[26];
+        int notMatchCount = 0;
+        for (char nextChar: p.toCharArray()) {
+            pCharCount[nextChar - 'a']++;
+            notMatchCount += pCharCount[nextChar - 'a'] == 1 ? 1 : 0;
+        }
+        int start = 0;
+        int end = p.length();
+        for (int i = 0; i < end; i++) {
+            char nextChar = s.charAt(i);
+            pCharCount[nextChar - 'a']--;
+            if (pCharCount[nextChar - 'a'] == 0) {
+                notMatchCount--;
+            } else {
+                notMatchCount += pCharCount[nextChar - 'a'] == -1 ? 1 : 0;
+            }
+        }
+        if (notMatchCount == 0) {
+            result.add(0);
+        }
+        while (end < s.length()) {
+            char removeChar = s.charAt(start);
+            char addChar = s.charAt(end);
+            pCharCount[removeChar - 'a']++;
+            if (pCharCount[removeChar - 'a'] == 0) {
+                notMatchCount--;
+            } else {
+                notMatchCount += pCharCount[removeChar - 'a'] == 1 ? 1 : 0;
+            }
+            pCharCount[addChar - 'a']--;
+            if (pCharCount[addChar - 'a'] == 0) {
+                notMatchCount--;
+            } else {
+                notMatchCount += pCharCount[addChar - 'a'] == -1 ? 1 : 0;
+            }
+            if (notMatchCount == 0) {
+                result.add(start + 1);
+            }
+            start++;
+            end++;
+        }
+        return result;
+    }
+}
