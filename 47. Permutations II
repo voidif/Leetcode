@@ -30,3 +30,34 @@ class Solution {
         }
     }
 }
+
+// runtime  n ^ n
+class Solution {
+    List<List<Integer>> result = new LinkedList<>();
+    
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        backtracking(new boolean[nums.length], nums, new LinkedList<>());
+        return result;
+    }
+    
+    private void backtracking(boolean[] visited, int[] nums, LinkedList<Integer> permutation) {
+        if (permutation.size() == nums.length) {
+            result.add(new LinkedList<>(permutation));
+        } else {
+            for (int i = 0; i < nums.length; i++) {
+                if (!visited[i]) {
+                    permutation.add(nums[i]);
+                    visited[i] = true;
+                    backtracking(visited, nums, permutation);
+                    permutation.removeLast();
+                    visited[i] = false; 
+                    // skip duplicated
+                    while (i < nums.length - 1 && nums[i + 1] == nums[i]) {
+                        i++;
+                    }
+                }
+            }
+        }
+    }
+}
