@@ -1,0 +1,83 @@
+class Solution {
+    public int[] findRedundantDirectedConnection(int[][] edges) {
+        HashMap<Integer, Integer> hasParentNode = new HashMap<>();
+        int[] firstConflict = null;
+        int[] secondConflict = null;
+        for (int[] edge: edges) {
+            if (hasParentNode.containsKey(edge[1])) {
+                firstConflict = new int[]{hasParentNode.get(edge[1]), edge[1]};
+                secondConflict = edge;
+                break;
+            } else {
+                hasParentNode.put(edge[1], edge[0]);
+            }
+        }
+        return firstConflict == null ? findRedundantConnection(edges) : findRedundantConnectionWithConflict(edges, firstConflict, secondConflict);
+        
+    }
+    
+    private int[] findRedundantConnection(int[][] edges) {
+        UnionFind unionFind = new UnionFind(edges.length + 1);
+        for (int[] edge: edges) {
+            if (!unionFind.quickUnionAndReturnIfUnioned(edge[0], edge[1])) {
+                return edge;
+            }
+        }
+        return null;
+    }
+    
+    private int[] findRedundantConnectionWithConflict(int[][] edges, int[] firstConflict, int[] secondConflict) {
+        UnionFind unionFind = new UnionFind(edges.length + 1);
+        for (int[] edge: edges) {
+            if (!(edge[0] == secondConflict[0] && edge[1] == secondConflict[1]) && 
+                !unionFind.quickUnionAndReturnIfUnioned(edge[0], edge[1])) {
+                return firstConflict;
+            }
+        }
+        return secondConflict;
+    }
+}
+
+
+class UnionFind {
+    private int[] id;
+    private int[] weights;
+    
+    public UnionFind(int n) {
+        id = new int[n];
+        weights = new int[n];
+        for (int i = 0; i < n; i++) {
+            id[i] = i;
+            weights[i] = 1;
+        }
+    }
+    
+    public int find(int i) {
+        while (id[i] != i) {
+            id[i] = id[id[i]];
+            i = id[i];
+        }
+        return i;
+    }
+    
+    public boolean quickUnionAndReturnIfUnioned(int node1, int node2) {
+        int id1 = find(node1);
+        int id2 = find(node2);
+        if (id1 == id2) {
+            return false;
+        } else {
+            if (weights[id1] > weights[id2]) {
+                id[id2] = id[id1];
+                weights[id1] += weights[id2];
+            } else {
+                id[id1] = id[id2];
+                weights[id2] += weights[id1];
+            }
+            return true;
+        }
+    }
+    
+    public void breakUnion(int node) {
+        id[node] = node;
+    }
+}
