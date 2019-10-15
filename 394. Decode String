@@ -36,3 +36,35 @@ class Solution {
         return res;
     }
 }
+
+
+class Solution {
+    int index = 0;
+    public String decodeString(String s) {
+        StringBuilder result = new StringBuilder();
+        int repeatNum = 0;
+        while (index < s.length()) {
+            char currentChar = s.charAt(index);
+            index++;
+            if (currentChar == '[') {
+                String decodeString = decodeString(s);
+                repeatNum += repeatNum == 0 ? 1 : 0;
+                appendNTime(result, repeatNum, decodeString);
+                repeatNum = 0;
+            } else if (currentChar == ']') {
+                return result.toString();
+            } else if (currentChar <= '9' && currentChar >= '0') {
+                repeatNum = repeatNum * 10 + currentChar - '0';
+            } else {
+                result.append(currentChar);
+            }
+        }
+        return result.toString();
+    }
+    
+    private void appendNTime(StringBuilder s, int n, String appendContext) {
+        for (int i = 0; i < n; i++) {
+            s.append(appendContext);
+        }
+    }
+}
