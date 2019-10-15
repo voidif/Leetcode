@@ -1,0 +1,66 @@
+class Solution {
+    private HashMap<Integer, List<Integer>> adjacentTable;
+    private int[][] adjacentMatrix;
+    public int networkDelayTime(int[][] times, int N, int K) {
+        constructMap(times, N);
+        return getMaxByDijkstra(K);
+    }
+    
+    private void constructMap(int[][] times, int N) {
+        adjacentMatrix = new int[N + 1][N + 1];
+        adjacentTable = new HashMap<>();
+        for (int[] time : times) {
+            int currentNode = time[0];
+            int nextNode = time[1];
+            int cost = time[2];
+            adjacentMatrix[currentNode][nextNode] = cost;
+            List<Integer> neigbors = adjacentTable.getOrDefault(currentNode, new LinkedList<>());
+            neigbors.add(nextNode);
+            adjacentTable.putIfAbsent(currentNode, neigbors);
+        }
+    }
+    
+    private int getMaxByDijkstra(int beginNode) {
+        int numOfNode = adjacentMatrix.length - 1;
+        int[] distance = new int[numOfNode + 1];
+        HashSet<Integer> visitedNode = new HashSet<>();
+        Arrays.fill(distance, Integer.MAX_VALUE);
+        PriorityQueue<int[]> nodeDistances = new PriorityQueue<>(numOfNode, (int[] a, int[] b) -> a[1] - b[1]);
+
+        nodeDistances.add(new int[]{beginNode, 0});
+        distance[beginNode] = 0;
+        
+        int maxDistance = 0;
+        while (visitedNode.size() < numOfNode && nodeDistances.size() > 0) {
+            int[] currentNodeAndDistance = nodeDistances.poll();
+            int currentNode = currentNodeAndDistance[0];
+            int currentDistance = currentNodeAndDistance[1];
+            if (distance[currentNode] == currentDistance) {
+                for (int child: adjacentTable.getOrDefault(currentNode, new LinkedList<>())) {
+                    int newDistance = currentDistance + adjacentMatrix[currentNode][child];
+                    if (distance[child] > newDistance) {
+                        distance[child] = newDistance;
+                        nodeDistances.add(new int[]{child, newDistance});
+                    }
+                }
+                visitedNode.add(currentNode);
+                maxDistance = Math.max(currentDistance, maxDistance);
+            }
+
+        }
+        return visitedNode.size() < numOfNode ? -1 : maxDistance;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
