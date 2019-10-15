@@ -1,0 +1,63 @@
+class Solution {
+    private PriorityQueue<Integer> smallMaxHeap;
+    private PriorityQueue<Integer> bigMinHeap;
+    
+    public double[] medianSlidingWindow(int[] nums, int k) {
+        construct(nums, k);
+        double[] result = new double[nums.length - (k - 1)];
+        for (int i = k; i < nums.length; i++) {
+            result[i - k] = getMedian();
+            addNum(nums[i]);
+            removeNum(nums[i - k]);
+            
+        }
+        result[nums.length - k] = getMedian();
+        return result;
+    }
+    
+    private void construct(int[] nums, int k) {
+        smallMaxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        bigMinHeap = new PriorityQueue<>((k + 1) / 2);
+        for (int i = 0; i < k; i++) {
+            addNum(nums[i]);
+        }
+    }
+    
+    private void addNum(int num) {
+        if (smallMaxHeap.size() != 0 && num <= smallMaxHeap.peek()) {
+            smallMaxHeap.add(num);
+        } else if (bigMinHeap.size() != 0 && num >= bigMinHeap.peek()){
+            bigMinHeap.add(num);
+        } else {
+            smallMaxHeap.add(num);
+        }
+        balance();
+    }
+    
+    private double getMedian() {
+        // System.out.println(smallMaxHeap.peek() + " " + bigMinHeap.peek());
+        int size = smallMaxHeap.size() + bigMinHeap.size();
+        if (size % 2 == 0) {
+            return (double)smallMaxHeap.peek() / 2.0 + (double)bigMinHeap.peek() / 2.0;
+        } else {
+            return smallMaxHeap.size() > bigMinHeap.size() ? smallMaxHeap.peek() : bigMinHeap.peek();
+        }
+    }
+    
+    private void removeNum(int num) {
+        if (smallMaxHeap.size() != 0 && num <= smallMaxHeap.peek()) {
+            smallMaxHeap.remove(num);
+        } else {
+            bigMinHeap.remove(num);
+        }
+        balance();
+    }
+    
+    private void balance() {
+        if (smallMaxHeap.size() - 1 > bigMinHeap.size()) {
+            bigMinHeap.add(smallMaxHeap.poll());
+        } else if (bigMinHeap.size() - 1 > smallMaxHeap.size()) {
+            smallMaxHeap.add(bigMinHeap.poll());
+        }
+    }
+}
