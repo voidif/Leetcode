@@ -1,0 +1,29 @@
+class Solution {
+    public int[] nextGreaterElements(int[] nums) {
+        int n = nums.length;
+        int[] result = new int[nums.length];
+        Arrays.fill(result, -1);
+        Stack<Integer> ascedingNum = new Stack<>();
+        Stack<Integer> indexNum = new Stack<>();
+        int count = 0;
+        for (int i = 0; i < 2 * n && count < n; i++) {
+            int curNum = safeGet(nums, i);
+            while (!ascedingNum.isEmpty() && ascedingNum.peek() < curNum) {
+                int samllerNum = ascedingNum.pop();
+                int index = indexNum.pop();
+                if (index < n) {
+                    result[index] = curNum;
+                    count++;
+                }
+            }
+            ascedingNum.add(curNum);
+            indexNum.add(i);
+        }
+        
+        return result;
+    }
+    
+    private int safeGet(int[] nums, int n) {
+        return nums[n % nums.length];
+    }
+}
