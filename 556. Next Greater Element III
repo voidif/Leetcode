@@ -1,0 +1,41 @@
+class Solution {
+    public int nextGreaterElement(int n) {
+        Stack<Integer> digits = new Stack<>();
+        while (n > 0) {
+            int digit = n % 10;
+            n /= 10;
+            if (digits.isEmpty() || digit >= digits.peek()) {
+                digits.add(digit);
+            } else {
+                Stack<Integer> lastDigits = new Stack<>();
+                int swap = 0;
+                while (digits.size() > 0) {
+                    if (digits.peek() > digit) {
+                        lastDigits.push(digits.pop());
+                        if (digit != -1) {
+                            swap = lastDigits.peek();
+                        }
+                    } else {
+                        lastDigits.push(digit);
+                        digit = -1;
+                    }
+                }
+                if (digit != -1) {
+                    lastDigits.push(digit);
+                }
+                long result = n * 10 + swap;
+                while (!lastDigits.isEmpty()) {
+                    if (lastDigits.peek() != swap) {
+                        result = result * 10 + lastDigits.pop();
+                    } else {
+                        lastDigits.pop();
+                        swap = -1;
+                    }
+                    
+                }
+                return result > Integer.MAX_VALUE ? -1 : (int)result;
+            }
+        }
+        return -1;
+    }
+}
