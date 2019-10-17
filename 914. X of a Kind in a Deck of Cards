@@ -1,0 +1,32 @@
+class Solution {
+    public boolean hasGroupsSizeX(int[] deck) {
+        HashMap<Integer, Integer> numCount = new HashMap<>();
+        for (int card : deck) {
+          int count = numCount.getOrDefault(card, 0);
+          numCount.put(card,  count + 1);
+        }
+        int allCount = -1;
+        for (int car : numCount.keySet()) {
+            int currentCount = numCount.get(car);
+            if (allCount == -1) {
+                allCount = currentCount;
+            } else {
+                allCount = gcd(allCount, currentCount);
+                if (allCount < 2) {
+                    return false;
+                }
+            }
+        }
+        return allCount >= 2;
+    }
+    
+    private int gcd(int m, int n) {
+        int t = 1;
+        while(t != 0) {
+            t=m%n;
+            m=n;
+            n=t;
+        }
+        return m;
+    }
+}
