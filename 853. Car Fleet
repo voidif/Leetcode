@@ -1,0 +1,38 @@
+class Solution {
+    public int carFleet(int target, int[] position, int[] speed) {
+        CarDistanceAndSpeed[] record = new CarDistanceAndSpeed[position.length];
+        for (int i = 0; i < position.length; i++) {
+            record[i] = new CarDistanceAndSpeed(target - position[i], speed[i]);
+        }
+        Arrays.sort(record);
+        int bumb = 0;
+        double arrivalTime = 0;
+        for (CarDistanceAndSpeed cur : record) {
+            double curArrivalTime = cur.getArrivalTime();
+            if (curArrivalTime > arrivalTime) {
+                arrivalTime = curArrivalTime;
+                bumb++;
+            }
+        }
+        return bumb;
+    }
+}
+
+class CarDistanceAndSpeed implements Comparable<CarDistanceAndSpeed>{
+    int distanceToTarget;
+    int speed;
+    
+    public CarDistanceAndSpeed(int distanceToTarget, int speed) {
+        this.distanceToTarget = distanceToTarget;
+        this.speed = speed;
+    }
+    
+    @Override
+    public int compareTo(CarDistanceAndSpeed o) {
+        return this.distanceToTarget - o.distanceToTarget;
+    }
+    
+    public double getArrivalTime() {
+        return (double)distanceToTarget / (double)speed;
+    }
+}
