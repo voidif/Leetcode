@@ -1,0 +1,46 @@
+class Solution {
+    public boolean canConvert(String str1, String str2) {
+        char[] str1ToStr2 = new char[26];
+        char[] str2ToStr1 = new char[26];
+        char[] str1Array = str1.toCharArray();
+        char[] str2Array = str2.toCharArray();
+        for (int i = 0; i < str1.length(); i++) {
+            char str1Char = str1Array[i];
+            // System.out.print(str1Char);
+            char str2Char = str2Array[i];
+            if (str1ToStr2[str1Char - 'a'] != 0 && str2Array[i] != str1ToStr2[str1Char - 'a']) {
+                // System.out.println("aa");
+                return false;
+            } else if (str2ToStr1[str2Char - 'a'] != 0) {
+                // System.out.println("bbb");
+                str1Array[i] = str2ToStr1[str2Char - 'a'];
+                str1Char = str1Array[i];
+            }
+            if (str1ToStr2[str1Char - 'a'] == 0) {
+                
+                str1ToStr2[str1Char - 'a'] = str2Char;
+                str2ToStr1[str2Char - 'a'] = str1Char;
+                // if (str1Char == 'p') {
+                //     System.out.println(str1Char + " " + str2Char);
+                // }
+            }
+
+        }
+        String newS1 = new String(str1Array);
+        int charCount = getCountOfChar(newS1);
+        // System.out.println(charCount);
+        return charCount == 26 ? newS1.equals(str2) : true;
+    }
+    
+    private int getCountOfChar(String s) {
+        int[] charCount = new int[26];
+        int countOfChar = 0;
+        for (char c : s.toCharArray()) {
+            if (charCount[c - 'a'] == 0) {
+                countOfChar++;
+                charCount[c - 'a'] = 1;
+            }
+        }
+        return countOfChar;
+    }
+}
