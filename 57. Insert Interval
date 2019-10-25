@@ -38,3 +38,48 @@ class Solution {
         return res;
     }
 }
+
+
+class Solution {
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        LinkedList<int[]> result = new LinkedList<>();
+        int insertIndex = insertAllIntervalsBeforeNewIntervals(result, intervals, newInterval);
+        insertAtEnd(result, newInterval);
+        insertFrom(result, intervals, insertIndex);
+        return result.toArray(new int[result.size()][]);
+    }
+    
+    private int insertAllIntervalsBeforeNewIntervals(List<int[]> result, int[][] intervals, int[] newInterval) {
+        int index = 0;
+        while (index < intervals.length && intervals[index][0] < newInterval[0]) {
+            result.add(intervals[index]);
+            index++;
+        }
+        return index;
+    }
+    
+    private void insertAtEnd(LinkedList<int[]> intervals, int[] newInterval) {
+        int[] lastInterval = intervals.size() == 0 ? null : intervals.getLast();
+        if (lastInterval != null && isOverlap(lastInterval, newInterval)) {
+            mergeInterval(lastInterval, newInterval);
+        } else {
+            intervals.add(newInterval);
+        }
+    }
+    
+    private boolean isOverlap(int[] interval1, int[] interval2) {
+        return interval1[0] >= interval2[0] && interval1[0] <= interval2[1] ||
+            interval2[0] >= interval1[0] && interval2[0] <= interval1[1];
+    }
+    
+    private void mergeInterval(int[] interval, int[] newInterval) {
+        interval[0] = Math.min(interval[0], newInterval[0]);
+        interval[1] = Math.max(interval[1], newInterval[1]);
+    }
+    
+    private void insertFrom(LinkedList<int[]> result, int[][] newIntervals, int begin) {
+        for (int i = begin; i < newIntervals.length; i++) {
+            insertAtEnd(result, newIntervals[i]);
+        }
+    }
+}
