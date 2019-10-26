@@ -1,0 +1,30 @@
+class Solution {
+    public String[] findRestaurant(String[] list1, String[] list2) {
+        LinkedList<String> foundRestaurants = new LinkedList<>();
+        HashMap<String, Integer> list2Index = constructIndexMap(list2);
+        int minIndexSum = Integer.MAX_VALUE;
+        for (int i =  0; i <= minIndexSum && i < list1.length; i++) {
+            String currentRestaurant = list1[i];
+            if (list2Index.containsKey(currentRestaurant)) {
+                int newSum = i + list2Index.get(currentRestaurant);
+                if (newSum < minIndexSum) {
+                    minIndexSum = newSum;
+                    foundRestaurants.clear();
+                }
+                if (newSum == minIndexSum) {
+                    foundRestaurants.add(currentRestaurant);
+                }
+            }
+        }
+        return foundRestaurants.toArray(new String[foundRestaurants.size()]);
+    }
+    
+    
+    private HashMap<String, Integer> constructIndexMap(String[] list) {
+        HashMap<String, Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < list.length; i++) {
+            indexMap.putIfAbsent(list[i], i);
+        }
+        return indexMap;
+    }
+}
