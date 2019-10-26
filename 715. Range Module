@@ -1,0 +1,52 @@
+class RangeModule {
+    private TreeMap<Integer, Integer> map;
+
+    public RangeModule() {
+        map = new TreeMap<>();
+    }
+    
+    public void addRange(int left, int right) {
+        Map.Entry<Integer, Integer> previousRange = map.floorEntry(left);
+        Map.Entry<Integer, Integer> newRange = null;
+        if (previousRange != null && previousRange.getValue() >= left) {
+            map.put(previousRange.getKey(), Math.max(right, previousRange.getValue()));
+            newRange = previousRange;
+        } else {
+            map.put(left, right);
+            newRange = map.floorEntry(left);
+        }
+        Map.Entry<Integer, Integer> nextRange = map.floorEntry(right);
+        if (nextRange != null && nextRange.getValue() > right) {
+            map.put(newRange.getKey(), nextRange.getValue());
+        }
+        // clean up
+        map.subMap(left, false, right, true).clear();
+    }
+    
+    public boolean queryRange(int left, int right) {
+        Map.Entry<Integer, Integer> previousRange = map.floorEntry(left);
+        return previousRange != null && previousRange.getValue() >= right;
+    }
+    
+    public void removeRange(int left, int right) {
+        Map.Entry<Integer, Integer> previousRange = map.lowerEntry(left);
+        if (previousRange != null && previousRange.getValue() >= left) {
+            map.put(previousRange.getKey(), left);
+            map.put(left, previousRange.getValue());
+        } 
+        Map.Entry<Integer, Integer> nextRange = map.lowerEntry(right);
+        if (nextRange != null && nextRange.getValue() > right) {
+            map.put(right, nextRange.getValue());
+        }
+        // clean up
+        map.subMap(left, true, right, false).clear();
+    }
+}
+
+/**
+ * Your RangeModule object will be instantiated and called as such:
+ * RangeModule obj = new RangeModule();
+ * obj.addRange(left,right);
+ * boolean param_2 = obj.queryRange(left,right);
+ * obj.removeRange(left,right);
+ */
