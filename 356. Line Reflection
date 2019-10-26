@@ -1,0 +1,26 @@
+class Solution {
+    public boolean isReflected(int[][] points) {
+        double mid = 0;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        HashSet<String> pointSet = new HashSet<>();
+        for (int[] point : points) {
+            min = Math.min(min, point[0]);
+            max = Math.max(max, point[0]);
+            pointSet.add(point[0] + " " + point[1]);
+        }
+        mid = min + ((double)max - min) / 2;
+        for (int[] point : points) {
+            String reflectPoint = getReflectPoint(point, mid);
+            if (!pointSet.contains(reflectPoint)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private String getReflectPoint(int[] point, double mid) {
+        int newX = (int)(mid - (point[0] - mid));
+        return newX + " " + point[1];
+    }
+}
