@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> verticalOrder(TreeNode root) {
+        if (root != null) {
+            HashMap<Integer, List<Integer>> columnList = new HashMap<>();
+            int[] range = doBfsAndReturnRange(root, columnList);
+            return mapToList(columnList, range[0], range[1]);
+        } else {
+            return new LinkedList();
+        }
+        
+    }
+    
+    private int[] doBfsAndReturnRange(TreeNode root, HashMap<Integer, List<Integer>> columnList) {
+        int[] range = new int[2];
+        Queue<TreeNode> queue = new LinkedList<>();
+        HashMap<TreeNode, Integer> colIndexMap = new HashMap<>();
+        queue.add(root);
+        addNodeValue(root.val, columnList, 0);
+        colIndexMap.put(root, 0);
+        while (!queue.isEmpty()) {
+            TreeNode currentNode = queue.poll();
+            int currentColIndex = colIndexMap.get(currentNode);
+            range[0] = Math.min(range[0], currentColIndex);
+            range[1] = Math.max(range[1], currentColIndex);
+            if (currentNode.left != null) {
+                queue.add(currentNode.left);
+                colIndexMap.put(currentNode.left, currentColIndex - 1);
+                addNodeValue(currentNode.left.val, columnList, currentColIndex - 1);
+            }
+            if (currentNode.right != null) {
+                queue.add(currentNode.right);
+                colIndexMap.put(currentNode.right, currentColIndex + 1);
+                addNodeValue(currentNode.right.val, columnList, currentColIndex + 1);
+            }
+        }
+        return range;
+    }
+    
+    private void addNodeValue(int value, HashMap<Integer, List<Integer>> columnList, int colIndex) {
+        List<Integer> col = columnList.getOrDefault(colIndex, new LinkedList<>());
+        col.add(value);
+        columnList.putIfAbsent(colIndex, col);
+    }
+    
+    private List<List<Integer>> mapToList(Map<Integer, List<Integer>> map, int smallest, int biggest) {
+        List<List<Integer>> list = new LinkedList<>();
+        for (int i = smallest; i <= biggest; i++) {
+            list.add(map.get(i));
+        } 
+        return list;
+    }
+}
