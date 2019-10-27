@@ -1,0 +1,55 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+
+    public Node() {}
+
+    public Node(int _val,Node _left,Node _right) {
+        val = _val;
+        left = _left;
+        right = _right;
+    }
+};
+*/
+class Solution {
+    private Node head;
+    private Node currentNode;
+    private Node endNode;
+    
+    public Node treeToDoublyList(Node root) {
+        head = new Node();
+        currentNode = head;
+        inOrderAndLink(root);
+        return deleteDummyHead(head);
+    }
+    
+    private void inOrderAndLink(Node root) {
+        if (root != null) {
+            inOrderAndLink(root.left);
+            link(currentNode, root);
+            currentNode = root;
+            inOrderAndLink(root.right);
+        }
+    }
+    
+    private void link(Node pre, Node next) {
+        pre.right = next;
+        next.left = pre;
+        endNode = next;
+    }
+    
+    private Node deleteDummyHead(Node head) {
+        if (head != null && head.right != null) {
+            head = head.right;
+            head.left.right = null;
+            head.left = endNode;
+            endNode.right = head;
+        } else {
+            head = null;
+        }
+        return head;
+    }
+}
