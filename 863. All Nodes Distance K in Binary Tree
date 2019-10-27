@@ -1,0 +1,60 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int K) {
+        HashMap<TreeNode, List<TreeNode>> graph = new HashMap<>();
+        constructGraph(root, graph);
+        return findDistanceKValues(graph, target, K);
+    }
+    
+    private void constructGraph(TreeNode root, HashMap<TreeNode, List<TreeNode>> graph) {
+        if (root != null) {
+            addLink(root, root.left, graph);
+            addLink(root, root.right, graph);
+            constructGraph(root.left, graph);
+            constructGraph(root.right, graph);
+        }
+    }
+    
+    private void addLink(TreeNode node1, TreeNode node2, HashMap<TreeNode, List<TreeNode>> graph) {
+        if (node1 != null && node2 != null) {
+            addEdge(node1, node2, graph);
+            addEdge(node2, node1, graph);
+        }
+    }
+    
+    private void addEdge(TreeNode node1, TreeNode node2, HashMap<TreeNode, List<TreeNode>> graph) {
+        List<TreeNode> children = graph.getOrDefault(node1, new LinkedList<>());
+        children.add(node2);
+        graph.putIfAbsent(node1, children);
+    }
+    
+    private List<Integer> findDistanceKValues(HashMap<TreeNode, List<TreeNode>> graph, TreeNode root, int K) {
+        int distance = 0;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        HashSet<TreeNode> visitedNodes = new HashSet<>();
+        visitedNodes.add(root);
+        while (!queue.isEmpty() && distance < K) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode currentNode = queue.poll();
+                for (TreeNode child : graph.getOrDefault(currentNode, new LinkedList<>())) {
+                    if (!visitedNodes.contains(child)) {
+                        visitedNodes.add(child);
+                        queue.add(child);
+                    }
+                }
+            }
+            distance++;
+        }
+        return queue.stream().map(a -> a.val).collect(Collectors.toList());
+    }
+}
