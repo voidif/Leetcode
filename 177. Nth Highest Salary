@@ -1,0 +1,15 @@
+CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+BEGIN
+  RETURN (
+      # Write your MySQL query statement below.
+        SELECT if (count(b.SecondHighestSalary) < 1, null, b.SecondHighestSalary) as SecondHighestSalary FROM (
+        SELECT Salary as SecondHighestSalary FROM
+        (SELECT Salary, (
+        SELECT COUNT(DISTINCT Salary)
+        FROM Employee as E2
+        WHERE E1.Salary <= E2.Salary) AS Rank
+        FROM Employee as E1
+        ORDER BY E1.Salary DESC) as a
+        WHERE Rank = N) as b
+  );
+END
