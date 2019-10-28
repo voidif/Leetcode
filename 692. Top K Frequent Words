@@ -1,0 +1,50 @@
+class Solution {
+    public List<String> topKFrequent(String[] words, int k) {
+        HashMap<String, Freq> freqMap = calculateFrequent(words);
+        PriorityQueue<Freq> pq = new PriorityQueue(k);
+        for (Map.Entry<String, Freq> entry : freqMap.entrySet()) {
+            pq.add(entry.getValue());
+            if (pq.size() > k) {
+                pq.poll();
+            }
+        }
+        return pqToList(pq);
+    }
+    
+    private HashMap<String, Freq> calculateFrequent(String[] words) {
+        HashMap<String, Freq> freqMap = new HashMap<>();
+        for (String word : words) {
+            Freq freqForWord = freqMap.getOrDefault(word, new Freq(word, 0));
+            freqForWord.freq++;
+            freqMap.putIfAbsent(word, freqForWord);
+        }
+        return freqMap;
+    }
+    
+    private List<String> pqToList(PriorityQueue<Freq> pq) {
+        LinkedList<String> result = new LinkedList<>();
+        while (!pq.isEmpty()) {
+            result.addFirst(pq.poll().s);
+        }
+        return result;
+    }
+}
+
+
+class Freq implements Comparable<Freq>{
+    public String s;
+    public int freq;
+    
+    public Freq(String s, int freq) {
+        this.s = s;
+        this.freq = freq;
+    }
+    
+    public int compareTo(Freq o1) {
+        if (this.freq != o1.freq) {
+            return this.freq - o1.freq;
+        } else {
+            return o1.s.compareTo(s);
+        }
+    }
+}
