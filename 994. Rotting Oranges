@@ -1,0 +1,73 @@
+// run time analysis\
+// m: lenth n: height
+// time: O(mn)
+// space: O(mn)
+class Solution {
+  private int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+  
+  public int orangesRotting(int[][] grid) {
+    List<int[]> rottingOrangeLocations = findRottingOrangeLocations(grid);
+    int rottingOrangeCount = rottingOrangeLocations.size();
+    int totalOrangeCount = getTotalOrangeCount(grid);
+    return findAllOrangeRottingEpoches(grid, rottingOrangeCount, rottingOrangeLocations, totalOrangeCount);
+  }
+  
+  private List<int[]> findRottingOrangeLocations(int[][] grid) {
+    List<int[]> rottingOrangeLocations = new ArrayList<>();
+    for (int row = 0; row < grid.length; row++) {
+      for (int col = 0 ; col < grid[0].length; col++) {
+        if (grid[row][col] == 2) {
+          rottingOrangeLocations.add(new int[]{row, col});
+        }
+      }
+    }
+    return rottingOrangeLocations;
+  }
+  
+  private int getTotalOrangeCount(int[][] grid) {
+    int totalOrangeCount = 0;
+    for (int[] row: grid) {
+      for (int cell: row) {
+        if (cell != 0) {
+          totalOrangeCount++;
+        }
+      }
+    }
+    return totalOrangeCount;
+  }
+  
+  private int findAllOrangeRottingEpoches(int[][] grid, int initalRottingOrangeCount, List<int[]> rottingOrangeLocations, int totalOrangeCount) {
+    int previousRottingOrangeCount = 0;
+    int currentRottingOrangeCount = initalRottingOrangeCount;
+    int iterCount = 0;
+    while (currentRottingOrangeCount != previousRottingOrangeCount && !rottingOrangeLocations.isEmpty()) {
+      previousRottingOrangeCount = currentRottingOrangeCount;
+      List<int[]> newRottingOrangeLocations = new ArrayList<>();
+      for (int[] rottingOrange : rottingOrangeLocations) {
+        for (int[] direction : directions) {
+          int[] newRottingLocation = new int[]{rottingOrange[0] + direction[0], rottingOrange[1] + direction[1]};
+          if (isFreshOrange(grid, newRottingLocation)) {
+            grid[newRottingLocation[0]][newRottingLocation[1]] = 2;
+            currentRottingOrangeCount++;
+            newRottingOrangeLocations.add(newRottingLocation);
+          }
+        }
+      }
+      rottingOrangeLocations = newRottingOrangeLocations;
+      iterCount += currentRottingOrangeCount == previousRottingOrangeCount ? 0 : 1;
+    }
+    return currentRottingOrangeCount == totalOrangeCount ? iterCount : -1;
+  }
+  
+  private boolean isFreshOrange(int[][] grid, int[] location) {
+    if (location[0] >= 0 && 
+        location[0] < grid.length &&
+        location[1] >= 0 && 
+        location[1] < grid[0].length &&
+        grid[location[0]][location[1]] == 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
